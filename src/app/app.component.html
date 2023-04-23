@@ -1,18 +1,7 @@
-<div *ngIf="fireService.auth.currentUser==null">
-  <input placeholder="email" [(ngModel)]="userName" type="email" >
-  <input placeholder="password" [(ngModel)]="password" type="password" >
-  <button (click)="fireService.signIn(userName, password)">Sign in</button>
-  <button (click)="fireService.register(userName, password)">Sign up</button>
+<script src="https://code.jquery.com/jquery-3.6.0.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.1/dist/umd/popper.min.js"></script>
+<script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+<app-sign-in ></app-sign-in>
 
 
-</div>
 
-<div *ngIf="fireService.auth.currentUser">
-  <h1>hello, {{fireService.auth.currentUser.email}}</h1>
-  <input [(ngModel)]="sendThisMessage">
-  <button (click)="fireService.sendMessage(sendThisMessage)">send message</button>
-  <p *ngFor="let m of fireService.messages">
-    {{m|json}}
-  </p>
-
-</div>
