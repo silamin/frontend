@@ -5,11 +5,15 @@ import { AppComponent } from './app.component';
 import {FormsModule} from "@angular/forms";
 import { SignInComponent } from './pages/sign-in/sign-in.component';
 import {RouterOutlet} from "@angular/router";
+import { NavigationBarComponent } from './components/navigation-bar/navigation-bar.component';
+import { MainPageComponent } from './pages/main-page/main-page.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    SignInComponent
+    SignInComponent,
+    NavigationBarComponent,
+    MainPageComponent
   ],
   imports: [
     BrowserModule,
