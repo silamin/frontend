@@ -7,13 +7,15 @@ import { SignInComponent } from './pages/sign-in/sign-in.component';
 import {RouterOutlet} from "@angular/router";
 import { NavigationBarComponent } from './components/navigation-bar/navigation-bar.component';
 import { MainPageComponent } from './pages/main-page/main-page.component';
+import { CompanyPageComponent } from './pages/company-page/company-page.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     SignInComponent,
     NavigationBarComponent,
-    MainPageComponent
+    MainPageComponent,
+    CompanyPageComponent
   ],
   imports: [
     BrowserModule,
