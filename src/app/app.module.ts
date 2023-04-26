@@ -8,6 +8,7 @@ import {RouterOutlet} from "@angular/router";
 import { NavigationBarComponent } from './components/navigation-bar/navigation-bar.component';
 import { MainPageComponent } from './pages/main-page/main-page.component';
 import { CompanyPageComponent } from './pages/company-page/company-page.component';
+import { ContactCompanyComponent } from './components/company-contact/contact-company/contact-company.component';
 
 @NgModule({
   declarations: [
@@ -15,7 +16,8 @@ import { CompanyPageComponent } from './pages/company-page/company-page.componen
     SignInComponent,
     NavigationBarComponent,
     MainPageComponent,
-    CompanyPageComponent
+    CompanyPageComponent,
+    ContactCompanyComponent
   ],
   imports: [
     BrowserModule,
