@@ -9,6 +9,8 @@ import { NavigationBarComponent } from './components/navigation-bar/navigation-b
 import { MainPageComponent } from './pages/main-page/main-page.component';
 import { CompanyPageComponent } from './pages/company-page/company-page.component';
 import { ContactCompanyComponent } from './components/company-contact/contact-company/contact-company.component';
+import { SkillsCardComponent } from './components/skills-card/skills-card.component';
+import { FileInputComponent } from './components/file-input/file-input.component';
 
 @NgModule({
   declarations: [
@@ -17,7 +19,9 @@ import { ContactCompanyComponent } from './components/company-contact/contact-co
     NavigationBarComponent,
     MainPageComponent,
     CompanyPageComponent,
-    ContactCompanyComponent
+    ContactCompanyComponent,
+    SkillsCardComponent,
+    FileInputComponent
   ],
   imports: [
     BrowserModule,

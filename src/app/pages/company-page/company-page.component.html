@@ -1,59 +1,60 @@
-<div class="container w-100">
-  <div class="row w-100 justify-content-center">
+<div class="container w-100 py-5" style="background-color: #fff">
     <div class="col-12 bhoechie-tab-container">
-      <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3 bhoechie-tab-menu">
-        <div class="list-group">
-          <a href="#" class="list-group-item active text-center"
-             [ngClass]="{'active': activeTab === 0}"
-             (click)="setActiveTab(0)">
-            <h4 class="glyphicon glyphicon-plane"></h4><br/>Contact us
-          </a>
-          <a href="#" class="list-group-item text-center"
-             [ngClass]="{'active': activeTab === 1}"
-             (click)="setActiveTab(1)">
-            <h4 class="glyphicon glyphicon-road"></h4><br/>Listed jobs
-          </a>
-          <a href="#" class="list-group-item text-center"
-             [ngClass]="{'active': activeTab === 2}"
-             (click)="setActiveTab(2)">
-            <h4 class="glyphicon glyphicon-home"></h4><br/>Networking
-          </a>
-        </div>
-      </div>
-      <div class="col-lg-9 col-md-7 col-sm-9 col-xs-9 bhoechie-tab d-flex align-items-center">
-        <!-- flight section -->
-        <div class="bhoechie-tab-content active d-flex align-items-center justify-content-center"
-             [ngClass]="{'active': activeTab === 0}">
-          <app-contact-company></app-contact-company>
-        </div>
-        <!-- train section -->
-        <div class="bhoechie-tab-content"
-             [ngClass]="{'active': activeTab === 1}">
-          <div class="text-center">
-            <h1 class="glyphicon glyphicon-road" style="font-size:12em;color:#55518a"></h1>
+      <div class="row justify-content-between">
+        <div class="col-lg-3   bhoechie-tab-menu">
+          <div class="list-group ml-lg-2">
+            <a href="#" class="list-group-item active text-center"
+               [ngClass]="{'active': activeTab === 0}"
+               (click)="setActiveTab(0)">
+              <h4 class="glyphicon glyphicon-plane"></h4><br/>Contact us
+            </a>
+            <a href="#" class="list-group-item text-center"
+               [ngClass]="{'active': activeTab === 1}"
+               (click)="setActiveTab(1)">
+              <h4 class="glyphicon glyphicon-road"></h4><br/>Listed jobs
+            </a>
+            <a href="#" class="list-group-item text-center"
+               [ngClass]="{'active': activeTab === 2}"
+               (click)="setActiveTab(2)">
+              <h4 class="glyphicon glyphicon-home"></h4><br/>Networking
+            </a>
           </div>
         </div>
+        <div class="col-lg-9  bhoechie-tab d-flex align-items-center m-0 p-0">
+          <!-- flight section -->
+          <div class="bhoechie-tab-content active d-flex align-items-center justify-content-center"
+               [ngClass]="{'active': activeTab === 0}">
+            <app-contact-company></app-contact-company>
+          </div>
+          <!-- train section -->
+          <div class="bhoechie-tab-content"
+               [ngClass]="{'active': activeTab === 1}">
+            <div class="text-center">
+              <h1 class="glyphicon glyphicon-road" style="font-size:12em;color:#55518a"></h1>
+            </div>
+          </div>
 
-        <!-- hotel search -->
-        <div class="bhoechie-tab-content"
-             [ngClass]="{'active': activeTab === 2}">
-          <div class="text-center">
-            <h1 class="glyphicon glyphicon-home" style="font-size:12em;color:#55518a"></h1>
+          <!-- hotel search -->
+          <div class="bhoechie-tab-content"
+               [ngClass]="{'active': activeTab === 2}">
+            <div class="text-center">
+              <h1 class="glyphicon glyphicon-home" style="font-size:12em;color:#55518a"></h1>
+            </div>
           </div>
-        </div>
-        <div class="bhoechie-tab-content"
-             [ngClass]="{'active': activeTab === 3}">
-          <div class="text-center">
-            <h1 class="glyphicon glyphicon-cutlery" style="font-size:12em;color:#55518a"></h1>
+          <div class="bhoechie-tab-content"
+               [ngClass]="{'active': activeTab === 3}">
+            <div class="text-center">
+              <h1 class="glyphicon glyphicon-cutlery" style="font-size:12em;color:#55518a"></h1>
+            </div>
           </div>
-        </div>
-        <div class="bhoechie-tab-content"
-             [ngClass]="{'active': activeTab === 4}">
-          <div class="text-center">
-            <h1 class="glyphicon glyphicon-credit-card" style="font-size:12em;color:#55518a"></h1>
+          <div class="bhoechie-tab-content"
+               [ngClass]="{'active': activeTab === 4}">
+            <div class="text-center">
+              <h1 class="glyphicon glyphicon-credit-card" style="font-size:12em;color:#55518a"></h1>
+            </div>
           </div>
         </div>
       </div>
+
     </div>
   </div>
-</div>

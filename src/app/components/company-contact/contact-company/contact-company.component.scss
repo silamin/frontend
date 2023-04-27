@@ -14,7 +14,6 @@ body{
 @media (min-width: 1024px) {
   .contact-info__wrapper {
     border-radius: 0 .625rem .625rem 0;
-    padding: 5rem !important
   }
 }
 .contact-info__list span.position-absolute {
@@ -27,7 +26,6 @@ body{
   list-style: none;
 }
 .contact__wrapper {
-  background-color: #fff;
   border-radius: 0 0 .625rem .625rem
 }
 
@@ -38,7 +36,6 @@ body{
 }
 @media (min-width: 1024px) {
   .contact-form__wrapper {
-    padding: 5rem !important
   }
 }
 .shadow-lg, .shadow-lg--on-hover:hover {
