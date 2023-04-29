@@ -22,39 +22,35 @@
         </div>
         <div class="col-lg-9  bhoechie-tab d-flex align-items-center m-0 p-0">
           <!-- flight section -->
-          <div class="bhoechie-tab-content active d-flex align-items-center justify-content-center"
+          <div class="bhoechie-tab-content"
                [ngClass]="{'active': activeTab === 0}">
             <app-contact-company></app-contact-company>
           </div>
           <!-- train section -->
-          <div class="bhoechie-tab-content"
+          <div class="bhoechie-tab-content " style="width: 100%"
                [ngClass]="{'active': activeTab === 1}">
-            <div class="text-center">
-              <h1 class="glyphicon glyphicon-road" style="font-size:12em;color:#55518a"></h1>
-            </div>
-          </div>
+            <app-select-box></app-select-box>
 
-          <!-- hotel search -->
+            <div class="card col-12 my-3">
+              <div class="card-header">Card Header</div>
+              <div class="card-body">
+                <h5 class="card-title">Card Title</h5>
+                <p class="card-text">Welcome to Tutlane. Its card sample text.</p>
+                <a href="#" class="btn btn-primary">View Profile</a>
+              </div>
+              <div class="card-footer text-muted">1 day ago</div>
+            </div>
+            </div>
           <div class="bhoechie-tab-content"
                [ngClass]="{'active': activeTab === 2}">
-            <div class="text-center">
-              <h1 class="glyphicon glyphicon-home" style="font-size:12em;color:#55518a"></h1>
-            </div>
+            <app-network-card></app-network-card>
           </div>
-          <div class="bhoechie-tab-content"
-               [ngClass]="{'active': activeTab === 3}">
-            <div class="text-center">
-              <h1 class="glyphicon glyphicon-cutlery" style="font-size:12em;color:#55518a"></h1>
-            </div>
+
+
           </div>
-          <div class="bhoechie-tab-content"
-               [ngClass]="{'active': activeTab === 4}">
-            <div class="text-center">
-              <h1 class="glyphicon glyphicon-credit-card" style="font-size:12em;color:#55518a"></h1>
-            </div>
-          </div>
+
+
         </div>
       </div>
 
     </div>
-  </div>

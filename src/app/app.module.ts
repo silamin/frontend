@@ -11,6 +11,10 @@ import { CompanyPageComponent } from './pages/company-page/company-page.componen
 import { ContactCompanyComponent } from './components/company-contact/contact-company/contact-company.component';
 import { SkillsCardComponent } from './components/skills-card/skills-card.component';
 import { FileInputComponent } from './components/file-input/file-input.component';
+import { SelectBoxComponent } from './components/select-box/select-box/select-box.component';
+import { NetworkCardComponent } from './components/network-card/network-card/network-card.component';
+import { JobFormComponent } from './pages/job-form/job-form/job-form.component';
+import { DatePickerComponent } from './components/date-picker/date-picker.component';
 
 @NgModule({
   declarations: [
@@ -21,7 +25,11 @@ import { FileInputComponent } from './components/file-input/file-input.component
     CompanyPageComponent,
     ContactCompanyComponent,
     SkillsCardComponent,
-    FileInputComponent
+    FileInputComponent,
+    SelectBoxComponent,
+    NetworkCardComponent,
+    JobFormComponent,
+    DatePickerComponent
   ],
   imports: [
     BrowserModule,

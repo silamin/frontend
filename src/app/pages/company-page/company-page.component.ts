@@ -5,8 +5,12 @@ import {Component, OnInit} from '@angular/core';
   templateUrl: './company-page.component.html',
   styleUrls: ['./company-page.component.scss']
 })
-export class CompanyPageComponent{
+export class CompanyPageComponent implements OnInit {
   activeTab = 0;
+
+  ngOnInit() {
+    this.activeTab = 0;
+  }
 
   setActiveTab(index: number) {
     this.activeTab = index;
