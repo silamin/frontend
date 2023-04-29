@@ -2,9 +2,9 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppComponent } from './app.component';
-import {FormsModule} from "@angular/forms";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import { SignInComponent } from './pages/sign-in/sign-in.component';
-import {RouterOutlet} from "@angular/router";
+import {RouterModule, RouterOutlet} from "@angular/router";
 import { NavigationBarComponent } from './components/navigation-bar/navigation-bar.component';
 import { MainPageComponent } from './pages/main-page/main-page.component';
 import { CompanyPageComponent } from './pages/company-page/company-page.component';
@@ -15,6 +15,12 @@ import { SelectBoxComponent } from './components/select-box/select-box/select-bo
 import { NetworkCardComponent } from './components/network-card/network-card/network-card.component';
 import { JobFormComponent } from './pages/job-form/job-form/job-form.component';
 import { DatePickerComponent } from './components/date-picker/date-picker.component';
+import { CompanyMainPageComponent } from './pages/company-main-page/company-main-page.component';
+import { WorkExperienceFormComponent } from './components/work-experience-form/work-experience-form.component';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { SkillFormComponent } from './components/skill-form/skill-form.component'; // import FontAwesomeModule
+
+
 
 @NgModule({
   declarations: [
@@ -29,14 +35,21 @@ import { DatePickerComponent } from './components/date-picker/date-picker.compon
     SelectBoxComponent,
     NetworkCardComponent,
     JobFormComponent,
-    DatePickerComponent
+    DatePickerComponent,
+    CompanyMainPageComponent,
+    WorkExperienceFormComponent,
+    SkillFormComponent
   ],
   imports: [
     BrowserModule,
     FormsModule,
-    RouterOutlet
+    RouterModule.forRoot([]),
+    FontAwesomeModule,
+    ReactiveFormsModule // add this line to import ReactiveFormsModule
+
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+
 })
 export class AppModule { }

@@ -8,7 +8,7 @@
   </thead>
   <tbody>
   <tr class="hotel_a">
-    <td>Hotel A</td>
+    <td>Angular
     <td>
       <i class="fa fa-star" style="color: rgb(253, 204, 13)"></i>
       <i class="fa fa-star" style="color: rgb(253, 204, 13)"></i>
@@ -21,7 +21,7 @@
     </td>
   </tr>
   <tr class="hotel_b">
-    <td>Hotel B</td>
+    <td>HTML</td>
     <td>
       <i class="fa fa-star" style="color: rgb(253, 204, 13)"></i>
       <i class="fa fa-star" style="color: rgb(253, 204, 13)"></i>
@@ -35,7 +35,7 @@
   </tr>
 
   <tr class="hotel_c">
-    <td>Hotel C</td>
+    <td>Typescript</td>
     <td>
         <i class="fa fa-star" style="color: rgb(253, 204, 13)"></i>
       <i class="fa fa-star" style="color: rgb(253, 204, 13)"></i>
@@ -48,7 +48,7 @@
     </td>
   </tr>
   <tr class="hotel_d">
-    <td>Hotel D</td>
+    <td>Tailwind</td>
     <td>
       <i class="fa fa-star" style="color: rgb(253, 204, 13)"></i>
       <i class="fa fa-star" style="color: rgb(253, 204, 13)"></i>
@@ -61,7 +61,7 @@
     </td>
   </tr>
   <tr class="hotel_e">
-    <td>Hotel E</td>
+    <td>Bootstrap</td>
     <td>
       <i class="fa fa-star" style="color: rgb(253, 204, 13)"></i>
       <i class="fa fa-star" style="color: rgb(253, 204, 13)"></i>
@@ -75,7 +75,7 @@
   </tr>
   <tr height="48">
     <td>
-      <button class="btn btn-danger btn-sm ml-auto w-100" style="width: 80%">Add a skill</button>
+      <button (click)="showPopUp()" class="btn btn-danger btn-sm ml-auto w-100" style="width: 80%">Add a skill</button>
     </td>
     <td colspan="2">
       <button class="btn btn-danger btn-sm ml-auto w-100" style="width: 80%">Save changes</button>
@@ -85,3 +85,4 @@
 </table>
 
 <a class="attribution" href="http://fontawesome.io/"><i class="fa fa-font-awesome"></i> fontawesome.io</a>
+<app-skill-form [visible]="isVisible" (visibleChange)="hidePopUp()"></app-skill-form>

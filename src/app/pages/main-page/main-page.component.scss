@@ -43,3 +43,21 @@
 .custom-height{
   height: 250px;
 }
+.scroll-button {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+}
+
+
+
+.description-text {
+  height: 200px;
+  overflow-y: scroll;
+}
+
+.text-area {
+  height: 200px;
+  resize: none;
+  overflow-y: scroll;
+}

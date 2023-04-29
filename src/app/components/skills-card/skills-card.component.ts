@@ -6,5 +6,13 @@ import { Component } from '@angular/core';
   styleUrls: ['./skills-card.component.scss']
 })
 export class SkillsCardComponent {
+  isVisible = false;
 
+  showPopUp() {
+    this.isVisible = true;
+  }
+
+  hidePopUp() {
+    this.isVisible = false;
+  }
 }

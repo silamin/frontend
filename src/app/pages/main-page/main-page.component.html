@@ -31,9 +31,26 @@
               <i class="fab fa-github"></i>
             </button>
           </div>
-          <button type="button" class="btn btn-primary btn-rounded btn-lg">
-            Message now
-          </button>
+          <div class="card">
+            <div class="card-header">
+              <div class="d-flex justify-content-between align-items-center">
+                <h5 class="card-title mb-0">Description</h5>
+                <button class="btn btn-link" (click)="toggleEditMode()">
+                  <fa-icon [icon]="editMode ? saveIcon : editIcon"></fa-icon>
+                </button>
+              </div>
+            </div>
+            <div class="card-body description-box">
+              <div *ngIf="!editMode" class="description-text">
+                {{ description }}
+              </div>
+              <div *ngIf="editMode">
+                <textarea class="form-control text-area" rows="3" [(ngModel)]="description"></textarea>
+              </div>
+            </div>
+          </div>
+
+
         </div>
       </div>
     </div>
@@ -93,7 +110,7 @@
 
               </div>
               <div class="card-footer text-dark bg-light w-100">
-                <a href="#" class="btn btn-danger btn-sm ml-auto w-100">Add</a>
+                <a href="#" (click)="showPopUp()" class="btn btn-danger btn-sm ml-auto w-100">Add</a>
               </div>
 
             </div>
@@ -150,3 +167,8 @@
   </div>
 </div>
   </div>
+<app-work-experience-form [visible]="isVisible" (visibleChange)="hidePopUp()"></app-work-experience-form>
+<button *ngIf="showButton" (click)="scrollToTop()" class="btn btn-primary btn-lg scroll-button">
+  Scroll to Top   <i class="fa fa-angle-up"></i>
+
+</button>

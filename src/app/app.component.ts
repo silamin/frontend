@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import {FireService} from "./fire.service";
+import {ModalServiceService} from "./services/modal-service.service";
 
 @Component({
   selector: 'app-root',
@@ -7,7 +8,7 @@ import {FireService} from "./fire.service";
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  constructor(public fireService: FireService) {
+  constructor(public modalService: ModalServiceService) {
   }
   sendThisMessage: any;
   userName: string = '';

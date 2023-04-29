@@ -1,131 +1,109 @@
-<div class="container">
-  <div class=" text-center mt-5 ">
-
-    <h1 >Create a job form</h1>
-
-
-  </div>
-
-
-  <div class="row" style="padding-bottom: 3rem">
-    <div class="col-lg-7 mx-auto">
-      <div class="card mt-2 mx-auto p-4 bg-light">
-        <div class="card-body bg-light">
-
-          <div class = "container">
-            <form id="contact-form" role="form">
-
-
-
-              <div class="controls">
-                <div class="row">
-                  <div class="col-12">
-                    <label>Job title</label>
-                    <input type="text" name="name" class="form-control" placeholder="Please enter a job title" required="required" data-error="Firstname is required.">
-                  </div>
-
-
-                </div>
-
-                <div class="row">
-                  <div class="col-md-6">
-                    <div class="form-group">
-                      <label for="form_name">Workplace *</label>
-                      <input id="form_name" type="text" name="name" class="form-control" placeholder="Please enter your firstname *" required="required" data-error="Firstname is required.">
-
-                    </div>
-                  </div>
-                  <div class="col-md-6">
-                    <div class="form-group">
-                      <label for="form_need">Type of work</label>
-                      <select id="form_need" name="need" class="form-control" required="required" data-error="Please specify your need.">
-                        <option value="" selected disabled>--Select Your Issue--</option>
-                        <option >Remote</option>
-                        <option >On-site</option>
-                        <option >Hybrid</option>
-
-                      </select>
-
-                    </div>
-                  </div>
-
-                <div class="row" style="padding-right: 0">
-                  <div class="col-md-6">
-                    <div class="form-group">
-                      <div class="datepicker">
-                        <label for="example">Starting date</label>
-                        <input style="width: 100%" placeholder="Select date" type="date" id="example" class="form-control">
-                      </div>                    </div>
-                  </div>
-                  <div class="col-md-6" style="padding-right: 0">
-                    <div class="form-group">
-                      <label >Deadline for application</label>
-                      <input style="width: 100%" placeholder="Select date" type="date" id="example" class="form-control">
-                    </div>
-                  </div>
-                </div>
-                </div>
-                <div class="row">
-                  <div class="col-md-12">
-                    <div class="form-group">
-                      <label for="form_message">Job description</label>
-                      <textarea id="form_message" name="message" class="form-control" placeholder="Write the job description." rows="4" required="required" data-error="Please, leave us a message."></textarea
-                      >
-                    </div>
-
-                  </div>
-                  </div>
-
-                <div class="row">
-                  <div class="col-md-12">
-                    <div class="form-group">
-                      <label for="form_message">Job Responsibilities</label>
-                      <textarea id="form_message" name="message" class="form-control" placeholder="Write the job description." rows="4" required="required" data-error="Please, leave us a message."></textarea
-                      >
-                    </div>
-
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col-md-12">
-                    <div class="form-group">
-                      <label for="form_message">Background & Skills</label>
-                      <textarea id="form_message" name="message" class="form-control" placeholder="Write the job description." rows="4" required="required" data-error="Please, leave us a message."></textarea
-                      >
-                    </div>
-
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col-md-12">
-                    <div class="form-group">
-                      <label for="form_message">What you will get</label>
-                      <textarea id="form_message" name="message" class="form-control" placeholder="Write the job description." rows="4" required="required" data-error="Please, leave us a message."></textarea
-                      >
-                    </div>
-
-                  </div>
-                </div>
-                  <div class="col-12 my-3 w-100">
-
-                    <input type="submit" class="btn btn-success btn-send  pt-2 btn-block
-                            " value="Submit form" style="width: 100%" >
-
-                  </div>
-
-
-
-              </div>
-            </form>
-          </div>
-        </div>
-
-
+<div [hidden]="!visible" class="popup" (click)="close()">
+  <div class="modal-dialog modal-lg w-100" (click)="$event.stopPropagation()">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Create a job</h5>
+        <button type="button" class="btn-close" (click)="close()"></button>
       </div>
-      <!-- /.8 -->
+      <div class="modal-body">
+        <form [formGroup]="jobForm" (ngSubmit)="submitJobForm()">
+          <div class="row">
+            <div class="col-md-12">
+              <div class="form-group">
+                <label for="jobTitle">Job title *</label>
+                <input formControlName="jobTitle" type="text" id="jobTitle" class="form-control"
+                       placeholder="Please enter a job title" required>
+              </div>
+            </div>
+          </div>
 
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="workplace">Workplace *</label>
+                <input formControlName="workplace" type="text" id="workplace" class="form-control"
+                       placeholder="Please enter your workplace" required>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="workType">Type of work</label>
+                <select formControlName="workType" id="workType" class="form-control" required>
+                  <option value="" selected disabled>--Select Your Issue--</option>
+                  <option>Remote</option>
+                  <option>On-site</option>
+                  <option>Hybrid</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <div class="datepicker">
+                  <label for="startDate">Starting date</label>
+                  <input formControlName="startDate" type="date" id="startDate" class="form-control"
+                         placeholder="Select date">
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="deadline">Deadline for application</label>
+                <input formControlName="deadline" type="date" id="deadline" class="form-control"
+                       placeholder="Select date">
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-12">
+              <div class="form-group">
+                <label for="jobDescription">Job description</label>
+                <textarea formControlName="jobDescription" id="jobDescription" class="form-control"
+                          placeholder="Write the job description." rows="4" required></textarea>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-12">
+              <div class="form-group">
+                <label for="jobResponsibilities">Job Responsibilities</label>
+                <textarea formControlName="jobResponsibilities" id="jobResponsibilities" class="form-control"
+                          placeholder="Write the job responsibilities." rows="4" required></textarea>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-12">
+              <div class="form-group">
+                <label for="backgroundSkills">Background & Skills</label>
+                <textarea formControlName="backgroundSkills" id="backgroundSkills" class="form-control"
+                          placeholder="Write the required background and skills." rows="4" required></textarea>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-12">
+              <div class="form-group">
+                <label for="jobBenefits">What you will get</label>
+                <textarea formControlName="jobBenefits" id="jobBenefits" class="form-control"
+                          placeholder="Write the job description." rows="4" required></textarea>
+              </div>
+
+            </div>
+          </div>
+          <div class="col-12 my-3 w-100">
+
+            <input type="submit" class="btn btn-success btn-send  pt-2 btn-block" value="Submit form" style="width: 100%">
+          </div>
+
+        </form>
+      </div>
     </div>
-    <!-- /.row-->
-
   </div>
 </div>
