@@ -4,7 +4,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppComponent } from './app.component';
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import { SignInComponent } from './pages/sign-in/sign-in.component';
-import {RouterModule, RouterOutlet} from "@angular/router";
+import {RouterModule, Routes} from "@angular/router";
 import { NavigationBarComponent } from './components/navigation-bar/navigation-bar.component';
 import { MainPageComponent } from './pages/main-page/main-page.component';
 import { CompanyPageComponent } from './pages/company-page/company-page.component';
@@ -18,9 +18,14 @@ import { DatePickerComponent } from './components/date-picker/date-picker.compon
 import { CompanyMainPageComponent } from './pages/company-main-page/company-main-page.component';
 import { WorkExperienceFormComponent } from './components/work-experience-form/work-experience-form.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { SkillFormComponent } from './components/skill-form/skill-form.component'; // import FontAwesomeModule
+import { SkillFormComponent } from './components/skill-form/skill-form.component';
+import { FilterCandidatesComponent } from './components/filter-candidates/filter-candidates.component'; // import FontAwesomeModule
 
-
+const routes: Routes = [
+  { path: '', component: SignInComponent },
+  { path: 'company-main-page', component: CompanyMainPageComponent },
+  {path: 'user-main-page', component: MainPageComponent}
+];
 
 @NgModule({
   declarations: [
@@ -38,7 +43,8 @@ import { SkillFormComponent } from './components/skill-form/skill-form.component
     DatePickerComponent,
     CompanyMainPageComponent,
     WorkExperienceFormComponent,
-    SkillFormComponent
+    SkillFormComponent,
+    FilterCandidatesComponent
   ],
   imports: [
     BrowserModule,

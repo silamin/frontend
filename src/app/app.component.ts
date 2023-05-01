@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
-import {FireService} from "./fire.service";
-import {ModalServiceService} from "./services/modal-service.service";
+import {RouterOutlet} from "@angular/router";
 
 @Component({
   selector: 'app-root',
@@ -8,9 +7,6 @@ import {ModalServiceService} from "./services/modal-service.service";
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  constructor(public modalService: ModalServiceService) {
+  constructor(public router: RouterOutlet) {
   }
-  sendThisMessage: any;
-  userName: string = '';
-  password: string = '';
 }

@@ -1,0 +1,12 @@
+.dropdown {
+  position: absolute;
+  z-index: 1;
+  .card {
+    margin-bottom: 0;
+  }
+}
+
+.card-header {
+  background-color: #f8f9fa;
+  padding: 1rem;
+}
