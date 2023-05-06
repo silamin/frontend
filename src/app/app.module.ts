@@ -19,7 +19,10 @@ import { CompanyMainPageComponent } from './pages/company-main-page/company-main
 import { WorkExperienceFormComponent } from './components/work-experience-form/work-experience-form.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { SkillFormComponent } from './components/skill-form/skill-form.component';
-import { FilterCandidatesComponent } from './components/filter-candidates/filter-candidates.component'; // import FontAwesomeModule
+import { FilterCandidatesComponent } from './components/filter-candidates/filter-candidates.component';
+import { AppPaginationComponent } from './components/app-pagination/app-pagination.component';
+import { UserProfileComponent } from './pages/user-profile/user-profile.component';
+import { EducationFormComponent } from './components/education-form/education-form.component'; // import FontAwesomeModule
 
 const routes: Routes = [
   { path: '', component: SignInComponent },
@@ -44,12 +47,15 @@ const routes: Routes = [
     CompanyMainPageComponent,
     WorkExperienceFormComponent,
     SkillFormComponent,
-    FilterCandidatesComponent
+    FilterCandidatesComponent,
+    AppPaginationComponent,
+    UserProfileComponent,
+    EducationFormComponent
   ],
   imports: [
     BrowserModule,
     FormsModule,
-    RouterModule.forRoot([]),
+    RouterModule.forRoot(routes), // <-- add RouterModule here
     FontAwesomeModule,
     ReactiveFormsModule // add this line to import ReactiveFormsModule
 

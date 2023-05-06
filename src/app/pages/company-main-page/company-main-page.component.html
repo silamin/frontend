@@ -1,11 +1,16 @@
-<app-navigation-bar></app-navigation-bar>
+<app-navigation-bar [navItems]="navItems"></app-navigation-bar>
 <div class="container mt-4">
   <div class="row">
     <div class="col">
-      <div class="card mb-4" *ngFor="let job of jobs; let jobIndex = index">
-        <div class="card-header">
-          <h5 class="card-title">{{ job.title }}</h5>
-          <h6 class="card-subtitle mb-2 text-muted">{{ job.company }}</h6>
+      <div class="card mb-4" *ngFor="let job of paginatedJobs; let jobIndex = index">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <div>
+            <h5 class="card-title">{{ job.title }}</h5>
+            <h6 class="card-subtitle mb-2 text-muted">{{ job.company }}</h6>
+          </div>
+          <button class="btn btn-primary float-right btn-danger"><i class="fa fa-trash"></i> Delete</button>
+
+
         </div>
         <div class="card-body">
           <p class="card-text">{{ job.description }}</p>
@@ -35,6 +40,11 @@
           </div>
         </div>
       </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col d-flex justify-content-end">
+      <app-app-pagination [currentPage]="currentPage" [itemsPerPage]="itemsPerPage" [totalItems]="jobs.length" (pageChanged)="onPageChanged($event)"></app-app-pagination>
     </div>
   </div>
 </div>

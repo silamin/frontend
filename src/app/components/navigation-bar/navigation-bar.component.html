@@ -5,24 +5,15 @@
       <span class="navbar-toggler-icon"></span>
     </button>
 
-    <div class=" collapse navbar-collapse" id="navbarNavDropdown">
-      <ul class="navbar-nav ms-auto ">
-        <li class="nav-item">
-          <a class="nav-link mx-2 active" aria-current="page" href="#">Home</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link mx-2" href="#">Liked jobs <i class="fa fa-heart"></i></a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link mx-2" href="#">Result <i class="fa fa-list-alt"></i></a>
-        </li>
-        <li class="nav-item">
-        <a class="nav-link mx-2" href="#">Messages <i class="fa fa-envelope"></i></a>
-      </li>
-        <li class="nav-item">
-          <a class="nav-link mx-2" href="#">Log out <i class="fa fa-sign-out-alt"></i></a>
+    <div class="collapse navbar-collapse" id="navbarNavDropdown">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item" *ngFor="let item of navItems">
+          <a class="nav-link mx-2" [ngClass]="{'active': item.active}" (click)="handleIconClicked(item.title)">
+            {{ item.title }} <i *ngIf="item.icon" class="fa" [ngClass]="item.icon"></i>
+          </a>
         </li>
       </ul>
     </div>
   </div>
 </nav>
+<app-job-form [visible]="jobPopupVisible" (visibleChange)="hideJobPopUp()" [isDisplay]="isDisplay"></app-job-form>

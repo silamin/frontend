@@ -9,8 +9,10 @@ import {FormBuilder, FormGroup, Validators} from "@angular/forms";
   styleUrls: ['./job-form.component.scss'],
 })
 export class JobFormComponent{
-  @Input() visible: boolean=false;
+  @Input() visible: boolean = false;
   @Output() visibleChange: EventEmitter<boolean> = new EventEmitter<boolean>();
+  @Input() isDisplay = false;
+
   jobForm: FormGroup;
 
   close() {

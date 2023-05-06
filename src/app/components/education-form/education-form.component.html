@@ -1,0 +1,49 @@
+<div [hidden]="!visible" class="popup" (click)="close()">
+  <div class="modal-dialog modal-lg w-100" (click)="$event.stopPropagation()">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Education Experience</h5>
+        <button type="button" class="btn-close" (click)="close()"></button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="educationForm" (ngSubmit)="onSubmit()">
+          <div class="mb-2">
+            <label for="school" class="form-label">School</label>
+            <input type="text" class="form-control" id="school" placeholder="School" formControlName="school">
+          </div>
+          <div class="mb-2">
+            <label for="degree" class="form-label">Degree</label>
+            <input type="text" class="form-control" id="degree" placeholder="Degree" formControlName="degree">
+          </div>
+          <div class="mb-2">
+            <label for="field-of-study" class="form-label">Field of Study</label>
+            <input type="text" class="form-control" id="field-of-study" placeholder="Field of Study" formControlName="fieldOfStudy">
+          </div>
+          <div class="row mb-2">
+            <div class="col">
+              <label for="start-date" class="form-label">Start Date</label>
+              <input type="date" class="form-control" id="start-date" formControlName="startDate">
+            </div>
+            <div class="col">
+              <label for="end-date" class="form-label">End Date</label>
+              <input type="date" class="form-control" id="end-date" formControlName="endDate">
+            </div>
+          </div>
+          <div class="mb-2">
+            <label for="grade" class="form-label">Grade</label>
+            <input type="text" class="form-control" id="grade" placeholder="Grade" formControlName="grade">
+          </div>
+          <div class="mb-2">
+            <label for="activities-societies" class="form-label">Activities and Societies</label>
+            <textarea class="form-control" id="activities-societies" rows="2" placeholder="Activities and Societies" formControlName="activitiesSocieties"></textarea>
+          </div>
+          <div class="mb-2">
+            <label for="description" class="form-label">Description</label>
+            <textarea class="form-control" id="description" rows="2" placeholder="Description" formControlName="description"></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary w-100">Submit</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
