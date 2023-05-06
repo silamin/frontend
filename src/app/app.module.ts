@@ -22,12 +22,17 @@ import { SkillFormComponent } from './components/skill-form/skill-form.component
 import { FilterCandidatesComponent } from './components/filter-candidates/filter-candidates.component';
 import { AppPaginationComponent } from './components/app-pagination/app-pagination.component';
 import { UserProfileComponent } from './pages/user-profile/user-profile.component';
-import { EducationFormComponent } from './components/education-form/education-form.component'; // import FontAwesomeModule
+import { EducationFormComponent } from './components/education-form/education-form.component';
+import { LikesJobsComponent } from './pages/likes-jobs/likes-jobs.component';
+import { ChatComponent } from './pages/chat/chat.component'; // import FontAwesomeModule
 
 const routes: Routes = [
   { path: '', component: SignInComponent },
   { path: 'company-main-page', component: CompanyMainPageComponent },
-  {path: 'user-main-page', component: MainPageComponent}
+  {path: 'user-main-page', component: MainPageComponent},
+  {path:'user-profile', component: UserProfileComponent},
+  {path:'liked-jobs', component: LikesJobsComponent},
+  {path: 'messages', component: ChatComponent}
 ];
 
 @NgModule({
@@ -50,7 +55,9 @@ const routes: Routes = [
     FilterCandidatesComponent,
     AppPaginationComponent,
     UserProfileComponent,
-    EducationFormComponent
+    EducationFormComponent,
+    LikesJobsComponent,
+    ChatComponent
   ],
   imports: [
     BrowserModule,

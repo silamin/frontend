@@ -1,0 +1,27 @@
+<app-navigation-bar [navItems]="navItems" [showSearchBar]="true"></app-navigation-bar>
+<div class="container my-2">
+  <div class="row">
+    <div *ngFor="let job of likedJobs" class="col-md-4">
+      <div class="card mb-4 job-container">
+        <div class="card-body">
+          <h5 class="card-title">{{job.title}}</h5>
+          <div class="text-container">
+            <p class="card-text">{{job.description}}</p>
+          </div>
+          <div class="card-footer buttons-container">
+          <div class="d-flex justify-content-between mt-3">
+            <button (click)="dislike(job)" class="btn btn-outline-danger">Dislike</button>
+            <button (click)="showMore(job)" class="btn btn-outline-primary">Show More</button>
+            <button (click)="applyNow(job)" class="btn btn-outline-success">Apply Now</button>
+          </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row my-2">
+    <div class="col d-flex justify-content-end">
+      <app-app-pagination *ngIf="likedJobs.length > 2" [currentPage]="currentPage" [itemsPerPage]="8" [totalItems]="likedJobs.length" (pageChanged)="onPageChanged($event)"></app-app-pagination>
+    </div>
+  </div>
+</div>

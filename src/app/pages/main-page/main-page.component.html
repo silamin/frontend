@@ -1,9 +1,9 @@
-<app-navigation-bar></app-navigation-bar>
+<app-navigation-bar [navItems]="navItems" [showSearchBar]="true"></app-navigation-bar>
 <div class="container my-2">
   <div class="row">
     <div class="col-md-4">
       <div class="list-group">
-        <a href="#" *ngFor="let job of jobs" class="list-group-item list-group-item-action" (click)="selectJob(job)">
+        <a *ngFor="let job of jobs" class="list-group-item list-group-item-action" (click)="selectJob(job)">
           <div class="d-flex w-100 justify-content-between">
             <h5 class="mb-1">{{ job.title }}</h5>
           </div>
@@ -12,7 +12,12 @@
       </div>
     </div>
     <div class="col-md-8 list-group-item">
-      <app-job-form [visible]="jobPopupVisible" (visibleChange)="hideJobPopUp()" [isDisplay]="isDisplay"></app-job-form>
+      <app-job-form [isPopUp]="false" [visible]="jobPopupVisible" (visibleChange)="hideJobPopUp()" [isDisplay]="isDisplay"></app-job-form>
     </div>
   </div>
+    <div class="row my-2">
+      <div class="col d-flex justify-content-end">
+        <app-app-pagination *ngIf="jobs.length > 8" [currentPage]="currentPage" [itemsPerPage]="8" [totalItems]="jobs.length" (pageChanged)="onPageChanged($event)"></app-app-pagination>
+      </div>
+    </div>
 </div>

@@ -14,6 +14,7 @@ export class JobFormComponent{
   @Input() isDisplay = false;
 
   jobForm: FormGroup;
+  @Input() isPopUp: boolean = false;
 
   close() {
     this.visible = false;

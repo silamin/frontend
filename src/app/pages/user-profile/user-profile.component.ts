@@ -11,6 +11,14 @@ export class UserProfileComponent implements OnInit{
   isDisplay = false;
   isWorkExperienceFormVisible = false;
   isEducationFormVisible = false;
+  navItems = [
+    { title: 'Home', href: '', icon: 'fa-home', active: true },
+    { title: 'Profile', href: '', icon: 'fa-user' },
+    { title: 'Liked jobs', href: '', icon: 'fa-heart' },
+    { title: 'Messages', href: '', icon: 'fa-envelope' },
+    { title: 'Log out', href: '', icon: 'fa-sign-out-alt' },
+
+  ];
 
 
   hidePopUp() {

@@ -1,0 +1,19 @@
+.search-text {
+  margin-right: 8px;
+}
+.nav-item-content {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.nav-item-content > span {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.nav-item-content > i {
+  display: inline-block;
+  vertical-align: middle;
+  margin-left: 5px; /* add some space between the text and icon */
+}
+

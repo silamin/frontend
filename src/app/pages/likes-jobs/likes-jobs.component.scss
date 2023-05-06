@@ -1,0 +1,26 @@
+.job-container {
+  background-color: #f8f9fa;
+  border-radius: 5px;
+  padding: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+  overflow-x: auto;
+}
+
+.card {
+  height: 328px; /* Define the card height */
+}
+
+.text-container {
+  overflow-y: auto; /* Enable scrolling if content overflows on the y-axis */
+  max-height: 150px; /* Set a maximum height for the text container */
+}
+
+.text-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+.text-container::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+}

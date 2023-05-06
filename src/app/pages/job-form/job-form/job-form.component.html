@@ -1,4 +1,4 @@
-<div [hidden]="!visible" class="popup" (click)="close()">
+<div [hidden]="!visible" [ngClass]="{'popup': isPopUp}" class="popup" (click)="close()">
   <div class="modal-dialog modal-lg w-100" (click)="$event.stopPropagation()">
     <div class="modal-content">
       <div class="modal-header">
@@ -6,7 +6,7 @@
         <h5 *ngIf="isDisplay" class="modal-title">Apply to a job</h5>
         <button type="button" class="btn-close" (click)="close()"></button>
       </div>
-      <div class="modal-body" style="height: 90vh">
+      <div class="modal-body">
         <form [formGroup]="jobForm" (ngSubmit)="submitJobForm()">
           <div class="row">
             <div class="col-md-12">
