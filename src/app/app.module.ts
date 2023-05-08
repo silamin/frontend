@@ -24,16 +24,28 @@ import { AppPaginationComponent } from './components/app-pagination/app-paginati
 import { UserProfileComponent } from './pages/user-profile/user-profile.component';
 import { EducationFormComponent } from './components/education-form/education-form.component';
 import { LikesJobsComponent } from './pages/likes-jobs/likes-jobs.component';
-import { ChatComponent } from './pages/chat/chat.component'; // import FontAwesomeModule
+import { ChatComponent } from './pages/chat/chat.component';
+import {AngularFireFunctionsModule} from "@angular/fire/compat/functions";
+import {AngularFireAuthModule} from "@angular/fire/compat/auth";
+import {AngularFireModule} from "@angular/fire/compat"; // import FontAwesomeModule
 
 const routes: Routes = [
   { path: '', component: SignInComponent },
   { path: 'company-main-page', component: CompanyMainPageComponent },
   {path: 'user-main-page', component: MainPageComponent},
   {path:'user-profile', component: UserProfileComponent},
-  {path:'liked-jobs', component: LikesJobsComponent},
+  {path:'liked-jobs/:userId', component: LikesJobsComponent},
   {path: 'messages', component: ChatComponent}
 ];
+const firebaseConfig = {
+  apiKey : "AIzaSyD-UXdqY60rn6MigvTq9jsU6dnDNI9jPLk" ,
+  authDomain : "silamin-7bbfd.firebaseapp.com" ,
+  projectId : "silamin-7bbfd" ,
+  storageBucket : "silamin-7bbfd.appspot.com" ,
+  messagingSenderId : "365220988857" ,
+  appId : "1:365220988857:web:f8fbe2e3ad8efd3b13d868" ,
+  measurementId : "G-394246XLDF"
+};
 
 @NgModule({
   declarations: [
@@ -62,10 +74,14 @@ const routes: Routes = [
   imports: [
     BrowserModule,
     FormsModule,
-    RouterModule.forRoot(routes), // <-- add RouterModule here
+    RouterModule.forRoot(routes),
     FontAwesomeModule,
-    ReactiveFormsModule // add this line to import ReactiveFormsModule
+    ReactiveFormsModule,
 
+    // Add AngularFire and Firebase configurations
+    AngularFireModule.initializeApp(firebaseConfig),
+    AngularFireAuthModule,
+    AngularFireFunctionsModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

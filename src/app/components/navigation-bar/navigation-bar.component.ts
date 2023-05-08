@@ -1,12 +1,14 @@
-import {Component, Input} from '@angular/core';
-import {Router} from "@angular/router";
+import {Component, Input, OnInit} from '@angular/core';
+import {ActivatedRoute, NavigationEnd, Router} from "@angular/router";
+import {filter} from "rxjs";
+import {NavBarService} from "../../services/nav-bar.service";
 
 @Component({
   selector: 'app-navigation-bar',
   templateUrl: './navigation-bar.component.html',
   styleUrls: ['./navigation-bar.component.scss']
 })
-export class NavigationBarComponent {
+export class NavigationBarComponent implements OnInit{
   @Input() navItems: any[] = [];
   jobPopupVisible = false;
   isDisplay = false;
@@ -14,7 +16,8 @@ export class NavigationBarComponent {
   isNavOpen = false;
   activeNavItemIndex: number = 0;
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private navBarService: NavBarService) { }
+
 
   handleIconClicked(title: string){
     console.log(this.navItems.findIndex(item => item.title === title))
@@ -26,6 +29,7 @@ export class NavigationBarComponent {
       case 'Messages': this.router.navigate(['/messages']);break;
       case 'Home': this.router.navigate(['/user-main-page'])
     }
+    this.navBarService.setActiveNavItemIndex(this.activeNavItemIndex);
   }
   handleNavToggle() {
     this.isNavOpen = !this.isNavOpen;
@@ -33,5 +37,11 @@ export class NavigationBarComponent {
 
   hideJobPopUp() {
 
+  }
+
+  ngOnInit(): void {
+    this.navBarService.activeNavItemIndex$.subscribe(index => {
+      this.activeNavItemIndex = index;
+    });
   }
 }
