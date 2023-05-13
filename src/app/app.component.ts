@@ -1,14 +1,30 @@
 import {Component, OnInit} from '@angular/core';
 import {RouterOutlet} from "@angular/router";
 import {AuthServiceService} from "./services/auth-service.service";
+import {AngularFireAuth} from "@angular/fire/compat/auth";
+import {UserStore} from "./stores/UserStore";
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent{
-    constructor(authService: AuthServiceService) {
-      authService.login('chafik@easv.dk','e50afeed0');
+export class AppComponent implements OnInit{
+    constructor(authService: AuthServiceService, private afAuth: AngularFireAuth, private userStore: UserStore) {
+      authService.login('loulou@easv.dk','e50afeed0');
     }
+
+  ngOnInit(): void {
+    this.afAuth.authState.subscribe(user => {
+      if (user) {
+        // User is signed in
+        const userId = user.uid;
+        this.userStore.setUser(user);
+        console.log('User ID:', userId);
+      } else {
+        // User is signed out
+        console.log('No user is signed in.');
+      }
+    });
+  }
 }

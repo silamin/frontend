@@ -24,7 +24,7 @@ export class CompanyMainPageComponent {
   jobs = [
     {
       id: 1,
-      title: 'Software Engineer',
+      jobTitle: 'Software Engineer',
       company: 'ABC Inc.',
       description: 'We are seeking a highly skilled software engineer to join our team. The ideal candidate will have experience with Angular and Node.js.',
       candidates: [
@@ -44,7 +44,7 @@ export class CompanyMainPageComponent {
     },
     {
       id: 2,
-      title: 'Marketing Manager',
+      jobTitle: 'Marketing Manager',
       company: 'XYZ Corp.',
       description: 'We are looking for an experienced marketing manager to lead our team. The ideal candidate will have a proven track record of driving successful campaigns.',
       candidates: [
@@ -64,7 +64,7 @@ export class CompanyMainPageComponent {
     },
     {
       id: 3,
-      title: 'Sales Representative',
+      jobTitle: 'Sales Representative',
       company: '123 Co.',
       description: 'We are seeking a driven sales representative to help us grow our business. The ideal candidate will have excellent communication skills and a proven track record of hitting sales targets.',
       candidates: [
@@ -84,7 +84,7 @@ export class CompanyMainPageComponent {
     },
     {
       id: 1,
-      title: 'Software Engineer',
+      jobTitle: 'Software Engineer',
       company: 'ABC Inc.',
       description: 'We are seeking a highly skilled software engineer to join our team. The ideal candidate will have experience with Angular and Node.js.',
       candidates: [
@@ -104,7 +104,7 @@ export class CompanyMainPageComponent {
     },
     {
       id: 2,
-      title: 'Marketing Manager',
+      jobTitle: 'Marketing Manager',
       company: 'XYZ Corp.',
       description: 'We are looking for an experienced marketing manager to lead our team. The ideal candidate will have a proven track record of driving successful campaigns.',
       candidates: [
@@ -124,7 +124,7 @@ export class CompanyMainPageComponent {
     },
     {
       id: 3,
-      title: 'Sales Representative',
+      jobTitle: 'Sales Representative',
       company: '123 Co.',
       description: 'We are seeking a driven sales representative to help us grow our business. The ideal candidate will have excellent communication skills and a proven track record of hitting sales targets.',
       candidates: [
@@ -146,10 +146,10 @@ export class CompanyMainPageComponent {
 
   selectedJob: any = null;
   navItems = [
-    { title: 'Home', href: '', icon: 'fa-home', active: true },
-    { title: 'Post a job', href: '', icon: 'fa-plus' },
-    { title: 'Messages', href: '', icon: 'fa-envelope' },
-    { title: 'Log out', href: '', icon: 'fa-sign-out-alt' },
+    { jobTitle: 'Home', href: '', icon: 'fa-home', active: true },
+    { jobTitle: 'Post a job', href: '', icon: 'fa-plus' },
+    { jobTitle: 'Messages', href: '', icon: 'fa-envelope' },
+    { jobTitle: 'Log out', href: '', icon: 'fa-sign-out-alt' },
   ];
   jobPopupVisible = false;
   isDisplay = false;

@@ -5,12 +5,12 @@
       <div class="card mb-4">
         <div class="row g-0">
           <div class="col-md-4">
-            <img src="{{ user.profilePicture }}" class="img-fluid rounded-start" alt="Profile Picture">
+            <img src="" class="img-fluid rounded-start" alt="Profile Picture">
           </div>
           <div class="col-md-8">
             <div class="card-body">
-              <h5 class="card-title">{{ user.name }}</h5>
-              <p class="card-text">{{ user.description }}</p>
+              <h5 class="card-title">silamin</h5>
+              <p class="card-text">no description</p>
             </div>
           </div>
         </div>
@@ -19,7 +19,7 @@
   </div>
 
   <div class="row">
-    <ng-container *ngFor="let section of user.sections">
+    <ng-container *ngFor="let section of sections">
       <div class="col-12">
         <div class="card mb-4">
           <div class="card-header d-flex justify-content-between">
@@ -30,33 +30,44 @@
                 <button class="btn btn-sm btn-primary mx-1"><i class="fa fa-plus"></i></button>
               </ng-container>
             </div>
-
           </div>
           <ul class="list-group list-group-flush">
-            <ng-container *ngFor="let item of section.items | slice:0:3">
-              <li class="list-group-item">{{ item }}</li>
-            </ng-container>
-            <ng-container *ngIf="section.items.length > 3">
-              <li class="list-group-item" *ngIf="showMore[section.title] !== true">
-                <div class="d-flex justify-content-center">
-                  <button class="btn btn-primary w-100" (click)="showMoreItems(section.title)">Show More ({{ section.items.length - 3 }} left)</button>
-                </div>
-              </li>
-              <ng-container *ngIf="showMore[section.title] === true">
-                <li class="list-group-item" *ngFor="let item of section.items | slice:3">{{ item }}</li>
-                <li class="list-group-item">
+            <!-- Your existing code here -->
+
+            <ng-container *ngIf="section.items | async as items">
+              <ng-container *ngFor="let item of getSlicedItems(items) | async">
+                <li class="list-group-item">{{ item }}</li>
+              </ng-container>
+
+              <ng-container *ngIf="items.length > 3">
+                <li class="list-group-item" *ngIf="showMore[section.title] !== true">
                   <div class="d-flex justify-content-center">
-                    <button class="btn btn-secondary w-100" (click)="showLessItems(section.title)">Show Less</button>
+                    <button class="btn btn-primary w-100" (click)="showMoreItems(section.title)">
+                      Show More ({{ items.length - 3 }} left)
+                    </button>
                   </div>
                 </li>
+                <ng-container *ngIf="showMore[section.title] === true">
+                  <li class="list-group-item" *ngFor="let item of items | slice:3">{{ item }}</li>
+                  <li class="list-group-item">
+                    <div class="d-flex justify-content-center">
+                      <button class="btn btn-secondary w-100" (click)="showLessItems(section.title)">Show Less</button>
+                    </div>
+                  </li>
+                </ng-container>
               </ng-container>
             </ng-container>
           </ul>
         </div>
       </div>
     </ng-container>
+
+
+
   </div>
 </div>
 <app-work-experience-form [visible]="isWorkExperienceFormVisible" (visibleChange)="hidePopUp()"></app-work-experience-form>
 <app-skill-form [visible]="isSkillFormVisible" (visibleChange)="hidePopUp()"></app-skill-form>
+<app-language-form [visible]="isLanguageFormVisible" (visibleChange)="hidePopUp()"></app-language-form>
+
 <app-education-form [visible]="isEducationFormVisible" (visibleChange)="hidePopUp()"></app-education-form>

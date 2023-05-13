@@ -1,5 +1,6 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {SkillsService} from "../../services/skills.service";
 
 @Component({
   selector: 'app-skill-form',
@@ -9,7 +10,7 @@ import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 export class SkillFormComponent{
   skillForm: FormGroup;
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, private skillsService: SkillsService) {
     this.skillForm = this.fb.group({
       skill: ['', Validators.required],
       rating: ['', Validators.required],
@@ -17,7 +18,10 @@ export class SkillFormComponent{
   }
 
   onSubmit() {
-    // handle form submission here
+   this.skillsService.addSkill('tTGtgSdVyQSwf8hBO3yUC1dcGBV2',{
+     rating: "devOps",
+     skill: "4"
+   })
   }
 
   @Input() visible: boolean=false;

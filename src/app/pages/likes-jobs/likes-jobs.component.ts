@@ -8,33 +8,33 @@ import { Component } from '@angular/core';
 export class LikesJobsComponent {
   likedJobs = [
     {
-      title: 'Job Title 1',
+      jobTitle: 'Job Title 1',
       description: 'Job Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.1',
       image: 'https://via.placeholder.com/150'
     },
     {
-      title: 'Job Title 1',
+      jobTitle: 'Job Title 1',
       description: 'Job Description 1',
       image: 'https://via.placeholder.com/150'
     },
     {
-      title: 'Job Title 1',
+      jobTitle: 'Job Title 1',
       description: 'Job Description 1',
       image: 'https://via.placeholder.com/150'
     },
     {
-      title: 'Job Title 1',
+      jobTitle: 'Job Title 1',
       description: 'Job Description 1',
       image: 'https://via.placeholder.com/150'
     }
     // ... other job objects
   ];
   navItems = [
-    { title: 'Home', href: '', icon: 'fa-home', active: true },
-    { title: 'Profile', href: '', icon: 'fa-user' },
-    { title: 'Liked jobs', href: '', icon: 'fa-heart' },
-    { title: 'Messages', href: '', icon: 'fa-envelope' },
-    { title: 'Log out', href: '', icon: 'fa-sign-out-alt' },
+    { jobTitle: 'Home', href: '', icon: 'fa-home', active: true },
+    { jobTitle: 'Profile', href: '', icon: 'fa-user' },
+    { jobTitle: 'Liked jobs', href: '', icon: 'fa-heart' },
+    { jobTitle: 'Messages', href: '', icon: 'fa-envelope' },
+    { jobTitle: 'Log out', href: '', icon: 'fa-sign-out-alt' },
 
   ];
   currentPage = 1;

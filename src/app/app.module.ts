@@ -27,7 +27,9 @@ import { LikesJobsComponent } from './pages/likes-jobs/likes-jobs.component';
 import { ChatComponent } from './pages/chat/chat.component';
 import {AngularFireFunctionsModule} from "@angular/fire/compat/functions";
 import {AngularFireAuthModule} from "@angular/fire/compat/auth";
-import {AngularFireModule} from "@angular/fire/compat"; // import FontAwesomeModule
+import {AngularFireModule} from "@angular/fire/compat";
+import {UserStore} from "./stores/UserStore";
+import { LanguageFormComponent } from './components/language-form/language-form.component'; // import FontAwesomeModule
 
 const routes: Routes = [
   { path: '', component: SignInComponent },
@@ -69,7 +71,8 @@ const firebaseConfig = {
     UserProfileComponent,
     EducationFormComponent,
     LikesJobsComponent,
-    ChatComponent
+    ChatComponent,
+    LanguageFormComponent
   ],
   imports: [
     BrowserModule,
@@ -83,7 +86,7 @@ const firebaseConfig = {
     AngularFireAuthModule,
     AngularFireFunctionsModule,
   ],
-  providers: [],
+  providers: [UserStore],
   bootstrap: [AppComponent],
 
 })

@@ -29,11 +29,11 @@ export class ChatComponent {
     { id: 3, title: 'Discussion 3' },
   ];
   navItems = [
-    { title: 'Home', href: '', icon: 'fa-home', active: true },
-    { title: 'Profile', href: '', icon: 'fa-user' },
-    { title: 'Liked jobs', href: '', icon: 'fa-heart' },
-    { title: 'Messages', href: '', icon: 'fa-envelope' },
-    { title: 'Log out', href: '', icon: 'fa-sign-out-alt' },
+    { jobTitle: 'Home', href: '', icon: 'fa-home', active: true },
+    { jobTitle: 'Profile', href: '', icon: 'fa-user' },
+    { jobTitle: 'Liked jobs', href: '', icon: 'fa-heart' },
+    { jobTitle: 'Messages', href: '', icon: 'fa-envelope' },
+    { jobTitle: 'Log out', href: '', icon: 'fa-sign-out-alt' },
 
   ];
   messages: Message[] = [
