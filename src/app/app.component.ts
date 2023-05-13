@@ -9,6 +9,6 @@ import {AuthServiceService} from "./services/auth-service.service";
 })
 export class AppComponent{
     constructor(authService: AuthServiceService) {
-      authService.register('loulou@easv.dk','e50afeed', false);
+      authService.login('chafik@easv.dk','e50afeed0');
     }
 }

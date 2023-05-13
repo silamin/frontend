@@ -8,24 +8,36 @@ import {AngularFireFunctions} from "@angular/fire/compat/functions";
 })
 export class AuthServiceService {
 
-  constructor(private afAuth: AngularFireAuth, private functions: AngularFireFunctions) {}
+  constructor(private afAuth: AngularFireAuth, private functions: AngularFireFunctions, private firestore: AngularFirestore) {}
 
   async setIsCompanyUser(uid: string, isCompanyUser: boolean): Promise<void> {
     const setIsCompanyUserCallable = this.functions.httpsCallable('setIsCompanyUser');
     try {
       await setIsCompanyUserCallable({ uid, isCompanyUser }).toPromise();
+      await this.addUserToFirestore(uid);  // Use uid directly here
     } catch (error) {
       console.error('Error setting isCompanyUser:', error);
       throw error;
     }
   }
-
+  async addUserToFirestore(uid: string): Promise<void> {
+    try {
+      await this.firestore.collection('users').add({
+        id: uid
+      });
+    } catch (error) {
+      console.error('Error adding user to Firestore:', error);
+      throw error;
+    }
+  }
   async register(email: string, password: string, isCompanyUser: boolean): Promise<void> {
     try {
-      const { user } = await this.afAuth.createUserWithEmailAndPassword(email, password);
+      const credential = await this.afAuth.createUserWithEmailAndPassword(email, password);
 
-      if (user) {
-        await this.setIsCompanyUser(user.uid, isCompanyUser);
+      if (credential.user) {
+        const uid = credential.user.uid; // Fetch uid from user object
+        //await this.setIsCompanyUser(uid, isCompanyUser);
+        await this.addUserToFirestore(uid);  // Use uid directly here
       }
     } catch (error: any) {
       console.error('Error during registration:', error);
@@ -34,7 +46,7 @@ export class AuthServiceService {
         alert('The email address is already in use by another account.');
       } else {
         alert('An error occurred during registration. Please try again later.');
-        throw error; // re-throw the error only if it is not of the 'auth/email-already-in-use' type
+        throw error;
       }
     }
   }
