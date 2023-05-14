@@ -12,6 +12,7 @@ import {UserStore} from "./stores/UserStore";
 export class AppComponent implements OnInit{
     constructor(authService: AuthServiceService, private afAuth: AngularFireAuth, private userStore: UserStore) {
       authService.login('loulou@easv.dk','e50afeed0');
+      //SWyg6mbbzeRrayewKprp2XaYhfm1 uid
     }
 
   ngOnInit(): void {

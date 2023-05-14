@@ -3,20 +3,22 @@
   <div class="row">
     <div class="col">
       <div class="card mb-4" *ngFor="let job of paginatedJobs; let jobIndex = index">
-        <div class="card-header d-flex justify-content-between align-items-center">
-          <div>
-            <h5 class="card-title">{{ job.title }}</h5>
-            <h6 class="card-subtitle mb-2 text-muted">{{ job.company }}</h6>
+        <div class="card-header d-flex align-items-center">
+          <div class="col-10">
+            <h5 class="card-title">{{ job.jobTitle }}</h5>
+            <h6 class="card-subtitle mb-2 text-muted">{{ job.jobDescription }}</h6>
           </div>
-          <button class="btn btn-primary float-right btn-danger"><i class="fa fa-trash"></i> Delete</button>
-
-
+          <div class="col-2 text-end d-flex">
+            <button class="btn btn-primary btn-light"><i class="fa fa-edit"></i> Edit</button>
+            <button class="btn btn-primary btn-danger"><i class="fa fa-trash"></i> Delete</button>
+          </div>
         </div>
+
         <div class="card-body">
           <p class="card-text">{{ job.description }}</p>
           <div class="table-responsive">
             <table class="table table-striped">
-              <thead>
+              <thead *ngIf="job.candidates && job.candidates.length > 0">
               <tr>
                 <th>Name</th>
                 <th>Experience</th>
@@ -26,15 +28,22 @@
               </tr>
               </thead>
               <tbody>
-              <tr *ngFor="let candidate of job.candidates; let rowIndex = index">
-                <td>{{ candidate.name }}</td>
-                <td>{{ candidate.experience }}</td>
-                <td>{{ candidate.summary }}</td>
-                <td>{{ candidate.education }}</td>
-                <td>
-                  <button class="btn btn-primary" (click)="showCandidates(jobIndex, rowIndex)">Select</button>
-                </td>
-              </tr>
+              <ng-container *ngIf="job.candidates && job.candidates.length > 0; else noCandidates">
+                <tr *ngFor="let candidate of job.candidates; let rowIndex = index">
+                  <td>{{ candidate.name }}</td>
+                  <td>{{ candidate.experience }}</td>
+                  <td>{{ candidate.summary }}</td>
+                  <td>{{ candidate.education }}</td>
+                  <td>
+                    <button class="btn btn-primary" (click)="showCandidates(jobIndex, rowIndex)">Select</button>
+                  </td>
+                </tr>
+              </ng-container>
+              <ng-template #noCandidates>
+                <tr>
+                  <td colspan="5">No candidates</td>
+                </tr>
+              </ng-template>
               </tbody>
             </table>
           </div>
@@ -44,7 +53,7 @@
   </div>
   <div class="row">
     <div class="col d-flex justify-content-end">
-      <app-app-pagination [currentPage]="currentPage" [itemsPerPage]="itemsPerPage" [totalItems]="jobs.length" (pageChanged)="onPageChanged($event)"></app-app-pagination>
+      <app-app-pagination [currentPage]="currentPage" [itemsPerPage]="itemsPerPage" [totalItems]="jobsToDisplay.length" (pageChanged)="onPageChanged($event)"></app-app-pagination>
     </div>
   </div>
 </div>
@@ -69,3 +78,4 @@
     </div>
   </div>
 </div>
+<app-job-form></app-job-form>

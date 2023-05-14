@@ -10,7 +10,20 @@
           <div class="col-md-8">
             <div class="card-body">
               <h5 class="card-title">silamin</h5>
-              <p class="card-text">no description</p>
+              <div class="card-text box position-relative">
+                <div *ngIf="!editMode">
+                  <p>{{ description }}</p>
+                  <button class="btn btn-link position-absolute top-0 end-0" (click)="editMode = true">
+                    <i class="fa fa-edit"></i>
+                  </button>
+                </div>
+                <div *ngIf="editMode">
+                  <textarea [(ngModel)]="description" class="form-control"></textarea>
+                  <button class="btn btn-link position-absolute top-0 end-0" (click)="editMode = false">
+                    <i class="fa fa-check"></i>
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -26,8 +39,7 @@
             {{ section.title }}
             <div>
               <ng-container *ngIf="!isDisplay">
-                <button class="btn btn-sm btn-primary mx-1" (click)="showPopUp(section.title)"><i class="fa fa-edit"></i></button>
-                <button class="btn btn-sm btn-primary mx-1"><i class="fa fa-plus"></i></button>
+                <button class="btn btn-sm btn-success mx-1" (click)="showPopUp(section.title)"><i class="fa fa-plus"></i></button>
               </ng-container>
             </div>
           </div>
@@ -36,8 +48,19 @@
 
             <ng-container *ngIf="section.items | async as items">
               <ng-container *ngFor="let item of getSlicedItems(items) | async">
-                <li class="list-group-item">{{ item }}</li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                  {{ item }}
+                  <div>
+                    <button class="btn btn-link text-bg-light" (click)="editItem(item)">
+                      <i class="fa fa-edit"></i>
+                    </button>
+                    <button class="btn btn-link text-danger" (click)="deleteItem(item)">
+                      <i class="fa fa-trash"></i>
+                    </button>
+                  </div>
+                </li>
               </ng-container>
+
 
               <ng-container *ngIf="items.length > 3">
                 <li class="list-group-item" *ngIf="showMore[section.title] !== true">

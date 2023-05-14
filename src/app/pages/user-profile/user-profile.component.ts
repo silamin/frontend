@@ -28,6 +28,8 @@ export class UserProfileComponent implements OnInit{
   isWorkExperienceFormVisible = false;
   isEducationFormVisible = false;
   isLanguageFormVisible = false;
+  description: string = 'no description';
+  editMode: boolean = false;
 
   navItems = [
     { jobTitle: 'Home', href: '', icon: 'fa-home', active: true },
@@ -94,4 +96,11 @@ export class UserProfileComponent implements OnInit{
     }
   }
 
+  editItem(item: any) {
+
+  }
+
+  deleteItem(item: any) {
+
+  }
 }

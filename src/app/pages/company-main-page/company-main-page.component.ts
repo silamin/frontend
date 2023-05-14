@@ -1,4 +1,5 @@
 import { Component } from "@angular/core";
+import {JobServiceService} from "../../services/job-service.service";
 
 @Component({
   selector: 'app-company-main-page',
@@ -6,13 +7,20 @@ import { Component } from "@angular/core";
   styleUrls: ['./company-main-page.component.scss'],
 })
 export class CompanyMainPageComponent {
+  constructor(private jobsService: JobServiceService) {
+    this.jobsTest= jobsService.getAllJobs('SWyg6mbbzeRrayewKprp2XaYhfm1');
+    this.jobsTest.subscribe(jobs => {
+      this.jobsToDisplay = jobs;
+    });  }
   itemsPerPage = 3;
   currentPage = 1;
+  jobsToDisplay: any[] = [];
+
 
   get paginatedJobs(): any[] {
     const startIndex = (this.currentPage - 1) * this.itemsPerPage;
     const endIndex = startIndex + this.itemsPerPage;
-    return this.jobs.slice(startIndex, endIndex);
+    return this.jobsToDisplay.slice(startIndex, endIndex);
   }
 
   onPageChanged(newPage: number): void {
@@ -20,6 +28,7 @@ export class CompanyMainPageComponent {
   }
   candidatesPosition: { top: string, left: string } = { top: '0', left: '0' };
   isVisible = false;
+  jobsTest;
 
   jobs = [
     {
@@ -146,10 +155,10 @@ export class CompanyMainPageComponent {
 
   selectedJob: any = null;
   navItems = [
-    { jobTitle: 'Home', href: '', icon: 'fa-home', active: true },
-    { jobTitle: 'Post a job', href: '', icon: 'fa-plus' },
-    { jobTitle: 'Messages', href: '', icon: 'fa-envelope' },
-    { jobTitle: 'Log out', href: '', icon: 'fa-sign-out-alt' },
+    { title: 'Home', href: '', icon: 'fa-home', active: true },
+    { title: 'Post a job', href: '', icon: 'fa-plus' },
+    { title: 'Messages', href: '', icon: 'fa-envelope' },
+    { title: 'Log out', href: '', icon: 'fa-sign-out-alt' },
   ];
   jobPopupVisible = false;
   isDisplay = false;
@@ -181,7 +190,6 @@ export class CompanyMainPageComponent {
       }
     }
     }
-
   closeCandidates() {
     this.selectedJob = null;
     this.isVisible = false;

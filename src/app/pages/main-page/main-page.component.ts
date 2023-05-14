@@ -1,5 +1,6 @@
 import {AfterViewInit, Component, ElementRef, HostListener, OnInit} from '@angular/core';
 import {faEdit, faSave} from '@fortawesome/free-solid-svg-icons';
+import {JobServiceService} from "../../services/job-service.service";
 
 @Component({
   selector: 'app-main-page',
@@ -23,22 +24,17 @@ export class MainPageComponent{
     { jobTitle: 'Log out', href: '', icon: 'fa-sign-out-alt' },
 
   ];
-  jobs = [
-    { jobTitle: 'Job Title 1', description: 'Job Description 1' },
-    { jobTitle: 'Job Title 2', description: 'Job Description 2' },
-    { jobTitle: 'Job Title 3', description: 'Job Description 3' },
-    { jobTitle: 'Job Title 4', description: 'Job Description 3' },
-    { jobTitle: 'Job Title 5', description: 'Job Description 3' },
-    { jobTitle: 'Job Title 6', description: 'Job Description 3' },
-    { jobTitle: 'Job Title 7', description: 'Job Description 3' },
-    { jobTitle: 'Job Title 8', description: 'Job Description 3' },
-    { jobTitle: 'Job Title 9', description: 'Job Description 3' }
-  ];
+  jobs;
   selectedJob = null;
   jobPopupVisible = false;
   isDisplay = true;
 
-  constructor() { }
+  constructor(private jobsService: JobServiceService) {
+    this.jobsService.getAllJobs().subscribe(jobs => {
+      this.jobs = jobs;
+      console.log(jobs);
+    });  }
+
 
   ngOnInit(): void {
   }
@@ -50,5 +46,10 @@ export class MainPageComponent{
 
   hideJobPopUp() {
     this.jobPopupVisible = false
+  }
+
+  onSelectedJobChange($event: any) {
+    this.selectedJob=$event;
+
   }
 }

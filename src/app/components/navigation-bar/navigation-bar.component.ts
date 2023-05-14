@@ -27,7 +27,8 @@ export class NavigationBarComponent implements OnInit{
       case 'Profile': this.router.navigate(['/user-profile']);break;
       case 'Liked jobs': this.router.navigate(['/liked-jobs']);break;
       case 'Messages': this.router.navigate(['/messages']);break;
-      case 'Home': this.router.navigate(['/user-main-page'])
+      case 'Home': this.router.navigate(['/user-main-page']);break;
+      case 'Post a job': this.jobPopupVisible = true;
     }
     this.navBarService.setActiveNavItemIndex(this.activeNavItemIndex);
   }

@@ -33,7 +33,6 @@ export class AuthServiceService {
     }
   }
 
-
   async login(email: string, password: string): Promise<void> {
     this.afAuth.idToken.subscribe((token) => console.log(token));
 

@@ -7,17 +7,17 @@
           <div class="d-flex w-100 justify-content-between">
             <h5 class="mb-1">{{ job.jobTitle }}</h5>
           </div>
-          <p class="mb-1">{{ job.description }}</p>
+          <p class="mb-1">{{ job.jobDescription }}</p>
         </a>
       </div>
     </div>
     <div class="col-md-8 list-group-item">
-      <app-job-form [isPopUp]="false" [visible]="jobPopupVisible" (visibleChange)="hideJobPopUp()" [isDisplay]="isDisplay"></app-job-form>
+      <app-job-form [isPopUp]="false" [visible]="jobPopupVisible" (visibleChange)="hideJobPopUp()" [isDisplay]="isDisplay" [selectedJob]="selectedJob" (selectedJobChange)="onSelectedJobChange($event)"></app-job-form>
     </div>
   </div>
     <div class="row my-2">
       <div class="col d-flex justify-content-end">
-        <app-app-pagination *ngIf="jobs.length > 8" [currentPage]="currentPage" [itemsPerPage]="8" [totalItems]="jobs.length" (pageChanged)="onPageChanged($event)"></app-app-pagination>
+        <app-app-pagination  *ngIf="jobs?.length > 8" [currentPage]="currentPage" [itemsPerPage]="8" [totalItems]="jobs.length" (pageChanged)="onPageChanged($event)"></app-app-pagination>
       </div>
     </div>
 </div>

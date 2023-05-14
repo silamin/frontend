@@ -1,3 +1,5 @@
+import {Validators} from "@angular/forms";
+
 export interface WorkExperienceFormDTO{
   companyName: string;
   currentlyWorkingHere: boolean;
@@ -25,4 +27,17 @@ export interface SkillDto{
 export interface LanguageDto{
   language: string;
   rating: string;
+}
+export interface  JobDto{
+  userId: string;
+  jobTitle: string,
+  workplace: string,
+  workType: string,
+  startDate: string,
+  deadline: string,
+  jobDescription: string,
+  jobResponsibilities: string,
+  backgroundSkills: string,
+  jobBenefits: string,
+  candidates?: string;
 }
