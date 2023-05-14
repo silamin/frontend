@@ -1,0 +1,93 @@
+<app-navigation-bar [isCompanyUser]="true"></app-navigation-bar>
+<div class="container mt-4">
+  <div *ngIf="userType === 'company'">
+    <h2>Selected Applicants</h2>
+    <div class="card mt-2" *ngFor="let application of applications">
+      <div class="card-header d-flex justify-content-between align-items-center" (click)="toggleDetails(application)">
+        <div class="d-flex align-items-center">
+          <img [src]="application.userPicture" class="rounded-circle mr-2" width="40" height="40">
+          <div>
+            <div class="mb-1">{{application.applicantName}}</div>
+            <div>{{application.position}}</div>
+          </div>
+        </div>
+        <div class="toggle-icon">
+          <i class="fas fa-chevron-down" [class.rotate]="application.showDetails"></i>
+        </div>
+      </div>
+      <div class="job-description-box">
+        <h5>Job Description</h5>
+        <div class="description-content">
+          <p>{{application.jobDescription}}</p>
+        </div>
+      </div>
+      <div class="card-body" [hidden]="!application.showDetails">
+        <div class="row">
+          <div class="col-md-6">
+            <h5>Contact Info</h5>
+            <p>Email: {{application.email}}</p>
+            <p>Phone Number: {{application.phoneNumber}}</p>
+            <p><a [href]="application.cv" target="_blank">View profile</a></p>
+            <h5>Summary</h5>
+            <p class="summary">{{application.summary}}</p>
+          </div>
+          <div class="col-md-6">
+            <div class="d-flex flex-column align-items-start">
+              <h5 class="mr-2">Application Info</h5>
+              <p>Application Date: {{application.applicationDate | date}}</p>
+              <p>Status:
+                <select class="custom-select" [(ngModel)]="application.status" (change)="changeStatus(application, application.status)">
+                  <option *ngFor="let status of statuses" [value]="status">{{status}}</option>
+                </select>
+              </p>
+            </div>
+            <div *ngIf="!application.editNotes" class="d-flex align-items-center mt-2">
+              <p class="mb-0 mr-2">Notes:</p>
+              <button *ngIf="!application.editNotes" class="btn btn-sm btn-primary" (click)="application.editNotes = true">
+                <i class="fa fa-edit"></i>
+              </button>
+            </div>
+            <textarea [(ngModel)]="application.notes" class="form-control" *ngIf="application.editNotes"></textarea>
+            <button class="btn btn-primary mt-2" *ngIf="application.editNotes" (click)="saveNotes(application)">Save Notes</button>
+            <div class="d-flex align-items-center mt-2">
+              <p class="mb-0 mr-2">Interview Date:</p>
+              <input type="date" [(ngModel)]="application.interviewDate" (change)="scheduleInterview(application, application.interviewDate)">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="userType === 'regular'">
+    <h2>My Applications</h2>
+    <div class="card mt-2" *ngFor="let application of applications">
+      <div class="card-header d-flex justify-content-between align-items-center" (click)="toggleDetails(application)">
+        <div class="d-flex align-items-center">
+          <img [src]="application.userPicture" class="rounded-circle mr-2" width="40" height="40">
+          <div>
+            <div class="mb-1">{{application.applicantName}}</div>
+            <div>{{application.position}}</div>
+          </div>
+        </div>
+        <div class="toggle-icon">
+          <i class="fas fa-chevron-down" [class.rotate]="application.showDetails"></i>
+        </div>
+      </div>
+      <div class="job-description-box" *ngIf="application.showDetails">
+        <h5>Job Description</h5>
+        <div class="description-content">
+          <p>{{application.jobDescription}}</p>
+        </div>
+      </div>
+      <div class="card-body" [hidden]="!application.showDetails">
+        <h5>Application Info</h5>
+        <p>Application Date: {{application.applicationDate | date}}</p>
+        <p>Status: <span [class]="getStatusClass(application.status)">{{application.status}}</span></p>
+        <p>Summary: {{application.summary}}</p>
+        <p *ngIf="application.interviewDate">Interview Date: {{application.interviewDate | date}}</p>
+      </div>
+    </div>
+  </div>
+</div>
+

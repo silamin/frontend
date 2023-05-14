@@ -29,7 +29,8 @@ import {AngularFireFunctionsModule} from "@angular/fire/compat/functions";
 import {AngularFireAuthModule} from "@angular/fire/compat/auth";
 import {AngularFireModule} from "@angular/fire/compat";
 import {UserStore} from "./stores/UserStore";
-import { LanguageFormComponent } from './components/language-form/language-form.component'; // import FontAwesomeModule
+import { LanguageFormComponent } from './components/language-form/language-form.component';
+import { ApplicationStatusComponent } from './pages/application-status/application-status.component'; // import FontAwesomeModule
 
 const routes: Routes = [
   { path: '', component: SignInComponent },
@@ -72,7 +73,8 @@ const firebaseConfig = {
     EducationFormComponent,
     LikesJobsComponent,
     ChatComponent,
-    LanguageFormComponent
+    LanguageFormComponent,
+    ApplicationStatusComponent
   ],
   imports: [
     BrowserModule,

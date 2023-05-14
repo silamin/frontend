@@ -1,6 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {ActivatedRoute, NavigationEnd, Router} from "@angular/router";
-import {filter} from "rxjs";
+import {Router} from "@angular/router";
 import {NavBarService} from "../../services/nav-bar.service";
 
 @Component({
@@ -9,7 +8,8 @@ import {NavBarService} from "../../services/nav-bar.service";
   styleUrls: ['./navigation-bar.component.scss']
 })
 export class NavigationBarComponent implements OnInit{
-  @Input() navItems: any[] = [];
+  @Input() isCompanyUser
+  navItems: any[] = [];
   jobPopupVisible = false;
   isDisplay = false;
   @Input() showSearchBar = false;
@@ -44,5 +44,21 @@ export class NavigationBarComponent implements OnInit{
     this.navBarService.activeNavItemIndex$.subscribe(index => {
       this.activeNavItemIndex = index;
     });
+    if (!this.isCompanyUser){
+      this.navItems = [
+        { title: 'Home', href: '', icon: 'fa-home', active: true },
+        { title: 'Profile', href: '', icon: 'fa-user' },
+        { title: 'Liked jobs', href: '', icon: 'fa-heart' },
+        { title: 'Messages', href: '', icon: 'fa-envelope' },
+        { title: 'Log out', href: '', icon: 'fa-sign-out-alt' },
+      ];
+    }else {
+      this.navItems = [
+        { title: 'Home', href: '', icon: 'fa-home', active: true },
+        { title: 'Post a job', href: '', icon: 'fa-plus' },
+        { title: 'Messages', href: '', icon: 'fa-envelope' },
+        { title: 'Log out', href: '', icon: 'fa-sign-out-alt' },
+      ];
+    }
   }
 }

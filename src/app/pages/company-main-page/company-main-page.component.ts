@@ -154,12 +154,6 @@ export class CompanyMainPageComponent {
   ];
 
   selectedJob: any = null;
-  navItems = [
-    { title: 'Home', href: '', icon: 'fa-home', active: true },
-    { title: 'Post a job', href: '', icon: 'fa-plus' },
-    { title: 'Messages', href: '', icon: 'fa-envelope' },
-    { title: 'Log out', href: '', icon: 'fa-sign-out-alt' },
-  ];
   jobPopupVisible = false;
   isDisplay = false;
   showCandidates(jobIndex: number, rowIndex: number) {

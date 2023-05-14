@@ -28,14 +28,6 @@ export class ChatComponent {
     { id: 2, title: 'Discussion 2' },
     { id: 3, title: 'Discussion 3' },
   ];
-  navItems = [
-    { jobTitle: 'Home', href: '', icon: 'fa-home', active: true },
-    { jobTitle: 'Profile', href: '', icon: 'fa-user' },
-    { jobTitle: 'Liked jobs', href: '', icon: 'fa-heart' },
-    { jobTitle: 'Messages', href: '', icon: 'fa-envelope' },
-    { jobTitle: 'Log out', href: '', icon: 'fa-sign-out-alt' },
-
-  ];
   messages: Message[] = [
     { id: 1, discussionId: 1, sender: 'User 1', content: 'Hello, how are you?', imageUrl: 'https://via.placeholder.com/40', createdAt: Date.now() },
     { id: 2, discussionId: 1, sender: 'User 2', content: 'Hi, I am fine, thank you!', imageUrl: 'https://via.placeholder.com/40', createdAt: Date.now() },

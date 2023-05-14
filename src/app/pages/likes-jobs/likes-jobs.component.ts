@@ -29,14 +29,7 @@ export class LikesJobsComponent {
     }
     // ... other job objects
   ];
-  navItems = [
-    { jobTitle: 'Home', href: '', icon: 'fa-home', active: true },
-    { jobTitle: 'Profile', href: '', icon: 'fa-user' },
-    { jobTitle: 'Liked jobs', href: '', icon: 'fa-heart' },
-    { jobTitle: 'Messages', href: '', icon: 'fa-envelope' },
-    { jobTitle: 'Log out', href: '', icon: 'fa-sign-out-alt' },
 
-  ];
   currentPage = 1;
 
   constructor() { }

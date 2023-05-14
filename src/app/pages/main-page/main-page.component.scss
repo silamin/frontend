@@ -13,7 +13,6 @@
 
 }
 
-
 .search input:focus{
 
   box-shadow: none;
@@ -29,7 +28,18 @@
   left: 16px;
 
 }
+.love-icon {
+  cursor: pointer;
+}
 
+.love-icon i {
+  color: #ccc;
+  transition: color 0.3s ease-in-out;
+}
+
+.love-icon.loved i {
+  color: red;
+}
 .search button{
 
   position: absolute;
