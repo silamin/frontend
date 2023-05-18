@@ -96,7 +96,7 @@
   </div>
 </div>
 
-<app-work-experience-form [visible]="isWorkExperienceFormVisible" [workExperienceData]="data" (visibleChange)="hidePopUp()"></app-work-experience-form>
-<app-skill-form [visible]="isSkillFormVisible" [data]="data" (visibleChange)="hidePopUp()"></app-skill-form>
-<app-language-form [visible]="isLanguageFormVisible" [data]="data" (visibleChange)="hidePopUp()"></app-language-form>
-<app-education-form [visible]="isEducationFormVisible" [data]="data" (visibleChange)="hidePopUp()"></app-education-form>
+<app-work-experience-form #workExperienceForm [visible]="isWorkExperienceFormVisible" (visibleChange)="hidePopUp()"></app-work-experience-form>
+<app-skill-form #skillForm  [visible]="isSkillFormVisible" (visibleChange)="hidePopUp()"></app-skill-form>
+<app-language-form #languageForm [visible]="isLanguageFormVisible" (visibleChange)="hidePopUp()"></app-language-form>
+<app-education-form #educationForm [visible]="isEducationFormVisible" (visibleChange)="hidePopUp()"></app-education-form>

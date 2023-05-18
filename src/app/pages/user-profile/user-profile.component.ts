@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {WorkExperienceService} from "../../services/work-experience.service";
 import {UserStore} from "../../stores/UserStore";
 import {Observable, take} from "rxjs";
@@ -8,6 +8,12 @@ import {SkillsService} from "../../services/skills.service";
 import {LanguageServiceService} from "../../services/language-service.service";
 import {ActivatedRoute} from "@angular/router";
 import { of } from 'rxjs';
+import {FormFactoryProviderService} from "../../services/factories/form-factory-provider.service";
+import {WorkExperienceFormComponent} from "../../components/work-experience-form/work-experience-form.component";
+import {SkillFormComponent} from "../../components/skill-form/skill-form.component";
+import {EducationFormComponent} from "../../components/education-form/education-form.component";
+import {LanguageFormComponent} from "../../components/language-form/language-form.component";
+import {HasForm} from "../../services/factories/FormFactory";
 
 
 interface Section {
@@ -22,6 +28,11 @@ interface Section {
   styleUrls: ['./user-profile.component.scss']
 })
 export class UserProfileComponent implements OnInit{
+  @ViewChild('workExperienceForm') workExperienceForm!: WorkExperienceFormComponent;
+  @ViewChild('skillForm') skillForm!: SkillFormComponent;
+  @ViewChild('educationForm') educationForm!: EducationFormComponent;
+  @ViewChild('languageForm') languageForm!: LanguageFormComponent;
+
   items: Observable<any>[] = [];
   showMore = {};
   isDisplay = false;
@@ -42,6 +53,7 @@ export class UserProfileComponent implements OnInit{
     private educationService: EducationService,
     private skillsService: SkillsService,
     private languageService: LanguageServiceService,
+     private formFactoryProvider: FormFactoryProviderService,
     private route: ActivatedRoute
   ) {
     this.sections.forEach(section => {
@@ -87,16 +99,26 @@ export class UserProfileComponent implements OnInit{
   }
 
   showPopUp(title: string) {
+    this.resetData(title);
     switch (title){
       case 'Work Experience': this.isWorkExperienceFormVisible = true; this.data = {};break;
       case 'Skills': this.isSkillFormVisible = true;break;
       case 'Education': this.isEducationFormVisible = true;break;
       case 'Languages': this.isLanguageFormVisible = true;
-
       }
   }
   getSlicedItems(items: any[]): any[] {
     return items.length > 3 ? items.slice(0, 3) : items;
+  }
+   formComponent: HasForm | undefined;
+
+  resetData(sectionTitle: string) {
+    this.getFormGroup(sectionTitle);
+    if (this.formComponent) {
+      let formGroup = this.formComponent.getForm();
+      let formFactory = this.formFactoryProvider.getFormFactory(sectionTitle);
+      formFactory.resetForm(formGroup);
+    }
   }
 
 
@@ -105,14 +127,35 @@ export class UserProfileComponent implements OnInit{
     this.data = item;
     const section = this.sections.find(section => section.title === sectionTitle);
     if (section) {
-      switch (section.title){
-        case 'Work Experience': this.isWorkExperienceFormVisible = true; break;
-        case 'Skills': this.isSkillFormVisible = true; break;
-        case 'Education': this.isEducationFormVisible = true; break;
-        case 'Languages': this.isLanguageFormVisible = true; break;
+        this.getFormGroup(section.title)
+      if (this.formComponent) {
+        let formGroup = this.formComponent.getForm();
+        let formFactory = this.formFactoryProvider.getFormFactory(section.title);
+        formFactory.populateForm(this.data, formGroup);
       }
     }
   }
+  private getFormGroup(sectionTitle: string){
+    switch (sectionTitle){
+      case 'Work Experience':
+        this.isWorkExperienceFormVisible = true;
+        this.formComponent = this.workExperienceForm;
+        break;
+      case 'Skills':
+        this.isSkillFormVisible = true;
+        this.formComponent = this.skillForm;
+        break;
+      case 'Languages':
+        this.isLanguageFormVisible = true;
+        this.formComponent = this.languageForm;
+        break;
+      case 'Education':
+        this.isEducationFormVisible = true;
+        this.formComponent = this.educationForm;
+        break;
+    }
+  }
+
 
   deleteItem(item: any, sectionTitle: string) {
     const section = this.sections.find(section => section.title === sectionTitle);

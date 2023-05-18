@@ -1,13 +1,14 @@
 import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {SkillsService} from "../../services/skills.service";
+import {HasForm} from "../../services/factories/FormFactory";
 
 @Component({
   selector: 'app-skill-form',
   templateUrl: './skill-form.component.html',
   styleUrls: ['./skill-form.component.scss']
 })
-export class SkillFormComponent implements OnChanges{
+export class SkillFormComponent implements HasForm{
   skillForm: FormGroup;
   @Input() data;
 
@@ -16,12 +17,6 @@ export class SkillFormComponent implements OnChanges{
       skill: ['', Validators.required],
       rating: ['', Validators.required],
     });
-  }
-  ngOnChanges(changes: SimpleChanges) {
-    if (changes['data'] && changes['data'].currentValue) {
-      this.skillForm.get('skill')?.setValue(this.data?.skill);
-      this.skillForm.get('rating')?.setValue(this.data?.rating);
-    }
   }
 
   onSubmit() {
@@ -37,5 +32,9 @@ export class SkillFormComponent implements OnChanges{
   close() {
     this.visible = false;
     this.visibleChange.emit(this.visible);
+  }
+
+  getForm(): FormGroup {
+    return this.skillForm;
   }
 }
