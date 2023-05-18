@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {WorkExperienceService} from "../../services/work-experience.service";
 import {AuthServiceService} from "../../services/auth-service.service";
@@ -12,7 +12,7 @@ import {Subscription} from "rxjs";
   templateUrl: './work-experience-form.component.html',
   styleUrls: ['./work-experience-form.component.scss']
 })
-export class WorkExperienceFormComponent implements OnInit{
+export class WorkExperienceFormComponent implements OnChanges{
   @Input() visible: boolean=false;
   @Output() visibleChange: EventEmitter<boolean> = new EventEmitter<boolean>();
   @Input() workExperienceData: WorkExperienceFormDTO | undefined;
@@ -23,16 +23,27 @@ export class WorkExperienceFormComponent implements OnInit{
     this.visibleChange.emit(this.visible);
   }
 
-  ngOnInit(): void {
-    if (this.workExperienceData){
-      this.formData.get('companyName')?.setValue(this.workExperienceData.companyName);
-      this.formData.get('currentlyWorkingHere')?.setValue(this.workExperienceData.currentlyWorkingHere);
-      this.formData.get('endDate')?.setValue(this.workExperienceData.endDate);
-      this.formData.get('startDate')?.setValue(this.workExperienceData.startDate);
-      this.formData.get('title')?.setValue(this.workExperienceData.jobTitle);
-      this.formData.get('environmentType')?.setValue(this.workExperienceData.employmentType);
-      this.formData.get('jobDescription')?.setValue(this.workExperienceData.jobDescription);
-      this.formData.get('location')?.setValue(this.workExperienceData.location)
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['workExperienceData'] && changes['workExperienceData'].currentValue) {
+      console.log(this.workExperienceData);
+
+      this.formData.get('companyName')?.setValue(this.workExperienceData?.companyName);
+      this.formData.get('currentlyWorking')?.setValue(this.workExperienceData?.currentlyWorkingHere);
+      if (this.workExperienceData?.endDate){
+        let endDate = new Date(this.workExperienceData.endDate);
+        if (!isNaN(endDate.getTime())) {
+          this.formData.get('endDate')?.setValue(endDate.toISOString().split('T')[0]);
+        }
+        else {
+          console.log('Invalid date', this.workExperienceData.endDate);
+        }
+      }
+
+      this.formData.get('startDate')?.setValue(this.workExperienceData?.startDate);
+      this.formData.get('jobTitle')?.setValue(this.workExperienceData?.jobTitle);
+      this.formData.get('employmentType')?.setValue(this.workExperienceData?.employmentType);
+      this.formData.get('jobDescription')?.setValue(this.workExperienceData?.jobDescription);
+      this.formData.get('location')?.setValue(this.workExperienceData?.location)
     }
   }
   constructor(private fb: FormBuilder, private workExperienceService: WorkExperienceService, private userStore: UserStore) {
@@ -52,7 +63,7 @@ export class WorkExperienceFormComponent implements OnInit{
     currentlyWorkingHere: true,
     employmentType: 'Full-Time',
     endDate: new Date(),
-    jobDescription: 'Research and Development',
+    jobDescription: 'test',
     jobTitle: 'Data Scientist',
     location: 'San Francisco, CA',
     startDate: new Date()

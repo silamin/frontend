@@ -1,6 +1,5 @@
-import {Validators} from "@angular/forms";
-
 export interface WorkExperienceFormDTO{
+  id?: number;
   companyName: string;
   currentlyWorkingHere: boolean;
   employmentType: string;

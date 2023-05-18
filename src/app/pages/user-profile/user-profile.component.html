@@ -1,4 +1,5 @@
 <app-navigation-bar class="my-2" [isCompanyUser]="false" [showSearchBar]="true"></app-navigation-bar>
+
 <div class="container my-2">
   <div class="row">
     <div class="col-12">
@@ -39,59 +40,60 @@
             {{ section.title }}
             <div>
               <ng-container *ngIf="!isDisplay">
-                <button class="btn btn-sm btn-success mx-1" (click)="showPopUp(section.title)"><i class="fa fa-plus"></i></button>
+                <button class="btn btn-sm btn-success mx-1" (click)="showPopUp(section.title)">
+                  <i class="fa fa-plus"></i>
+                </button>
               </ng-container>
             </div>
           </div>
           <ul class="list-group list-group-flush">
-            <!-- Your existing code here -->
-
-            <ng-container *ngIf="(section.items | async) as items">
-              <ng-container *ngFor="let item of (getSlicedItems(items) | async)">
-                <li class="list-group-item d-flex justify-content-between align-items-center">
+            <ng-container *ngIf="section.items | async as items">
+              <ng-container *ngIf="getSlicedItems(items) as slicedItems">
+                <li class="list-group-item d-flex justify-content-between align-items-center" *ngFor="let item of slicedItems">
                   {{ item[section.displayProperty] }}
                   <div>
                     <button class="btn btn-link text-bg-light" (click)="editItem(item)">
                       <i class="fa fa-edit"></i>
                     </button>
-                    <button class="btn btn-link text-danger" (click)="deleteItem(item)">
+                    <button class="btn btn-link text-danger" (click)="deleteItem(item, section.title)">
                       <i class="fa fa-trash"></i>
                     </button>
                   </div>
                 </li>
               </ng-container>
 
-              <ng-container *ngIf="(items).length > 3">
-                <li class="list-group-item" *ngIf="showMore[section.title] !== true">
+              <li class="list-group-item" *ngIf="items.length > 3 && !showMore[section.title]">
+                <div class="d-flex justify-content-center">
+                  <button class="btn btn-primary w-100" (click)="showMoreItems(section.title)">
+                    Show More ({{ items.length - 3 }} left)
+                  </button>
+                </div>
+              </li>
+
+              <ng-container *ngIf="showMore[section.title]">
+                <li class="list-group-item" *ngFor="let item of items | slice:3">{{ item[section.displayProperty] }}
+                  <button class="btn btn-link text-bg-light" (click)="editItem(item)">
+                    <i class="fa fa-edit"></i>
+                  </button>
+                  <button class="btn btn-link text-danger" (click)="deleteItem(item, section.title)">
+                    <i class="fa fa-trash"></i>
+                  </button>
+                </li>
+                <li class="list-group-item">
                   <div class="d-flex justify-content-center">
-                    <button class="btn btn-primary w-100" (click)="showMoreItems(section.title)">
-                      Show More ({{ (items).length - 3 }} left)
-                    </button>
+                    <button class="btn btn-secondary w-100" (click)="showLessItems(section.title)">Show Less</button>
                   </div>
                 </li>
-                <ng-container *ngIf="showMore[section.title] === true">
-                  <li class="list-group-item" *ngFor="let item of (items) | slice:3">{{ item }}</li>
-                  <li class="list-group-item">
-                    <div class="d-flex justify-content-center">
-                      <button class="btn btn-secondary w-100" (click)="showLessItems(section.title)">Show Less</button>
-                    </div>
-                  </li>
-                </ng-container>
               </ng-container>
             </ng-container>
-
-
           </ul>
         </div>
       </div>
     </ng-container>
-
-
-
   </div>
 </div>
-<app-work-experience-form [visible]="isWorkExperienceFormVisible" (visibleChange)="hidePopUp()"></app-work-experience-form>
+
+<app-work-experience-form [visible]="isWorkExperienceFormVisible" [workExperienceData]="selectedWorkExperience" (visibleChange)="hidePopUp()"></app-work-experience-form>
 <app-skill-form [visible]="isSkillFormVisible" (visibleChange)="hidePopUp()"></app-skill-form>
 <app-language-form [visible]="isLanguageFormVisible" (visibleChange)="hidePopUp()"></app-language-form>
-
 <app-education-form [visible]="isEducationFormVisible" (visibleChange)="hidePopUp()"></app-education-form>

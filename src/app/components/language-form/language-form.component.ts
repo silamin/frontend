@@ -1,6 +1,5 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {SkillsService} from "../../services/skills.service";
 import {LanguageServiceService} from "../../services/language-service.service";
 
 @Component({
@@ -20,8 +19,8 @@ export class LanguageFormComponent {
 
   onSubmit() {
     this.languageService.addLanguage('tTGtgSdVyQSwf8hBO3yUC1dcGBV2',{
-      rating: "devOps",
-      language: "4"
+      rating: this.languageForm.get('rating')?.value,
+      language: this.languageForm.get('language')?.value
     })
   }
 

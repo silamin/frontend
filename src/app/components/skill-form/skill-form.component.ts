@@ -19,8 +19,8 @@ export class SkillFormComponent{
 
   onSubmit() {
    this.skillsService.addSkill('tTGtgSdVyQSwf8hBO3yUC1dcGBV2',{
-     rating: "devOps",
-     skill: "4"
+     rating: this.skillForm.get('rating')?.value,
+     skill: this.skillForm.get('skill')?.value
    })
   }
 
