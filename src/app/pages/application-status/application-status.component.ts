@@ -6,7 +6,7 @@ import {Component, Input, OnInit} from '@angular/core';
   styleUrls: ['./application-status.component.scss']
 })
 export class ApplicationStatusComponent implements OnInit{
-  @Input() userType!: 'company' | 'regular';
+  //@Input() userType!: 'company' | 'regular';
 
   // Application statuses
   statuses = ['Selected', 'Rejected', 'In-progress'];

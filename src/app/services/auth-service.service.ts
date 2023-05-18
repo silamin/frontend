@@ -2,13 +2,14 @@ import { Injectable } from '@angular/core';
 import {AngularFireAuth} from "@angular/fire/compat/auth";
 import {AngularFirestore} from "@angular/fire/compat/firestore";
 import {AngularFireFunctions} from "@angular/fire/compat/functions";
+import {Router} from "@angular/router";
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthServiceService {
 
-  constructor(private afAuth: AngularFireAuth, private functions: AngularFireFunctions, private firestore: AngularFirestore) {}
+  constructor(private afAuth: AngularFireAuth, private functions: AngularFireFunctions, private firestore: AngularFirestore, private router: Router) {}
 
   async register(email: string, password: string, isCompanyUser: boolean): Promise<void> {
     try {
@@ -50,6 +51,7 @@ export class AuthServiceService {
           await userDocRef.set({
             // Add any initial data you want for the user here
           });
+          await this.router.navigate(['/user-main-page', user.uid]);
         }
       } else {
         console.error('Error during login: No user');

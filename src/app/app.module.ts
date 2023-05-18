@@ -35,10 +35,10 @@ import { ApplicationStatusComponent } from './pages/application-status/applicati
 const routes: Routes = [
   { path: '', component: SignInComponent },
   { path: 'company-main-page', component: CompanyMainPageComponent },
-  {path: 'user-main-page', component: MainPageComponent},
-  {path:'user-profile', component: UserProfileComponent},
+  {path: 'user-main-page/:id', component: MainPageComponent},
+  {path:'user-profile/:id', component: UserProfileComponent},
   {path:'liked-jobs/:userId', component: LikesJobsComponent},
-  {path: 'messages', component: ChatComponent}
+  {path: 'status/:userId', component: ApplicationStatusComponent}
 ];
 const firebaseConfig = {
   apiKey : "AIzaSyD-UXdqY60rn6MigvTq9jsU6dnDNI9jPLk" ,

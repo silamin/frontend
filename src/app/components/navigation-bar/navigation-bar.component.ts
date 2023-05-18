@@ -1,6 +1,7 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {Router} from "@angular/router";
 import {NavBarService} from "../../services/nav-bar.service";
+import {UserStore} from "../../stores/UserStore";
 
 @Component({
   selector: 'app-navigation-bar',
@@ -16,18 +17,17 @@ export class NavigationBarComponent implements OnInit{
   isNavOpen = false;
   activeNavItemIndex: number = 0;
 
-  constructor(private router: Router, private navBarService: NavBarService) { }
+  constructor(private router: Router, private navBarService: NavBarService, private userStore: UserStore) { }
 
 
-  handleIconClicked(title: string){
-    console.log(this.navItems.findIndex(item => item.title === title))
+  async handleIconClicked(title: string){
     this.activeNavItemIndex = this.navItems.findIndex(item => item.title === title);
 
     switch (title){
-      case 'Profile': this.router.navigate(['/user-profile']);break;
-      case 'Liked jobs': this.router.navigate(['/liked-jobs']);break;
-      case 'Messages': this.router.navigate(['/messages']);break;
-      case 'Home': this.router.navigate(['/user-main-page']);break;
+      case 'Profile': await this.router.navigate(['/user-profile', this.userStore.getUser.uid]);break;
+      case 'Liked jobs': await this.router.navigate(['/liked-jobs', this.userStore.getUser.uid]);break;
+      case 'Status': await this.router.navigate(['/status', this.userStore.getUser.uid]);break;
+      case 'Home': await this.router.navigate(['/user-main-page', this.userStore.getUser.uid]);break;
       case 'Post a job': this.jobPopupVisible = true;
     }
     this.navBarService.setActiveNavItemIndex(this.activeNavItemIndex);
@@ -49,14 +49,14 @@ export class NavigationBarComponent implements OnInit{
         { title: 'Home', href: '', icon: 'fa-home', active: true },
         { title: 'Profile', href: '', icon: 'fa-user' },
         { title: 'Liked jobs', href: '', icon: 'fa-heart' },
-        { title: 'Messages', href: '', icon: 'fa-envelope' },
+        { title: 'Status', href: '', icon: 'fa-envelope' },
         { title: 'Log out', href: '', icon: 'fa-sign-out-alt' },
       ];
     }else {
       this.navItems = [
         { title: 'Home', href: '', icon: 'fa-home', active: true },
         { title: 'Post a job', href: '', icon: 'fa-plus' },
-        { title: 'Messages', href: '', icon: 'fa-envelope' },
+        { title: 'Status', href: '', icon: 'fa-envelope' },
         { title: 'Log out', href: '', icon: 'fa-sign-out-alt' },
       ];
     }

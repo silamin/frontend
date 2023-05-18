@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {RouterOutlet} from "@angular/router";
+import {Router, RouterOutlet} from "@angular/router";
 import {AuthServiceService} from "./services/auth-service.service";
 import {AngularFireAuth} from "@angular/fire/compat/auth";
 import {UserStore} from "./stores/UserStore";
@@ -10,7 +10,7 @@ import {UserStore} from "./stores/UserStore";
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit{
-    constructor(authService: AuthServiceService, private afAuth: AngularFireAuth, private userStore: UserStore) {
+    constructor(authService: AuthServiceService, private afAuth: AngularFireAuth, private userStore: UserStore, private router: Router) {
       authService.login('loulou@easv.dk','e50afeed0');
       //SWyg6mbbzeRrayewKprp2XaYhfm1 uid
     }

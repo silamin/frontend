@@ -63,7 +63,7 @@ export class MainPageComponent implements OnInit, AfterViewInit{
   get paginatedJobs(): any[] {
     const startIndex = (this.currentPage - 1) * 5;
     const endIndex = startIndex + 5;
-    return this.jobs.slice(startIndex, endIndex);
+    return this.jobs?.slice(startIndex, endIndex);
   }
 
   hideJobPopUp() {
