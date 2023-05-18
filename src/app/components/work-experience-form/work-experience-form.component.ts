@@ -1,11 +1,9 @@
-import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
-import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
+import {Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
+import {FormBuilder, FormGroup} from "@angular/forms";
 import {WorkExperienceService} from "../../services/work-experience.service";
-import {AuthServiceService} from "../../services/auth-service.service";
 import {UserStore} from "../../stores/UserStore";
 import {WorkExperienceFormDTO} from "../../dtos/DTO's";
-import {AngularFireAuth} from "@angular/fire/compat/auth";
-import {Subscription} from "rxjs";
+
 
 @Component({
   selector: 'app-work-experience-form',

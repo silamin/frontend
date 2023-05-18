@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {LanguageServiceService} from "../../services/language-service.service";
 
@@ -7,8 +7,9 @@ import {LanguageServiceService} from "../../services/language-service.service";
   templateUrl: './language-form.component.html',
   styleUrls: ['./language-form.component.scss']
 })
-export class LanguageFormComponent {
+export class LanguageFormComponent implements OnChanges{
   languageForm: FormGroup;
+  @Input() data;
 
   constructor(private fb: FormBuilder, private languageService: LanguageServiceService) {
     this.languageForm = this.fb.group({
@@ -16,6 +17,12 @@ export class LanguageFormComponent {
       rating: ['', Validators.required],
     });
   }
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['data'] && changes['data'].currentValue) {
+      this.languageForm.get('language')?.setValue(this.data?.language);
+      this.languageForm.get('rating')?.setValue(this.data?.rating);
+    }
+    }
 
   onSubmit() {
     this.languageService.addLanguage('tTGtgSdVyQSwf8hBO3yUC1dcGBV2',{

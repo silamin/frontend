@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {SkillsService} from "../../services/skills.service";
 
@@ -7,14 +7,21 @@ import {SkillsService} from "../../services/skills.service";
   templateUrl: './skill-form.component.html',
   styleUrls: ['./skill-form.component.scss']
 })
-export class SkillFormComponent{
+export class SkillFormComponent implements OnChanges{
   skillForm: FormGroup;
+  @Input() data;
 
   constructor(private fb: FormBuilder, private skillsService: SkillsService) {
     this.skillForm = this.fb.group({
       skill: ['', Validators.required],
       rating: ['', Validators.required],
     });
+  }
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['data'] && changes['data'].currentValue) {
+      this.skillForm.get('skill')?.setValue(this.data?.skill);
+      this.skillForm.get('rating')?.setValue(this.data?.rating);
+    }
   }
 
   onSubmit() {

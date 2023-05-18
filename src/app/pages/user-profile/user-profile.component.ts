@@ -34,7 +34,7 @@ export class UserProfileComponent implements OnInit{
   sections: Section[] = [];
   isSkillFormVisible = false;
   userId;
-  selectedWorkExperience: any;
+  data: any;
 
   constructor(
     private workExperienceService: WorkExperienceService,
@@ -88,7 +88,7 @@ export class UserProfileComponent implements OnInit{
 
   showPopUp(title: string) {
     switch (title){
-      case 'Work Experience': this.isWorkExperienceFormVisible = true; this.selectedWorkExperience = {};break;
+      case 'Work Experience': this.isWorkExperienceFormVisible = true; this.data = {};break;
       case 'Skills': this.isSkillFormVisible = true;break;
       case 'Education': this.isEducationFormVisible = true;break;
       case 'Languages': this.isLanguageFormVisible = true;
@@ -100,9 +100,18 @@ export class UserProfileComponent implements OnInit{
   }
 
 
-  editItem(item: any) {
-    this.selectedWorkExperience = item;
-    this.isWorkExperienceFormVisible = true;
+  editItem(item: any, sectionTitle: string) {
+    this.data = {};
+    this.data = item;
+    const section = this.sections.find(section => section.title === sectionTitle);
+    if (section) {
+      switch (section.title){
+        case 'Work Experience': this.isWorkExperienceFormVisible = true; break;
+        case 'Skills': this.isSkillFormVisible = true; break;
+        case 'Education': this.isEducationFormVisible = true; break;
+        case 'Languages': this.isLanguageFormVisible = true; break;
+      }
+    }
   }
 
   deleteItem(item: any, sectionTitle: string) {

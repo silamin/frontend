@@ -52,7 +52,7 @@
                 <li class="list-group-item d-flex justify-content-between align-items-center" *ngFor="let item of slicedItems">
                   {{ item[section.displayProperty] }}
                   <div>
-                    <button class="btn btn-link text-bg-light" (click)="editItem(item)">
+                    <button class="btn btn-link text-bg-light" (click)="editItem(item, section.title)">
                       <i class="fa fa-edit"></i>
                     </button>
                     <button class="btn btn-link text-danger" (click)="deleteItem(item, section.title)">
@@ -71,13 +71,16 @@
               </li>
 
               <ng-container *ngIf="showMore[section.title]">
-                <li class="list-group-item" *ngFor="let item of items | slice:3">{{ item[section.displayProperty] }}
-                  <button class="btn btn-link text-bg-light" (click)="editItem(item)">
-                    <i class="fa fa-edit"></i>
-                  </button>
-                  <button class="btn btn-link text-danger" (click)="deleteItem(item, section.title)">
-                    <i class="fa fa-trash"></i>
-                  </button>
+                <li class="list-group-item d-flex justify-content-between align-items-center" *ngFor="let item of items | slice:3">{{ item[section.displayProperty] }}
+                  <div>
+                    <button class="btn btn-link text-bg-light" (click)="editItem(item, section.title)">
+                      <i class="fa fa-edit"></i>
+                    </button>
+                    <button class="btn btn-link text-danger" (click)="deleteItem(item, section.title)">
+                      <i class="fa fa-trash"></i>
+                    </button>
+                  </div>
+
                 </li>
                 <li class="list-group-item">
                   <div class="d-flex justify-content-center">
@@ -93,7 +96,7 @@
   </div>
 </div>
 
-<app-work-experience-form [visible]="isWorkExperienceFormVisible" [workExperienceData]="selectedWorkExperience" (visibleChange)="hidePopUp()"></app-work-experience-form>
-<app-skill-form [visible]="isSkillFormVisible" (visibleChange)="hidePopUp()"></app-skill-form>
-<app-language-form [visible]="isLanguageFormVisible" (visibleChange)="hidePopUp()"></app-language-form>
-<app-education-form [visible]="isEducationFormVisible" (visibleChange)="hidePopUp()"></app-education-form>
+<app-work-experience-form [visible]="isWorkExperienceFormVisible" [workExperienceData]="data" (visibleChange)="hidePopUp()"></app-work-experience-form>
+<app-skill-form [visible]="isSkillFormVisible" [data]="data" (visibleChange)="hidePopUp()"></app-skill-form>
+<app-language-form [visible]="isLanguageFormVisible" [data]="data" (visibleChange)="hidePopUp()"></app-language-form>
+<app-education-form [visible]="isEducationFormVisible" [data]="data" (visibleChange)="hidePopUp()"></app-education-form>
