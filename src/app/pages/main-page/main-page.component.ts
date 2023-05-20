@@ -35,21 +35,25 @@ export class MainPageComponent implements OnInit, AfterViewInit{
   jobPopupVisible = true;
   isDisplay = true;
 
-  constructor(private jobsService: JobServiceService, private elementRef: ElementRef,    private ngZone: NgZone
+  constructor(private jobsService: JobServiceService, private elementRef: ElementRef
   ) {
-    this.jobsService.getAllJobs().subscribe(jobs => {
-      this.jobs = jobs;
-      console.log(jobs);
-      this.onSelectedJobChange(this.jobs[0])
-
-    });  }
+  }
 
   scrollable!: HTMLElement;
   isScrollableEnd: boolean = false;
 
-  ngOnInit() {
+ async ngOnInit() {
     this.scrollable = this.elementRef.nativeElement.querySelector('.scrollable');
-    this.scrollable.addEventListener('scroll', this.onScroll.bind(this));  }
+    this.scrollable.addEventListener('scroll', this.onScroll.bind(this));
+
+    await this.jobsService.getAllJobs().subscribe(jobs => {
+      this.jobs = jobs;
+      console.log(jobs);
+      this.onSelectedJobChange(this.jobs[0])
+
+    });
+
+  }
 
   onScroll() {
     const { scrollTop, clientHeight, scrollHeight } = this.scrollable;
@@ -72,6 +76,7 @@ export class MainPageComponent implements OnInit, AfterViewInit{
 
   onSelectedJobChange($event: any) {
     this.selectedJob=$event;
+    console.log(this.selectedJob)
 
   }
   toggleLove(job: any) {

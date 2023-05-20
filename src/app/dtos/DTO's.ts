@@ -28,6 +28,7 @@ export interface LanguageDto{
   rating: string;
 }
 export interface  JobDto{
+  id: number;
   userId: string;
   jobTitle: string,
   workplace: string,
@@ -38,5 +39,5 @@ export interface  JobDto{
   jobResponsibilities: string,
   backgroundSkills: string,
   jobBenefits: string,
-  candidates?: string;
+  candidates?: any[];
 }

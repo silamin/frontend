@@ -6,7 +6,6 @@ import {WorkExperienceFormDTO} from "../../dtos/DTO's";
 import {EducationService} from "../../services/education.service";
 import {SkillsService} from "../../services/skills.service";
 import {LanguageServiceService} from "../../services/language-service.service";
-import {ActivatedRoute} from "@angular/router";
 import { of } from 'rxjs';
 import {FormFactoryProviderService} from "../../services/factories/form-factory-provider.service";
 import {WorkExperienceFormComponent} from "../../components/work-experience-form/work-experience-form.component";
@@ -44,7 +43,6 @@ export class UserProfileComponent implements OnInit{
   workExperiences$: Observable<WorkExperienceFormDTO[]> =of([]);
   sections: Section[] = [];
   isSkillFormVisible = false;
-  userId;
   data: any;
 
   constructor(
@@ -54,7 +52,6 @@ export class UserProfileComponent implements OnInit{
     private skillsService: SkillsService,
     private languageService: LanguageServiceService,
      private formFactoryProvider: FormFactoryProviderService,
-    private route: ActivatedRoute
   ) {
     this.sections.forEach(section => {
       section.items.subscribe(data => this.items = data);
@@ -71,8 +68,7 @@ export class UserProfileComponent implements OnInit{
   }
 
   async ngOnInit() {
-    this.userId = this.route.snapshot.paramMap.get('id');
-    this.workExperiences$ =  await this.workExperienceService.getAllWorkExperiences(this.userId);
+    this.workExperiences$ =  await this.workExperienceService.getAllWorkExperiences(this.userStore.getUser.uid);
 
     this.sections = [
       {
@@ -82,17 +78,17 @@ export class UserProfileComponent implements OnInit{
       },
       {
         title: 'Education',
-        items: this.educationService.getAllEducationBackground(this.userId),
+        items: this.educationService.getAllEducationBackground(this.userStore.getUser.uid),
         displayProperty: 'degree'
       },
       {
         title: 'Skills',
-        items: this.skillsService.getAllSkills(this.userId),
+        items: this.skillsService.getAllSkills(this.userStore.getUser.uid),
         displayProperty: 'skill'
       },
       {
         title: 'Languages',
-        items: this.languageService.getAllLanguages(this.userId),
+        items: this.languageService.getAllLanguages(this.userStore.getUser.uid),
         displayProperty: 'language'
       }
     ];

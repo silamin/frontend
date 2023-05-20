@@ -51,7 +51,7 @@ export class AuthServiceService {
           await userDocRef.set({
             // Add any initial data you want for the user here
           });
-          await this.router.navigate(['/user-main-page', user.uid]);
+          await this.router.navigate(['/user-main-page']);
         }
       } else {
         console.error('Error during login: No user');

@@ -24,10 +24,10 @@ export class NavigationBarComponent implements OnInit{
     this.activeNavItemIndex = this.navItems.findIndex(item => item.title === title);
 
     switch (title){
-      case 'Profile': await this.router.navigate(['/user-profile', this.userStore.getUser.uid]);break;
-      case 'Liked jobs': await this.router.navigate(['/liked-jobs', this.userStore.getUser.uid]);break;
-      case 'Status': await this.router.navigate(['/status', this.userStore.getUser.uid]);break;
-      case 'Home': await this.router.navigate(['/user-main-page', this.userStore.getUser.uid]);break;
+      case 'Profile': await this.router.navigate(['/user-profile']);break;
+      case 'Liked jobs': await this.router.navigate(['/liked-jobs']);break;
+      case 'Status': await this.router.navigate(['/status']);break;
+      case 'Home': await this.router.navigate(['/user-main-page']);break;
       case 'Post a job': this.jobPopupVisible = true;
     }
     this.navBarService.setActiveNavItemIndex(this.activeNavItemIndex);

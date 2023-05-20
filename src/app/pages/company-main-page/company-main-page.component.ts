@@ -1,17 +1,14 @@
-import { Component } from "@angular/core";
+import {Component, OnInit} from "@angular/core";
 import {JobServiceService} from "../../services/job-service.service";
+import {UserStore} from "../../stores/UserStore";
 
 @Component({
   selector: 'app-company-main-page',
   templateUrl: './company-main-page.component.html',
   styleUrls: ['./company-main-page.component.scss'],
 })
-export class CompanyMainPageComponent {
-  constructor(private jobsService: JobServiceService) {
-    this.jobsTest= jobsService.getAllJobs('SWyg6mbbzeRrayewKprp2XaYhfm1');
-    this.jobsTest.subscribe(jobs => {
-      this.jobsToDisplay = jobs;
-    });  }
+export class CompanyMainPageComponent implements OnInit{
+  constructor(private jobsService: JobServiceService, private userStore: UserStore) {}
   itemsPerPage = 3;
   currentPage = 1;
   jobsToDisplay: any[] = [];
@@ -192,4 +189,12 @@ export class CompanyMainPageComponent {
   hideJobPopUp() {
     this.jobPopupVisible = false;
   }
+
+  ngOnInit(): void {
+    console.log(this.userStore.getUser)
+    this.jobsTest= this.jobsService.getAllJobs(this.userStore.getUser.uid);
+    this.jobsTest.subscribe(jobs => {
+      this.jobsToDisplay = jobs;
+    }
+    )};
 }

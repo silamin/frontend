@@ -6,6 +6,7 @@ export class UserStore{
   @observable private _user: any;
 
   @action setUser(user: any) {
+    console.log(this._user)
     this._user = user;
   }
 

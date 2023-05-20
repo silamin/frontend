@@ -36,10 +36,10 @@ import {NgbCollapse} from "@ng-bootstrap/ng-bootstrap"; // import FontAwesomeMod
 const routes: Routes = [
   { path: '', component: SignInComponent },
   { path: 'company-main-page', component: CompanyMainPageComponent },
-  {path: 'user-main-page/:id', component: MainPageComponent},
-  {path:'user-profile/:id', component: UserProfileComponent},
-  {path:'liked-jobs/:userId', component: LikesJobsComponent},
-  {path: 'status/:userId', component: ApplicationStatusComponent}
+  {path: 'user-main-page', component: MainPageComponent},
+  {path:'user-profile', component: UserProfileComponent},
+  {path:'liked-jobs', component: LikesJobsComponent},
+  {path: 'status', component: ApplicationStatusComponent}
 ];
 const firebaseConfig = {
   apiKey : "AIzaSyD-UXdqY60rn6MigvTq9jsU6dnDNI9jPLk" ,

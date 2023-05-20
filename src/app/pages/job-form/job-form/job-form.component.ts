@@ -1,6 +1,7 @@
 import {Component, EventEmitter, Input, OnChanges, OnInit, Output} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {JobServiceService} from "../../../services/job-service.service";
+import {UserStore} from "../../../stores/UserStore";
 
 
 
@@ -18,6 +19,7 @@ export class JobFormComponent implements OnChanges{
 
   ngOnChanges() {
     if (this.selectedJob) {
+      this.jobForm.get('id')?.setValue(this.selectedJob?.id);
       this.jobForm.get('jobTitle')?.setValue(this.selectedJob?.jobTitle);
       this.jobForm.get('workplace')?.setValue(this.selectedJob?.workplace);
       this.jobForm.get('workType')?.setValue(this.selectedJob?.workType);
@@ -39,8 +41,9 @@ export class JobFormComponent implements OnChanges{
     this.visibleChange.emit(this.visible);
   }
 
-  constructor(private fb: FormBuilder, private jobService: JobServiceService) {
+  constructor(private fb: FormBuilder, private jobService: JobServiceService, private userStore: UserStore) {
     this.jobForm = this.fb.group({
+      id: ['', Validators.required],
       jobTitle: ['', Validators.required],
       workplace: ['', Validators.required],
       workType: ['', Validators.required],
@@ -49,23 +52,19 @@ export class JobFormComponent implements OnChanges{
       jobDescription: ['', Validators.required],
       jobResponsibilities: ['', Validators.required],
       backgroundSkills: ['', Validators.required],
-      jobBenefits: ['', Validators.required]
+      jobBenefits: ['', Validators.required],
+      userId: ['', Validators.required]
     });
   }
 
 
   submitJobForm() {
-    this.jobService.addJob({
-      userId: 'SWyg6mbbzeRrayewKprp2XaYhfm1',
-      backgroundSkills: "Knowledge in JavaScript, TypeScript, Angular, and NodeJS. Understanding of REST APIs, SQL, and Git version control. Familiarity with Agile methodologies and TDD (Test Driven Development).",
-      deadline: "2023-06-30",
-      jobBenefits: "Health insurance, Retirement plan, Paid time off, Flexible schedule, Professional development assistance.",
-      jobDescription: "Developing front end website architecture, designing user interactions on web pages. You will be responsible for the server side of our web applications and you will also be responsible for developing and integrating the front-end elements into the application.",
-      jobResponsibilities: "Developing front end website architecture, designing user interactions on web pages, developing back end website applications, creating servers and databases for functionality, ensuring responsiveness of applications, working alongside graphic designers for web design features.",
-      jobTitle: "Full Stack Developer",
-      startDate: "2023-07-15",
-      workType: "Full-time",
-      workplace: "Remote"
-    })
+    this.jobForm.get('userId')?.setValue(this.userStore.getUser.uid)
+    this.jobService.addJob(this.jobForm.value)
+  }
+
+  onApply() {
+    this.jobForm.get('userId')?.setValue(this.userStore.getUser.uid)
+    this.jobService.apply(this.jobForm.get('id')?.value.toString(), this.userStore.getUser.uid)
   }
 }

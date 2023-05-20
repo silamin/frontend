@@ -10,12 +10,11 @@ import {UserStore} from "./stores/UserStore";
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit{
-    constructor(authService: AuthServiceService, private afAuth: AngularFireAuth, private userStore: UserStore, private router: Router) {
-      authService.login('loulou@easv.dk','e50afeed0');
-      //SWyg6mbbzeRrayewKprp2XaYhfm1 uid
+    constructor(private authService: AuthServiceService, private afAuth: AngularFireAuth, private userStore: UserStore, private router: Router) {
     }
 
-  ngOnInit(): void {
+   async ngOnInit() {
+    await this.authService.login('loulou@easv.dk','e50afeed0');
     this.afAuth.authState.subscribe(user => {
       if (user) {
         // User is signed in
