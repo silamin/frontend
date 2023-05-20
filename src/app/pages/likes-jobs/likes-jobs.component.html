@@ -1,27 +1,31 @@
-<app-navigation-bar [isCompanyUser]="false" [showSearchBar]="true"></app-navigation-bar>
-<div class="container my-2">
-  <div class="row">
-    <div *ngFor="let job of likedJobs" class="col-md-4">
-      <div class="card mb-4 job-container">
+<app-navigation-bar></app-navigation-bar>
+<div class="container my-5">
+  <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+    <div *ngFor="let job of paginatedJobs" class="col">
+      <div class="card h-100 shadow-sm">
         <div class="card-body">
-          <h5 class="card-title">{{job.jobTitle}}</h5>
-          <div class="text-container">
-            <p class="card-text">{{job.description}}</p>
+          <h5 class="card-title text-primary">{{ job.title }}</h5>
+          <h6 class="card-subtitle mb-2 text-muted">{{ job.company }}</h6>
+          <p class="card-text location-text"><i class="fas fa-map-marker-alt text-muted mr-2"></i>{{ job.location }}</p>
+          <div class="py-2" [ngbCollapse]="isCollapsed[job.id]">
+            <div class="card mt-2">
+              <div class="card-body">
+                Detailed job description goes here.
+              </div>
+            </div>
           </div>
-          <div class="card-footer buttons-container">
-          <div class="d-flex justify-content-between mt-3">
-            <button (click)="dislike(job)" class="btn btn-outline-danger">Dislike</button>
-            <button (click)="showMore(job)" class="btn btn-outline-primary">Show More</button>
-            <button (click)="applyNow(job)" class="btn btn-outline-success">Apply Now</button>
-          </div>
-          </div>
+          <button class="btn btn-link text-primary" (click)="toggleCollapse(job.id)"><i class="fas fa-chevron-down"></i> Show More</button>
+        </div>
+        <div class="card-footer d-flex justify-content-between align-items-center">
+          <button class="btn btn-outline-success" (click)="onApply(job.id)"><i class="fas fa-check-circle"></i> Apply</button>
+          <button class="btn btn-outline-danger" (click)="onDislike(job.id)"><i class="fas fa-times-circle"></i> Dislike</button>
         </div>
       </div>
     </div>
   </div>
-  <div class="row my-2">
+  <div class="row">
     <div class="col d-flex justify-content-end">
-      <app-app-pagination *ngIf="likedJobs.length > 2" [currentPage]="currentPage" [itemsPerPage]="8" [totalItems]="likedJobs.length" (pageChanged)="onPageChanged($event)"></app-app-pagination>
+      <app-app-pagination class="my-3" [currentPage]="currentPage" [itemsPerPage]="itemsPerPage" [totalItems]="jobs.length" (pageChanged)="onPageChanged($event)"></app-app-pagination>
     </div>
   </div>
 </div>

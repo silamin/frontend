@@ -30,7 +30,8 @@ import {AngularFireAuthModule} from "@angular/fire/compat/auth";
 import {AngularFireModule} from "@angular/fire/compat";
 import {UserStore} from "./stores/UserStore";
 import { LanguageFormComponent } from './components/language-form/language-form.component';
-import { ApplicationStatusComponent } from './pages/application-status/application-status.component'; // import FontAwesomeModule
+import { ApplicationStatusComponent } from './pages/application-status/application-status.component';
+import {NgbCollapse} from "@ng-bootstrap/ng-bootstrap"; // import FontAwesomeModule
 
 const routes: Routes = [
   { path: '', component: SignInComponent },
@@ -76,18 +77,19 @@ const firebaseConfig = {
     LanguageFormComponent,
     ApplicationStatusComponent
   ],
-  imports: [
-    BrowserModule,
-    FormsModule,
-    RouterModule.forRoot(routes),
-    FontAwesomeModule,
-    ReactiveFormsModule,
+    imports: [
+        BrowserModule,
+        FormsModule,
+        RouterModule.forRoot(routes),
+        FontAwesomeModule,
+        ReactiveFormsModule,
 
-    // Add AngularFire and Firebase configurations
-    AngularFireModule.initializeApp(firebaseConfig),
-    AngularFireAuthModule,
-    AngularFireFunctionsModule,
-  ],
+        // Add AngularFire and Firebase configurations
+        AngularFireModule.initializeApp(firebaseConfig),
+        AngularFireAuthModule,
+        AngularFireFunctionsModule,
+        NgbCollapse,
+    ],
   providers: [UserStore],
   bootstrap: [AppComponent],
 
