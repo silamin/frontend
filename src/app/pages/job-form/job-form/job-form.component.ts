@@ -10,7 +10,7 @@ import {UserStore} from "../../../stores/UserStore";
   templateUrl: './job-form.component.html',
   styleUrls: ['./job-form.component.scss'],
 })
-export class JobFormComponent implements OnChanges{
+export class JobFormComponent implements OnChanges, OnInit{
   @Input() visible: boolean = false;
   @Output() visibleChange: EventEmitter<boolean> = new EventEmitter<boolean>();
   @Input() isDisplay = false;
@@ -31,6 +31,9 @@ export class JobFormComponent implements OnChanges{
       this.jobForm.get('jobBenefits')?.setValue(this.selectedJob?.jobBenefits);
       this.selectedJobChange.emit(this.selectedJob);
     }
+  }
+  ngOnInit() {
+    this.userStore.user$.subscribe(user => this.user = user)
   }
 
   jobForm: FormGroup;
@@ -56,15 +59,15 @@ export class JobFormComponent implements OnChanges{
       userId: ['', Validators.required]
     });
   }
-
+  user:any;
 
   submitJobForm() {
-    this.jobForm.get('userId')?.setValue(this.userStore.getUser.uid)
+    this.jobForm.get('userId')?.setValue(this.user.uid)
     this.jobService.addJob(this.jobForm.value)
   }
 
   onApply() {
-    this.jobForm.get('userId')?.setValue(this.userStore.getUser.uid)
-    this.jobService.apply(this.jobForm.get('id')?.value.toString(), this.userStore.getUser.uid)
+    this.jobForm.get('userId')?.setValue(this.user.uid)
+    this.jobService.apply(this.jobForm.get('id')?.value.toString(), this.user.uid)
   }
 }

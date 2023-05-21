@@ -13,6 +13,7 @@ import {SkillFormComponent} from "../../components/skill-form/skill-form.compone
 import {EducationFormComponent} from "../../components/education-form/education-form.component";
 import {LanguageFormComponent} from "../../components/language-form/language-form.component";
 import {HasForm} from "../../services/factories/FormFactory";
+import {user} from "@angular/fire/auth";
 
 
 interface Section {
@@ -27,6 +28,7 @@ interface Section {
   styleUrls: ['./user-profile.component.scss']
 })
 export class UserProfileComponent implements OnInit{
+  user: any;
   @ViewChild('workExperienceForm') workExperienceForm!: WorkExperienceFormComponent;
   @ViewChild('skillForm') skillForm!: SkillFormComponent;
   @ViewChild('educationForm') educationForm!: EducationFormComponent;
@@ -68,7 +70,8 @@ export class UserProfileComponent implements OnInit{
   }
 
   async ngOnInit() {
-    this.workExperiences$ =  await this.workExperienceService.getAllWorkExperiences(this.userStore.getUser.uid);
+    this.userStore.user$.subscribe(user => this.user = user)
+    this.workExperiences$ =  await this.workExperienceService.getAllWorkExperiences(this.user.uid);
 
     this.sections = [
       {
@@ -78,17 +81,17 @@ export class UserProfileComponent implements OnInit{
       },
       {
         title: 'Education',
-        items: this.educationService.getAllEducationBackground(this.userStore.getUser.uid),
+        items: this.educationService.getAllEducationBackground(this.user.uid),
         displayProperty: 'degree'
       },
       {
         title: 'Skills',
-        items: this.skillsService.getAllSkills(this.userStore.getUser.uid),
+        items: this.skillsService.getAllSkills(this.user.uid),
         displayProperty: 'skill'
       },
       {
         title: 'Languages',
-        items: this.languageService.getAllLanguages(this.userStore.getUser.uid),
+        items: this.languageService.getAllLanguages(this.user.uid),
         displayProperty: 'language'
       }
     ];

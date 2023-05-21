@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
 import {FormBuilder, FormGroup} from "@angular/forms";
 import {WorkExperienceService} from "../../services/work-experience.service";
 import {UserStore} from "../../stores/UserStore";
@@ -11,11 +11,12 @@ import {HasForm} from "../../services/factories/FormFactory";
   templateUrl: './work-experience-form.component.html',
   styleUrls: ['./work-experience-form.component.scss']
 })
-export class WorkExperienceFormComponent implements HasForm{
+export class WorkExperienceFormComponent implements HasForm, OnInit{
   @Input() visible: boolean=false;
   @Output() visibleChange: EventEmitter<boolean> = new EventEmitter<boolean>();
   @Input() workExperienceData: WorkExperienceFormDTO | undefined;
   formData: FormGroup;
+  user: any;
 
   close() {
     this.visible = false;
@@ -48,6 +49,10 @@ export class WorkExperienceFormComponent implements HasForm{
     startDate: new Date()
   };
   onSubmit() {
-      this.workExperienceService.addUserWorkExperience(this.userStore.getUser.uid,this.newWorkExperience)
+      this.workExperienceService.addUserWorkExperience(this.user.uid,this.newWorkExperience)
+  }
+
+  ngOnInit(): void {
+    this.userStore.user$.subscribe(user => this.user = user)
   }
 }

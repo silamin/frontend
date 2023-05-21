@@ -11,7 +11,7 @@ export class CompanyMainPageComponent implements OnInit{
   constructor(private jobsService: JobServiceService, private userStore: UserStore) {}
   itemsPerPage = 3;
   currentPage = 1;
-  jobsToDisplay: any[] = [];
+  jobsToDisplay!: any[];
 
 
   get paginatedJobs(): any[] {
@@ -149,7 +149,7 @@ export class CompanyMainPageComponent implements OnInit{
       ]
     }
   ];
-
+  user: any;
   selectedJob: any = null;
   jobPopupVisible = false;
   isDisplay = false;
@@ -191,10 +191,21 @@ export class CompanyMainPageComponent implements OnInit{
   }
 
   ngOnInit(): void {
-    console.log(this.userStore.getUser)
-    this.jobsTest= this.jobsService.getAllJobs(this.userStore.getUser.uid);
-    this.jobsTest.subscribe(jobs => {
-      this.jobsToDisplay = jobs;
-    }
-    )};
+    this.userStore.user$.subscribe(user => {
+      if (user) {
+        this.user = user;
+        this.jobsTest = this.jobsService.getAllJobs(this.user.uid);
+        console.log(this.user.uid);
+
+        this.jobsTest.subscribe(jobs => {
+          this.jobsToDisplay = jobs;
+        });
+      } else {
+        console.log("No user is signed in.");
+        this.user = null;  // Set this.user to null when no user is signed in
+        this.jobsToDisplay = [];  // Reset jobsToDisplay when no user is signed in
+      }
+    });
+  }
+
 }

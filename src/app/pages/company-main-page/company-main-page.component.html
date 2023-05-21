@@ -1,81 +1,95 @@
-<app-navigation-bar [isCompanyUser]="true"></app-navigation-bar>
-<div class="container mt-4">
-  <div class="row">
-    <div class="col">
-      <div class="card h-100 mb-4" *ngFor="let job of paginatedJobs; let jobIndex = index">
-        <div class="card-header d-flex align-items-center">
-          <div class="col-10">
-            <h5 class="card-title">{{ job.jobTitle }}</h5>
-            <h6 class="card-subtitle mb-2 text-muted">{{ job.jobDescription }}</h6>
-          </div>
-          <div class="col-2 text-end d-flex">
-            <button class="btn btn-primary btn-light"><i class="fa fa-edit"></i> Edit</button>
-            <button class="btn btn-primary btn-danger"><i class="fa fa-trash"></i> Delete</button>
-          </div>
-        </div>
-
-        <div class="card-body">
-          <p class="card-text">{{ job.description }}</p>
-          <div class="table-responsive">
-            <table class="table table-striped">
-              <thead *ngIf="job.candidates && job.candidates.length > 0">
-              <tr>
-                <th>Name</th>
-                <th>Experience</th>
-                <th>Summary</th>
-                <th>Education</th>
-                <th></th>
-              </tr>
-              </thead>
-              <tbody>
-              <ng-container *ngIf="job.candidates && job.candidates.length > 0; else noCandidates">
-                <tr *ngFor="let candidate of job.candidates; let rowIndex = index">
-                  <td>{{ candidate.name }}</td>
-                  <td>{{ candidate.experience }}</td>
-                  <td>{{ candidate.summary }}</td>
-                  <td>{{ candidate.education }}</td>
-                  <td>
-                    <button class="btn btn-primary" (click)="showCandidates(jobIndex, rowIndex)">Select</button>
-                  </td>
-                </tr>
-              </ng-container>
-              <ng-template #noCandidates>
-                <tr>
-                  <td colspan="5">No candidates</td>
-                </tr>
-              </ng-template>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col d-flex justify-content-end">
-      <app-app-pagination [currentPage]="currentPage" [itemsPerPage]="itemsPerPage" [totalItems]="jobsToDisplay.length" (pageChanged)="onPageChanged($event)"></app-app-pagination>
-    </div>
-  </div>
-</div>
-
-<!-- Candidates dropdown -->
-<div class="dropdown" [class.show]="isVisible">
-  <div class="card">
-    <div class="card-body">
-      <h5 class="card-title">{{ selectedJob?.title }}</h5>
-      <h6 class="card-subtitle mb-2 text-muted">{{ selectedJob?.company }}</h6>
-      <p class="card-text">{{ selectedJob?.description }}</p>
-      <hr>
-      <div *ngFor="let candidate of selectedJob?.candidates">
-        <div class="card mb-2">
-          <div class="card-body">
-            <h5 class="card-title">{{ candidate.name }}</h5>
-            <h6 class="card-subtitle mb-2 text-muted">{{ candidate.education }}</h6>
-            <p class="card-text">{{ candidate.summary }}</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
 <app-job-form></app-job-form>
+<app-navigation-bar [isCompanyUser]="true"></app-navigation-bar>
+<ng-container *ngIf="!jobsToDisplay else jobsList">
+  <div class="loading-screen-content">
+    <div class="logo">
+      <img src="/assets/loading-logo.svg" alt="">
+    </div>
+    <div class="text">
+      <h1 class="loading-text">Preparing your experience...</h1>
+      <p class="subtext">Please wait while we gather all the amazing jobs for you.</p>
+    </div>
+  </div>
+</ng-container>
+
+  <ng-template #jobsList>
+    <div class="container mt-4">
+      <div class="row">
+        <div class="col">
+          <div class="card mb-4" *ngFor="let job of paginatedJobs; let jobIndex = index">
+            <div class="card-header d-flex align-items-center">
+              <div class="col-lg-9 col-md-8 col-sm-6">
+                <h5 class="card-title">{{ job.jobTitle }}</h5>
+                <h6 class="card-subtitle mb-2 text-muted">{{ job.jobDescription }}</h6>
+              </div>
+              <div class="col-lg-3 col-md-4 col-sm-4 col-sm-6 text-end d-flex">
+                <button class="btn btn-primary btn-light"><i class="fa fa-edit"></i> Edit</button>
+                <button class="btn btn-primary btn-danger"><i class="fa fa-trash"></i> Delete</button>
+              </div>
+            </div>
+
+            <div class="card-body">
+              <p class="card-text">{{ job.description }}</p>
+              <div class="table-responsive">
+                <table class="table table-striped">
+                  <thead *ngIf="job.candidates && job.candidates.length > 0">
+                  <tr>
+                    <th>Name</th>
+                    <th>Experience</th>
+                    <th>Summary</th>
+                    <th>Education</th>
+                    <th></th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <ng-container *ngIf="job.candidates && job.candidates.length > 0; else noCandidates">
+                    <tr *ngFor="let candidate of job.candidates; let rowIndex = index">
+                      <td>{{ candidate.name }}</td>
+                      <td>{{ candidate.experience }}</td>
+                      <td>{{ candidate.summary }}</td>
+                      <td>{{ candidate.education }}</td>
+                      <td>
+                        <button class="btn btn-primary" (click)="showCandidates(jobIndex, rowIndex)">Select</button>
+                      </td>
+                    </tr>
+                  </ng-container>
+                  <ng-template #noCandidates>
+                    <tr>
+                      <td colspan="5">No candidates</td>
+                    </tr>
+                  </ng-template>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col d-flex justify-content-end">
+          <app-app-pagination [currentPage]="currentPage" [itemsPerPage]="itemsPerPage" [totalItems]="jobsToDisplay.length" (pageChanged)="onPageChanged($event)"></app-app-pagination>
+        </div>
+      </div>
+    </div>
+
+    <!-- Candidates dropdown -->
+    <div class="dropdown" [class.show]="isVisible">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">{{ selectedJob?.title }}</h5>
+          <h6 class="card-subtitle mb-2 text-muted">{{ selectedJob?.company }}</h6>
+          <p class="card-text">{{ selectedJob?.description }}</p>
+          <hr>
+          <div *ngFor="let candidate of selectedJob?.candidates">
+            <div class="card mb-2">
+              <div class="card-body">
+                <h5 class="card-title">{{ candidate.name }}</h5>
+                <h6 class="card-subtitle mb-2 text-muted">{{ candidate.education }}</h6>
+                <p class="card-text">{{ candidate.summary }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-template>

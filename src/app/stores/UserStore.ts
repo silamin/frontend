@@ -1,16 +1,13 @@
 import {action, observable} from 'mobx-angular';
 import {Injectable} from "@angular/core";
+import {BehaviorSubject, Observable} from "rxjs";
 
 @Injectable()
-export class UserStore{
-  @observable private _user: any;
+export class UserStore {
+  user$: BehaviorSubject<any> = new BehaviorSubject<any>({});
 
-  @action setUser(user: any) {
-    console.log(this._user)
-    this._user = user;
-  }
-
-  get getUser(): any {
-    return this._user;
+  setUser(user: any) {
+    console.log(user.uid)
+    this.user$.next(user); // Use next function to set the user
   }
 }
