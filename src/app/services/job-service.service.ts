@@ -3,6 +3,7 @@ import {AngularFireAuth} from "@angular/fire/compat/auth";
 import {AngularFireFunctions} from "@angular/fire/compat/functions";
 import {AngularFirestore} from "@angular/fire/compat/firestore";
 import {JobDto} from "../dtos/DTO's";
+import {map, Observable} from "rxjs";
 
 @Injectable({
   providedIn: 'root'
@@ -45,13 +46,14 @@ export class JobServiceService {
   }
 
 
-  getAllJobs(userId?: string) {
+  getAllJobs(userId?: string): Observable<any[]> {
     if (userId) {
       return this.firestore.collection('jobs', ref => ref.where('userId', '==', userId)).valueChanges();
     } else {
       return this.firestore.collection('jobs').valueChanges();
     }
   }
+
 
   async apply(jobId: string, userId: string): Promise<void> {
     // Reference to the specific 'job' document
@@ -79,5 +81,10 @@ export class JobServiceService {
     await jobDocRef.update(jobData);
   }
 
+
+  getCandidate(candidateId: string): Observable<any> {
+    console.log(this.firestore.collection('users').doc(candidateId).valueChanges())
+    return this.firestore.collection('users').doc(candidateId).valueChanges();
+  }
 
 }

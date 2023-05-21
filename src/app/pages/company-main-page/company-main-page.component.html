@@ -44,14 +44,15 @@
                   <tbody>
                   <ng-container *ngIf="job.candidates && job.candidates.length > 0; else noCandidates">
                     <tr *ngFor="let candidate of job.candidates; let rowIndex = index">
-                      <td>{{ candidate.name }}</td>
-                      <td>{{ candidate.experience }}</td>
-                      <td>{{ candidate.summary }}</td>
-                      <td>{{ candidate.education }}</td>
+                      <td>{{ (candidate.name)}}</td>
+                      <td>{{ (candidate.summary)}}</td>
+                      <td>{{ (candidate)}}</td>
+                      <td>{{ (candidate)}}</td>
                       <td>
                         <button class="btn btn-primary" (click)="showCandidates(jobIndex, rowIndex)">Select</button>
                       </td>
                     </tr>
+
                   </ng-container>
                   <ng-template #noCandidates>
                     <tr>
