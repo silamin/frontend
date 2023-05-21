@@ -1,28 +1,29 @@
-<app-navigation-bar class="my-2" [isCompanyUser]="false" [showSearchBar]="true"></app-navigation-bar>
-
-<div class="container my-2">
-  <div class="row">
-    <div class="col-12">
-      <div class="card mb-4">
-        <div class="row g-0">
-          <div class="col-md-2">
-            <img src="https://robohash.org/mockUser?size=104x104" class="img-fluid rounded-start" alt="Profile Picture">
-          </div>
-          <div class="col-md-10">
-            <div class="card-body">
-              <h5 class="card-title">silamin</h5>
-              <div class="card-text box position-relative">
-                <div *ngIf="!editMode">
-                  <p>{{ description }}</p>
-                  <button class="btn btn-link position-absolute top-0 end-0" (click)="editMode = true">
-                    <i class="fa fa-edit"></i>
-                  </button>
-                </div>
-                <div *ngIf="editMode">
-                  <textarea [(ngModel)]="description" class="form-control"></textarea>
-                  <button class="btn btn-link position-absolute top-0 end-0" (click)="editMode = false">
-                    <i class="fa fa-check"></i>
-                  </button>
+<div *ngIf="isCompanyUser === false ; else popUp">
+  <app-navigation-bar class="my-2" [isCompanyUser]="false" [showSearchBar]="true"></app-navigation-bar>
+  <div class="container my-2">
+    <div class="row">
+      <div class="col-12">
+        <div class="card mb-4">
+          <div class="row g-0">
+            <div class="col-md-2">
+              <img src="https://robohash.org/mockUser?size=104x104" class="img-fluid rounded-start" alt="Profile Picture">
+            </div>
+            <div class="col-md-10">
+              <div class="card-body">
+                <h5 class="card-title">silamin</h5>
+                <div class="card-text box position-relative">
+                  <div *ngIf="!editMode">
+                    <p>{{ description }}</p>
+                    <button class="btn btn-link position-absolute top-0 end-0" (click)="editMode = true">
+                      <i class="fa fa-edit"></i>
+                    </button>
+                  </div>
+                  <div *ngIf="editMode">
+                    <textarea [(ngModel)]="description" class="form-control"></textarea>
+                    <button class="btn btn-link position-absolute top-0 end-0" (click)="editMode = false">
+                      <i class="fa fa-check"></i>
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -30,73 +31,152 @@
         </div>
       </div>
     </div>
-  </div>
 
-  <div class="row">
-    <ng-container *ngFor="let section of sections">
-      <div class="col-12">
-        <div class="card mb-4">
-          <div class="card-header d-flex justify-content-between">
-            {{ section.title }}
-            <div>
-              <ng-container *ngIf="!isDisplay">
-                <button class="btn btn-sm btn-success mx-1" (click)="showPopUp(section.title)">
-                  <i class="fa fa-plus"></i>
-                </button>
+    <div class="row">
+      <ng-container *ngFor="let section of sections">
+        <div class="col-12">
+          <div class="card mb-4">
+            <div class="card-header d-flex justify-content-between">
+              {{ section.title }}
+              <div>
+                <ng-container *ngIf="!isDisplay">
+                  <button class="btn btn-sm btn-success mx-1" (click)="showPopUp(section.title)">
+                    <i class="fa fa-plus"></i>
+                  </button>
+                </ng-container>
+              </div>
+            </div>
+            <ul class="list-group list-group-flush">
+              <ng-container *ngIf="section.items | async as items">
+                <ng-container *ngIf="getSlicedItems(items) as slicedItems">
+                  <li class="list-group-item d-flex justify-content-between align-items-center" *ngFor="let item of slicedItems">
+                    {{ item[section.displayProperty] }}
+                    <div>
+                      <button class="btn btn-link text-bg-light" (click)="editItem(item, section.title)">
+                        <i class="fa fa-edit"></i>
+                      </button>
+                      <button class="btn btn-link text-danger" (click)="deleteItem(item, section.title)">
+                        <i class="fa fa-trash"></i>
+                      </button>
+                    </div>
+                  </li>
+                </ng-container>
+
+                <li class="list-group-item" *ngIf="items.length > 3 && !showMore[section.title]">
+                  <div class="d-flex justify-content-center">
+                    <button class="btn btn-primary w-100" (click)="showMoreItems(section.title)">
+                      Show More ({{ items.length - 3 }} left)
+                    </button>
+                  </div>
+                </li>
+
+                <ng-container *ngIf="showMore[section.title]">
+                  <li class="list-group-item d-flex justify-content-between align-items-center" *ngFor="let item of items | slice:3">{{ item[section.displayProperty] }}
+                    <div>
+                      <button class="btn btn-link text-bg-light" (click)="editItem(item, section.title)">
+                        <i class="fa fa-edit"></i>
+                      </button>
+                      <button class="btn btn-link text-danger" (click)="deleteItem(item, section.title)">
+                        <i class="fa fa-trash"></i>
+                      </button>
+                    </div>
+
+                  </li>
+                  <li class="list-group-item">
+                    <div class="d-flex justify-content-center">
+                      <button class="btn btn-secondary w-100" (click)="showLessItems(section.title)">Show Less</button>
+                    </div>
+                  </li>
+                </ng-container>
+              </ng-container>
+            </ul>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+  <app-work-experience-form #workExperienceForm [visible]="isWorkExperienceFormVisible" (visibleChange)="hidePopUp()"></app-work-experience-form>
+  <app-skill-form #skillForm  [visible]="isSkillFormVisible" (visibleChange)="hidePopUp()"></app-skill-form>
+  <app-language-form #languageForm [visible]="isLanguageFormVisible" (visibleChange)="hidePopUp()"></app-language-form>
+  <app-education-form #educationForm [visible]="isEducationFormVisible" (visibleChange)="hidePopUp()"></app-education-form>
+</div>
+<ng-template #popUp>
+  <!-- Content to display when the condition is false -->
+  <div [hidden]="!visible" [ngClass]="{'popup': isPopUp}" class="popup" (click)="close()">
+    <div class="modal-dialog modal-lg w-100" (click)="$event.stopPropagation()">
+      <div class="modal-content popup-content">
+        <div class="modal-header">
+          <h5 class="modal-title">User profile</h5>
+          <button type="button" class="btn-close" (click)="close()"></button>
+        </div>
+        <div class="modal-body">
+          <div class="container my-2">
+            <div class="row">
+              <div class="col-12">
+                <div class="card mb-4">
+                  <div class="row g-0">
+                    <div class="col-md-2">
+                      <img src="https://robohash.org/mockUser?size=104x104" class="img-fluid rounded-start" alt="Profile Picture">
+                    </div>
+                    <div class="col-md-10">
+                      <div class="card-body">
+                        <h5 class="card-title">silamin</h5>
+                        <div class="card-text box position-relative">
+                          <p>{{ description }}</p>
+
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <ng-container *ngFor="let section of sections">
+                <div class="col-12">
+                  <div class="card mb-4">
+                    <div class="card-header d-flex justify-content-between">
+                      {{ section.title }}
+                      <div>
+                      </div>
+                    </div>
+                    <ul class="list-group list-group-flush">
+                      <ng-container *ngIf="section.items | async as items">
+                        <ng-container *ngIf="getSlicedItems(items) as slicedItems">
+                          <li class="list-group-item d-flex justify-content-between align-items-center" *ngFor="let item of slicedItems">
+                            {{ item[section.displayProperty] }}
+                          </li>
+                        </ng-container>
+
+                        <li class="list-group-item" *ngIf="items.length > 3 && !showMore[section.title]">
+                          <div class="d-flex justify-content-center">
+                            <button class="btn btn-primary w-100" (click)="showMoreItems(section.title)">
+                              Show More ({{ items.length - 3 }} left)
+                            </button>
+                          </div>
+                        </li>
+
+                        <ng-container *ngIf="showMore[section.title]">
+                          <li class="list-group-item d-flex justify-content-between align-items-center" *ngFor="let item of items | slice:3">{{ item[section.displayProperty] }}
+
+                          </li>
+                          <li class="list-group-item">
+                            <div class="d-flex justify-content-center">
+                              <button class="btn btn-secondary w-100" (click)="showLessItems(section.title)">Show Less</button>
+                            </div>
+                          </li>
+                        </ng-container>
+                      </ng-container>
+                    </ul>
+                  </div>
+                </div>
               </ng-container>
             </div>
           </div>
-          <ul class="list-group list-group-flush">
-            <ng-container *ngIf="section.items | async as items">
-              <ng-container *ngIf="getSlicedItems(items) as slicedItems">
-                <li class="list-group-item d-flex justify-content-between align-items-center" *ngFor="let item of slicedItems">
-                  {{ item[section.displayProperty] }}
-                  <div>
-                    <button class="btn btn-link text-bg-light" (click)="editItem(item, section.title)">
-                      <i class="fa fa-edit"></i>
-                    </button>
-                    <button class="btn btn-link text-danger" (click)="deleteItem(item, section.title)">
-                      <i class="fa fa-trash"></i>
-                    </button>
-                  </div>
-                </li>
-              </ng-container>
-
-              <li class="list-group-item" *ngIf="items.length > 3 && !showMore[section.title]">
-                <div class="d-flex justify-content-center">
-                  <button class="btn btn-primary w-100" (click)="showMoreItems(section.title)">
-                    Show More ({{ items.length - 3 }} left)
-                  </button>
-                </div>
-              </li>
-
-              <ng-container *ngIf="showMore[section.title]">
-                <li class="list-group-item d-flex justify-content-between align-items-center" *ngFor="let item of items | slice:3">{{ item[section.displayProperty] }}
-                  <div>
-                    <button class="btn btn-link text-bg-light" (click)="editItem(item, section.title)">
-                      <i class="fa fa-edit"></i>
-                    </button>
-                    <button class="btn btn-link text-danger" (click)="deleteItem(item, section.title)">
-                      <i class="fa fa-trash"></i>
-                    </button>
-                  </div>
-
-                </li>
-                <li class="list-group-item">
-                  <div class="d-flex justify-content-center">
-                    <button class="btn btn-secondary w-100" (click)="showLessItems(section.title)">Show Less</button>
-                  </div>
-                </li>
-              </ng-container>
-            </ng-container>
-          </ul>
         </div>
       </div>
-    </ng-container>
+    </div>
   </div>
-</div>
+</ng-template>
 
-<app-work-experience-form #workExperienceForm [visible]="isWorkExperienceFormVisible" (visibleChange)="hidePopUp()"></app-work-experience-form>
-<app-skill-form #skillForm  [visible]="isSkillFormVisible" (visibleChange)="hidePopUp()"></app-skill-form>
-<app-language-form #languageForm [visible]="isLanguageFormVisible" (visibleChange)="hidePopUp()"></app-language-form>
-<app-education-form #educationForm [visible]="isEducationFormVisible" (visibleChange)="hidePopUp()"></app-education-form>

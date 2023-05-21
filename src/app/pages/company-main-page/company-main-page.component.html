@@ -35,32 +35,55 @@
                   <thead *ngIf="job.candidates && job.candidates.length > 0">
                   <tr>
                     <th>Name</th>
-                    <th>Experience</th>
                     <th>Summary</th>
-                    <th>Education</th>
                     <th></th>
                   </tr>
                   </thead>
                   <tbody>
                   <ng-container *ngIf="job.candidates && job.candidates.length > 0; else noCandidates">
                     <tr *ngFor="let candidate of job.candidates; let rowIndex = index">
-                      <td>{{ (candidate.name)}}</td>
-                      <td>{{ (candidate.summary)}}</td>
-                      <td>{{ (candidate)}}</td>
-                      <td>{{ (candidate)}}</td>
+                      <td>{{ candidate.name }}</td>
                       <td>
-                        <button class="btn btn-primary" (click)="showCandidates(jobIndex, rowIndex)">Select</button>
+                        <div class="summary-container">
+                          <div *ngIf="candidate.workExperience && candidate.workExperience.length > 0" class="summary-item">
+                            <span>{{ candidate.workExperience.length }}</span>
+                            <span *ngIf="candidate.workExperience.length === 1"> experience</span>
+                            <span *ngIf="candidate.workExperience.length > 1"> experiences</span>
+                          </div>
+                          <div *ngIf="candidate.education && candidate.education.length > 0" class="summary-item">
+                            <span>{{ candidate.education.length }}</span>
+                            <span *ngIf="candidate.education.length === 1"> education</span>
+                            <span *ngIf="candidate.education.length > 1"> educations</span>
+                          </div>
+                          <div *ngIf="candidate.languages && candidate.languages.length > 0" class="summary-item">
+                            <span>{{ candidate.languages.length }}</span>
+                            <span *ngIf="candidate.languages.length === 1"> language</span>
+                            <span *ngIf="candidate.languages.length > 1"> languages</span>
+                          </div>
+                          <div *ngIf="candidate.skills && candidate.skills.length > 0" class="summary-item">
+                            <span>{{ candidate.skills.length }}</span>
+                            <span *ngIf="candidate.skills.length === 1"> skill</span>
+                            <span *ngIf="candidate.skills.length > 1"> skills</span>
+                          </div>
+                        </div>
                       </td>
-                    </tr>
+                      <td>
+                        <button class="btn btn-outline-primary mb-2 " (click)="showMore(candidate)">Show more <i class="fa fa-info-circle"></i></button>
+                        <button class="btn btn-outline-success  ms-2 mb-2" (click)="showCandidates(jobIndex, rowIndex)">Select <i class="fa fa-check"></i></button>
+                        <button class="btn btn-outline-danger mb-2 ms-2" (click)="showCandidates(jobIndex, rowIndex)">Reject <i class="fa fa-ban"></i></button>
+                      </td>
 
+                    </tr>
                   </ng-container>
                   <ng-template #noCandidates>
                     <tr>
-                      <td colspan="5">No candidates</td>
+                      <td colspan="3">No candidates</td>
                     </tr>
                   </ng-template>
                   </tbody>
                 </table>
+
+
               </div>
             </div>
           </div>
@@ -93,4 +116,5 @@
         </div>
       </div>
     </div>
+    <app-user-profile [user]="selectedUser"  [isPopUp]="isPopUp" [visible]="isUserProfileVisible"></app-user-profile>
   </ng-template>

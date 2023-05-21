@@ -3,7 +3,7 @@ import {AngularFireAuth} from "@angular/fire/compat/auth";
 import {AngularFireFunctions} from "@angular/fire/compat/functions";
 import {AngularFirestore} from "@angular/fire/compat/firestore";
 import {JobDto} from "../dtos/DTO's";
-import {map, Observable} from "rxjs";
+import {combineLatest, map, Observable} from "rxjs";
 
 @Injectable({
   providedIn: 'root'
@@ -85,6 +85,47 @@ export class JobServiceService {
   getCandidate(candidateId: string): Observable<any> {
     console.log(this.firestore.collection('users').doc(candidateId).valueChanges())
     return this.firestore.collection('users').doc(candidateId).valueChanges();
+  }
+  getCandidateWithWorkExperience(candidateId: string): Observable<any> {
+    const candidateDoc = this.firestore.collection('users').doc(candidateId);
+
+    return combineLatest([
+      candidateDoc.valueChanges(),
+      candidateDoc.collection('workExperience').valueChanges()
+    ]).pipe(
+      map(([candidate, workExperience]) => {
+        const candidateData = candidate as any; // Specify the type of candidate object
+        return {
+          ...candidateData,
+          workExperience: workExperience
+        };
+      })
+    );
+  }
+
+  getCandidateWithDetails(candidateId: string): Observable<any> {
+    const candidateDoc = this.firestore.collection('users').doc(candidateId);
+
+    return combineLatest([
+      candidateDoc.valueChanges(),
+      candidateDoc.collection('workExperience').valueChanges(),
+      candidateDoc.collection('education').valueChanges(),
+      candidateDoc.collection('skills').valueChanges(),
+      candidateDoc.collection('languages').valueChanges()
+
+
+    ]).pipe(
+      map(([candidate, workExperience, education, skills, languages]) => {
+        const candidateData = candidate as any; // Specify the type of candidate object
+        return {
+          ...candidateData,
+          workExperience: workExperience,
+          education: education,
+          skills: skills,
+          languages: languages
+        };
+      })
+    );
   }
 
 }

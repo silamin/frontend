@@ -44,7 +44,7 @@ export class CompanyMainPageComponent implements OnInit {
               }
 
               const candidateObservables = job.candidates.map(candidateId =>
-                this.jobsService.getCandidate(candidateId).pipe(take(1))
+                this.jobsService.getCandidateWithDetails(candidateId).pipe(take(1))
               );
 
               return combineLatest(candidateObservables).pipe(
@@ -60,7 +60,7 @@ export class CompanyMainPageComponent implements OnInit {
           })
         ).subscribe(jobsWithCandidates => {
           this.jobsToDisplay = jobsWithCandidates;
-          console.log(this.jobsToDisplay)
+          console.log(this.jobsToDisplay);
         });
       } else {
         this.jobsToDisplay = [];
@@ -71,9 +71,13 @@ export class CompanyMainPageComponent implements OnInit {
 
 
 
+
+
+
   candidatesPosition: { top: string, left: string } = { top: '0', left: '0' };
   isVisible = false;
   selectedJob: any = null;
+  isUserProfileVisible = false;
   showCandidates(jobIndex: number, rowIndex: number) {
     this.selectedJob = this.jobsToDisplay[jobIndex];
     const card = document.getElementById(`card-${jobIndex}-${rowIndex}`);
@@ -101,5 +105,13 @@ export class CompanyMainPageComponent implements OnInit {
           rowBelow.style.top = `${dropdownHeight + cardHeight - rowHeight}px`;
       }
     }
+  }
+  isPopUp: boolean= false
+  selectedUser: any;
+  showMore(selectedUser: any) {
+    console.log(selectedUser)
+    this.isUserProfileVisible =true
+    this.isPopUp=true;
+    this.selectedUser = selectedUser
   }
 }

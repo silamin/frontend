@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, Input, OnInit, ViewChild} from '@angular/core';
 import {WorkExperienceService} from "../../services/work-experience.service";
 import {UserStore} from "../../stores/UserStore";
 import {Observable, take} from "rxjs";
@@ -28,7 +28,7 @@ interface Section {
   styleUrls: ['./user-profile.component.scss']
 })
 export class UserProfileComponent implements OnInit{
-  user: any;
+  @Input() user: any;
   @ViewChild('workExperienceForm') workExperienceForm!: WorkExperienceFormComponent;
   @ViewChild('skillForm') skillForm!: SkillFormComponent;
   @ViewChild('educationForm') educationForm!: EducationFormComponent;
@@ -68,33 +68,68 @@ export class UserProfileComponent implements OnInit{
   showLessItems(sectionTitle: string) {
     this.showMore[sectionTitle] = false;
   }
-
+  isCompanyUser!: boolean;
   async ngOnInit() {
-    this.userStore.user$.subscribe(user => this.user = user)
-    this.workExperiences$ =  await this.workExperienceService.getAllWorkExperiences(this.user.uid);
+    this.userStore.isCompanyUser$.subscribe(isCompanyUser => {
+      this.isCompanyUser = isCompanyUser
+      console.log(this.isCompanyUser)
+    })
+    this.userStore.user$.subscribe(async siUser => {
+      console.log(siUser.uid)
+      if (!siUser.isCompanyUser) {
+        this.user = siUser;
+        this.workExperiences$ = await this.workExperienceService.getAllWorkExperiences(this.user?.uid);
 
-    this.sections = [
-      {
-        title: 'Work Experience',
-        items: this.workExperiences$,
-        displayProperty: 'jobTitle'
-      },
-      {
-        title: 'Education',
-        items: this.educationService.getAllEducationBackground(this.user.uid),
-        displayProperty: 'degree'
-      },
-      {
-        title: 'Skills',
-        items: this.skillsService.getAllSkills(this.user.uid),
-        displayProperty: 'skill'
-      },
-      {
-        title: 'Languages',
-        items: this.languageService.getAllLanguages(this.user.uid),
-        displayProperty: 'language'
+        this.sections = [
+          {
+            title: 'Work Experience',
+            items: this.workExperiences$,
+            displayProperty: 'jobTitle'
+          },
+          {
+            title: 'Education',
+            items: this.educationService.getAllEducationBackground(this.user?.uid),
+            displayProperty: 'degree'
+          },
+          {
+            title: 'Skills',
+            items: this.skillsService.getAllSkills(this.user?.uid),
+            displayProperty: 'skill'
+          },
+          {
+            title: 'Languages',
+            items: this.languageService.getAllLanguages(this.user?.uid),
+            displayProperty: 'language'
+          }
+        ];
+      }else {
+        this.sections = [
+          {
+            title: 'Work Experience',
+            items: this.user.workExperience,
+            displayProperty: 'jobTitle'
+          },
+          {
+            title: 'Education',
+            items: this.user.education,
+            displayProperty: 'degree'
+          },
+          {
+            title: 'Skills',
+            items: this.user.skills,
+            displayProperty: 'skill'
+          },
+          {
+            title: 'Languages',
+            items: this.user.languages,
+            displayProperty: 'language'
+          }
+        ];
       }
-    ];
+
+    })
+    console.log(this.sections)
+
   }
 
   showPopUp(title: string) {
@@ -110,6 +145,8 @@ export class UserProfileComponent implements OnInit{
     return items.length > 3 ? items.slice(0, 3) : items;
   }
    formComponent: HasForm | undefined;
+  @Input() visible: boolean = false ;
+  @Input() isPopUp: boolean =false;
 
   resetData(sectionTitle: string) {
     this.getFormGroup(sectionTitle);
@@ -164,5 +201,10 @@ export class UserProfileComponent implements OnInit{
         section.items = of(updatedItems);
       });
     }
+  }
+
+  close() {
+    this.isPopUp =false
+    this.visible = false;
   }
 }

@@ -1,0 +1,21 @@
+.popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; /* make height 100vh */
+  width: 100%;
+  background-color: rgba(0,0,0,0.5); /* semi-transparent black background */
+  z-index: 9999; /* ensure the popup appears above all other elements */
+  overflow-y: auto; /* add scrollbar if necessary */
+}
+
+
+.popup-content {
+  top: 80px;
+  bottom: 20px;
+}

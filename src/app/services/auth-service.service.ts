@@ -36,18 +36,29 @@ export class AuthServiceService {
   }
 
   async login(email: string, password: string): Promise<void> {
-
     try {
       const userCredential = await this.afAuth.signInWithEmailAndPassword(email, password);
       const user = userCredential.user;
 
       if (user) {
         this.userStore.setUser(user)
+
         // Check if a user document already exists
         const userDocRef = this.firestore.collection('users').doc(user.uid);
         const userDoc = await userDocRef.get().toPromise();
 
-        if (!userDoc?.exists) {
+        if (userDoc?.exists) {
+          // If the user document exists, check if the user is a company user
+          const userData: any = userDoc.data();
+          if (userData) {
+            this.userStore.setIsCompanyUser(userData.isCompanyUser);
+            if (userData.isCompanyUser) {
+              await this.router.navigate(['/company-main-page']);
+            } else {
+              await this.router.navigate(['/user-main-page']); // Navigate to different page for non-company users
+            }
+          }
+        } else {
           // If the user document does not exist, create it
           await userDocRef.set({
             // Add any initial data you want for the user here
@@ -57,14 +68,11 @@ export class AuthServiceService {
       } else {
         console.error('Error during login: No user');
       }
-
     } catch (error) {
       console.error('Error during login:', error);
       throw error;
     }
   }
-
-
 
   async logout(): Promise<void> {
     try {

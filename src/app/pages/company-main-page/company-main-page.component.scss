@@ -56,3 +56,11 @@
   background-color: #f8f9fa;
   padding: 1rem;
 }
+.summary-container {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.summary-item {
+  margin-right: 10px;
+}
