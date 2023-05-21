@@ -50,7 +50,8 @@
               <ng-container *ngIf="section.items | async as items">
                 <ng-container *ngIf="getSlicedItems(items) as slicedItems">
                   <li class="list-group-item d-flex justify-content-between align-items-center" *ngFor="let item of slicedItems">
-                    {{ item[section.displayProperty] }}
+                    {{ getDisplayProperties(item, section.displayProperty) }}
+
                     <div>
                       <button class="btn btn-link text-bg-light" (click)="editItem(item, section.title)">
                         <i class="fa fa-edit"></i>
@@ -71,7 +72,9 @@
                 </li>
 
                 <ng-container *ngIf="showMore[section.title]">
-                  <li class="list-group-item d-flex justify-content-between align-items-center" *ngFor="let item of items | slice:3">{{ item[section.displayProperty] }}
+                  <li class="list-group-item d-flex justify-content-between align-items-center" *ngFor="let item of items | slice:3">
+                    {{ getDisplayProperties(item, section.displayProperty) }}
+
                     <div>
                       <button class="btn btn-link text-bg-light" (click)="editItem(item, section.title)">
                         <i class="fa fa-edit"></i>
@@ -145,8 +148,20 @@
                       <ng-container *ngIf="section.items | async as items">
                         <ng-container *ngIf="getSlicedItems(items) as slicedItems">
                           <li class="list-group-item d-flex justify-content-between align-items-center" *ngFor="let item of slicedItems">
-                            {{ item[section.displayProperty] }}
+                            <ng-container *ngIf="section.title !== 'Skills' && section.title !== 'Languages'; else skillsAndLanguages">
+                              {{ getDisplayPropertiesBrief(item, section.title) }}
+                            </ng-container>
+
+                            <ng-template #skillsAndLanguages>
+                              <div>{{ item.skill || item.language }}</div>
+                              <div class="stars">
+                                <ng-container *ngFor="let starIndex of starIndexes; index as i">
+                                  <span class="star" *ngIf="i < item.rating">★</span>
+                                </ng-container>
+                              </div>
+                            </ng-template>
                           </li>
+
                         </ng-container>
 
                         <li class="list-group-item" *ngIf="items.length > 3 && !showMore[section.title]">
@@ -158,7 +173,9 @@
                         </li>
 
                         <ng-container *ngIf="showMore[section.title]">
-                          <li class="list-group-item d-flex justify-content-between align-items-center" *ngFor="let item of items | slice:3">{{ item[section.displayProperty] }}
+                          <li class="list-group-item d-flex justify-content-between align-items-center" *ngFor="let item of items | slice:3">
+                            {{ getDisplayPropertiesBrief(item,section.title) }}
+
 
                           </li>
                           <li class="list-group-item">

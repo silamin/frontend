@@ -68,12 +68,6 @@ export class CompanyMainPageComponent implements OnInit {
     });
   }
 
-
-
-
-
-
-
   candidatesPosition: { top: string, left: string } = { top: '0', left: '0' };
   isVisible = false;
   selectedJob: any = null;

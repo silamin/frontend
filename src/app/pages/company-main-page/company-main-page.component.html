@@ -18,13 +18,15 @@
         <div class="col">
           <div class="card mb-4" *ngFor="let job of paginatedJobs; let jobIndex = index">
             <div class="card-header d-flex align-items-center">
-              <div class="col-lg-9 col-md-8 col-sm-6">
-                <h5 class="card-title">{{ job.jobTitle }}</h5>
-                <h6 class="card-subtitle mb-2 text-muted">{{ job.jobDescription }}</h6>
-              </div>
-              <div class="col-lg-3 col-md-4 col-sm-4 col-sm-6 text-end d-flex">
-                <button class="btn btn-primary btn-light"><i class="fa fa-edit"></i> Edit</button>
-                <button class="btn btn-primary btn-danger"><i class="fa fa-trash"></i> Delete</button>
+              <div class="row w-100">
+                <div class="col-lg-9 col-md-8 col-sm-6">
+                  <h5 class="card-title">{{ job.jobTitle }}</h5>
+                  <h6 class="card-subtitle mb-2 text-muted">{{ job.jobDescription }}</h6>
+                </div>
+                <div class="col-lg-3 col-md-4 col-sm-6 col-xs-6 text-end">
+                  <button class="btn btn-outline-dark me-2"><i class="fa fa-edit"></i> Edit</button>
+                  <button class="btn btn-outline-danger px-2"><i class="fa fa-trash"></i> Delete</button>
+                </div>
               </div>
             </div>
 
@@ -67,7 +69,7 @@
                           </div>
                         </div>
                       </td>
-                      <td>
+                      <td class="text-end">
                         <button class="btn btn-outline-primary mb-2 " (click)="showMore(candidate)">Show more <i class="fa fa-info-circle"></i></button>
                         <button class="btn btn-outline-success  ms-2 mb-2" (click)="showCandidates(jobIndex, rowIndex)">Select <i class="fa fa-check"></i></button>
                         <button class="btn btn-outline-danger mb-2 ms-2" (click)="showCandidates(jobIndex, rowIndex)">Reject <i class="fa fa-ban"></i></button>

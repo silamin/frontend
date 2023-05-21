@@ -19,7 +19,7 @@ import {user} from "@angular/fire/auth";
 interface Section {
   title: string;
   items: Observable<any[]>;
-  displayProperty: string;
+  displayProperty: string[];
 }
 
 @Component({
@@ -70,12 +70,11 @@ export class UserProfileComponent implements OnInit{
   }
   isCompanyUser!: boolean;
   async ngOnInit() {
+
     this.userStore.isCompanyUser$.subscribe(isCompanyUser => {
       this.isCompanyUser = isCompanyUser
-      console.log(this.isCompanyUser)
     })
     this.userStore.user$.subscribe(async siUser => {
-      console.log(siUser.uid)
       if (!siUser.isCompanyUser) {
         this.user = siUser;
         this.workExperiences$ = await this.workExperienceService.getAllWorkExperiences(this.user?.uid);
@@ -84,22 +83,22 @@ export class UserProfileComponent implements OnInit{
           {
             title: 'Work Experience',
             items: this.workExperiences$,
-            displayProperty: 'jobTitle'
+            displayProperty: ['jobTitle']
           },
           {
             title: 'Education',
             items: this.educationService.getAllEducationBackground(this.user?.uid),
-            displayProperty: 'degree'
+            displayProperty: ['degree']
           },
           {
             title: 'Skills',
             items: this.skillsService.getAllSkills(this.user?.uid),
-            displayProperty: 'skill'
+            displayProperty: ['skill']
           },
           {
             title: 'Languages',
             items: this.languageService.getAllLanguages(this.user?.uid),
-            displayProperty: 'language'
+            displayProperty: ['language']
           }
         ];
       }else {
@@ -107,31 +106,72 @@ export class UserProfileComponent implements OnInit{
           {
             title: 'Work Experience',
             items: this.user.workExperience,
-            displayProperty: 'jobTitle'
+            displayProperty: ['jobTitle']
           },
           {
             title: 'Education',
             items: this.user.education,
-            displayProperty: 'degree'
+            displayProperty: ['degree']
           },
           {
             title: 'Skills',
             items: this.user.skills,
-            displayProperty: 'skill'
+            displayProperty: ['skill']
           },
           {
             title: 'Languages',
             items: this.user.languages,
-            displayProperty: 'language'
+            displayProperty: ['language']
           }
         ];
       }
 
     })
-    console.log(this.sections)
 
   }
+  getDisplayPropertiesBrief(item: any, sectionTitle: string): string {
+    let str = '';
 
+    switch (sectionTitle) {
+      case 'Work Experience':
+        str += `As a ${item.jobTitle} at ${item.companyName}, located in ${item.location}, `;
+        str += `I work on a ${item.employmentType} basis. `;
+
+        if(item.currentlyWorkingHere) {
+          str += `I'm currently employed here. `;
+        } else if(item.endDate) {
+          const endDate = new Date(item.endDate.seconds * 1000);
+          str += `My employment ended on ${endDate.toLocaleDateString()}. `;
+        }
+
+        str += `During my time here, my responsibilities included: ${item.jobDescription}. `;
+        break;
+
+      case 'Education':
+        const startDate = item.startDate ? new Date(item.startDate.seconds * 1000) : undefined;
+        const endDate = item.endDate ? new Date(item.endDate.seconds * 1000) : undefined;
+
+        str += `I pursued my ${item.degree} in ${item.fieldOfStudy} from the ${item.school}. `;
+
+        if (startDate && endDate) {
+          str += `My course began in ${startDate.toLocaleDateString()} and I graduated in ${endDate.toLocaleDateString()} with a grade of ${item.grade}. `;
+        }
+
+        str += `During my time at the university, I participated in activities such as ${item.activitiesAndSocieties}. `;
+
+        str += `My notable accomplishments include ${item.description}. `;
+        break;
+      case 'Skills':
+
+
+      // add more cases as needed
+
+      default:
+        str = 'No information available';
+    }
+
+    return str;
+  }
   showPopUp(title: string) {
     this.resetData(title);
     switch (title){
@@ -147,6 +187,7 @@ export class UserProfileComponent implements OnInit{
    formComponent: HasForm | undefined;
   @Input() visible: boolean = false ;
   @Input() isPopUp: boolean =false;
+  starIndexes: number[] = [0, 1, 2, 3, 4]; // array for 5 star rating system
 
   resetData(sectionTitle: string) {
     this.getFormGroup(sectionTitle);
@@ -207,4 +248,12 @@ export class UserProfileComponent implements OnInit{
     this.isPopUp =false
     this.visible = false;
   }
+  getDisplayProperties(item: any, displayProperties: string[]): string {
+    return displayProperties.map(prop => item[prop]).join(' ');
+  }
+
+  getStarsArray(rating: number): number[] {
+    return [...Array(rating).keys()];
+  }
+
 }
