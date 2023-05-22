@@ -1,6 +1,6 @@
-<app-navigation-bar [isCompanyUser]="false"></app-navigation-bar>
+<app-navigation-bar [isCompanyUser]="isCompanyUser"></app-navigation-bar>
 <div class="container mt-4">
-  <div *ngIf="6>5">
+  <div *ngIf="userType === 'company'">
     <h2>Selected Applicants</h2>
     <div class="card mt-2" *ngFor="let application of applications">
       <div class="card-header d-flex justify-content-between align-items-center" (click)="toggleDetails(application)">
@@ -59,7 +59,7 @@
     </div>
   </div>
 
-  <div *ngIf="4<3">
+  <div *ngIf="userType === 'regular'">
     <h2>My Applications</h2>
     <div class="card mt-2" *ngFor="let application of applications">
       <div class="card-header d-flex justify-content-between align-items-center" (click)="toggleDetails(application)">

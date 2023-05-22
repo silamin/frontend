@@ -1,4 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
+import {UserStore} from "../../stores/UserStore";
 
 @Component({
   selector: 'app-application-status',
@@ -6,7 +7,7 @@ import {Component, Input, OnInit} from '@angular/core';
   styleUrls: ['./application-status.component.scss']
 })
 export class ApplicationStatusComponent implements OnInit{
-  @Input() userType!: 'company' | 'regular';
+  userType!: 'company' | 'regular';
 
   // Application statuses
   statuses = ['Selected', 'Rejected', 'In-progress'];
@@ -48,12 +49,16 @@ export class ApplicationStatusComponent implements OnInit{
     },
     // Add more applications here
   ];
+  isCompanyUser!: boolean;
 
 
-  constructor() { }
+  constructor(private userStore: UserStore) { }
 
   ngOnInit(): void {
-  }
+    this.userStore.isCompanyUser$.subscribe(isCompanyUser => {
+      this.userType = isCompanyUser ? 'company' : 'regular';
+      this.isCompanyUser = isCompanyUser;
+    });  }
 
   changeStatus(application, newStatus: string) {
     application.status = newStatus;
