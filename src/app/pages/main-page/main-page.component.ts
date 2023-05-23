@@ -1,15 +1,12 @@
 import {
   AfterViewInit,
-  ChangeDetectorRef,
   Component,
   ElementRef,
-  HostListener, NgZone,
   OnInit,
-  Renderer2,
   ViewChild
 } from '@angular/core';
-import {faEdit, faSave} from '@fortawesome/free-solid-svg-icons';
 import {JobServiceService} from "../../services/job-service.service";
+import {UserStore} from "../../stores/UserStore";
 
 @Component({
   selector: 'app-main-page',
@@ -17,46 +14,46 @@ import {JobServiceService} from "../../services/job-service.service";
   styleUrls: ['./main-page.component.scss']
 })
 export class MainPageComponent implements OnInit, AfterViewInit{
+  @ViewChild('scrollable', { static: false }) scrollable!: ElementRef;
   @ViewChild('scrollableContainer') scrollableContainerRef!: ElementRef;
-  isContentOverflowing: boolean = false;
-
   currentPage = 1;
-
+  likedJobIds: any;
   onPageChanged(newPage: number): void {
     this.currentPage = newPage;
     // Add logic to handle fetching or filtering the jobs for the current page
-  }
-  ngAfterViewInit() {
-
-
   }
   jobs;
   selectedJob = null;
   jobPopupVisible = true;
   isDisplay = true;
+  user: any;
 
-  constructor(private jobsService: JobServiceService, private elementRef: ElementRef
+  constructor(private jobsService: JobServiceService,
+              private elementRef: ElementRef,
+              private userStore: UserStore
   ) {
   }
 
-  scrollable!: HTMLElement;
   isScrollableEnd: boolean = false;
 
- async ngOnInit() {
-    this.scrollable = this.elementRef.nativeElement.querySelector('.scrollable');
-    this.scrollable.addEventListener('scroll', this.onScroll.bind(this));
+  async ngOnInit() {
+    this.userStore.user$.subscribe(async user => {
+      if (user) {
+        this.user = user;
+        this.likedJobIds = await this.jobsService.getLikedJobIds(user.uid);
+      }
+    });
 
     await this.jobsService.getAllJobs().subscribe(jobs => {
       this.jobs = jobs;
       console.log(jobs);
       this.onSelectedJobChange(this.jobs[0])
-
     });
-
   }
 
   onScroll() {
-    const { scrollTop, clientHeight, scrollHeight } = this.scrollable;
+    const element = this.scrollable.nativeElement;
+    const { scrollTop, clientHeight, scrollHeight } = element;
     this.isScrollableEnd = scrollTop + clientHeight >= scrollHeight;
   }
 
@@ -81,5 +78,20 @@ export class MainPageComponent implements OnInit, AfterViewInit{
   }
   toggleLove(job: any) {
     job.loved = !job.loved;
+    const index = this.likedJobIds.indexOf(job.id);
+    if (index !== -1) {
+      this.likedJobIds.splice(index, 1);
+      this.jobsService.removeLikedJob(this.user.uid, job.id);
+    } else {
+      this.likedJobIds.push(job.id);
+      this.jobsService.likeJob(this.user.uid, job.id);
+    }
+  }
+  isJobLiked(jobId: string): boolean {
+    return this.likedJobIds.includes(jobId);
+  }
+
+  ngAfterViewInit(): void {
+    this.scrollable?.nativeElement?.addEventListener('scroll', this.onScroll.bind(this));
   }
 }

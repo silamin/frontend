@@ -1,10 +1,10 @@
 import {Injectable} from '@angular/core';
 import {AngularFireAuth} from "@angular/fire/compat/auth";
 import {AngularFireFunctions} from "@angular/fire/compat/functions";
-import {AngularFirestore} from "@angular/fire/compat/firestore";
 import {JobDto} from "../dtos/DTO's";
 import {combineLatest, map, Observable} from "rxjs";
-
+import { AngularFirestore } from '@angular/fire/compat/firestore';
+import firebase from 'firebase/compat/app';
 @Injectable({
   providedIn: 'root'
 })
@@ -126,6 +126,45 @@ export class JobServiceService {
         };
       })
     );
+  }
+
+  likeJob(uid: string, jobId: string): Promise<void> {
+    const userRef = this.firestore.collection('users').doc(uid);
+
+    return userRef.get().toPromise().then(docSnapshot => {
+      if (docSnapshot && docSnapshot.exists) {
+        const userData = docSnapshot.data() as { likedJobs?: string[] };
+
+        let likedJobs: string[] = userData.likedJobs || [];
+
+        if (!likedJobs.includes(jobId)) {
+          likedJobs.push(jobId);
+        }
+
+        return userRef.update({ likedJobs });
+      } else {
+        return userRef.set({ likedJobs: [jobId] });
+      }
+    });
+  }
+  getLikedJobIds(uid: string): Promise<string[]> {
+    const userRef = this.firestore.collection('users').doc(uid);
+
+    return userRef.get().toPromise().then(docSnapshot => {
+      if (docSnapshot && docSnapshot.exists) {
+        const userData = docSnapshot.data() as { likedJobs?: string[] };
+        return userData.likedJobs || [];
+      } else {
+        return [];
+      }
+    });
+  }
+  removeLikedJob(uid: string, jobId: string): Promise<void> {
+    const userRef = this.firestore.collection('users').doc(uid);
+
+    return userRef.update({
+      likedJobs: firebase.firestore.FieldValue.arrayRemove(jobId)
+    });
   }
 
 }

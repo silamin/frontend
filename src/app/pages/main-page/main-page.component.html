@@ -1,34 +1,49 @@
 <app-navigation-bar [isCompanyUser]="false" [showSearchBar]="true"></app-navigation-bar>
-<div class="container my-2">
-  <div class="row">
-    <div class="col-md-4">
-      <div class="list-group">
-        <a *ngFor="let job of paginatedJobs" class="list-group-item list-group-item-action" (click)="selectJob(job)">
-          <div class="d-flex w-100 justify-content-between">
-            <h5 class="mb-1">
-              <span class="love-icon" [class.loved]="job.loved" (click)="toggleLove(job)"><i class="far fa-heart"></i></span>
-              {{ job.jobTitle }}
-            </h5>
-          </div>
-          <p style="height: 92px; overflow: auto" class="mb-1">{{ job.jobDescription }}</p>
-        </a>
-        <div class="row my-2">
-          <div class="col d-flex justify-content-center">
-            <app-app-pagination  *ngIf="jobs?.length > 5" [currentPage]="currentPage" [itemsPerPage]="5" [totalItems]="jobs.length" (pageChanged)="onPageChanged($event)"></app-app-pagination>
-          </div>
-        </div>
-      </div>
+<ng-container *ngIf="!likedJobIds else jobsList">
+  <div class="loading-screen-content">
+    <div class="logo">
+      <img src="/assets/loading-logo.svg" alt="">
     </div>
-    <div class="col-md-8 list-group-item">
-      <div class="h-100 scrollable" [class.scrollable-end]="isScrollableEnd">
-        <div class="content">
-          <app-job-form [isPopUp]="false" [visible]="jobPopupVisible" (visibleChange)="hideJobPopUp()" [isDisplay]="isDisplay" [selectedJob]="selectedJob" (selectedJobChange)="onSelectedJobChange($event)" style="width: 100%"></app-job-form>
-        </div>
-        <div class="scroll-indicator-container">
-          <div class="scroll-indicator"></div>
-        </div>
-      </div>
+    <div class="text">
+      <h1 class="loading-text">Preparing your experience...</h1>
+      <p class="subtext">Please wait while we gather all the amazing jobs for you.</p>
     </div>
-
   </div>
-</div>
+</ng-container>
+<ng-template #jobsList>
+  <div class="container my-2">
+    <div class="row">
+      <div class="col-md-4">
+        <div class="list-group">
+          <a *ngFor="let job of paginatedJobs" class="list-group-item list-group-item-action" (click)="selectJob(job)">
+            <div class="d-flex w-100 justify-content-between">
+              <h5 class="mb-1">
+                <span class="love-icon" [class.loved]="isJobLiked(job.id)" (click)="toggleLove(job)"><i class="far fa-heart"></i></span>
+                {{ job.jobTitle }}
+              </h5>
+            </div>
+            <p style="height: 92px; overflow: auto" class="mb-1">{{ job.jobDescription }}</p>
+          </a>
+
+          <div class="row my-2">
+            <div class="col d-flex justify-content-center">
+              <app-app-pagination  *ngIf="jobs?.length > 5" [currentPage]="currentPage" [itemsPerPage]="5" [totalItems]="jobs.length" (pageChanged)="onPageChanged($event)"></app-app-pagination>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-8 list-group-item">
+        <div class="h-100 scrollable" #scrollable [class.scrollable-end]="isScrollableEnd">
+          <div class="content">
+            <app-job-form [isPopUp]="false" [visible]="jobPopupVisible" (visibleChange)="hideJobPopUp()" [isDisplay]="isDisplay" [selectedJob]="selectedJob" (selectedJobChange)="onSelectedJobChange($event)" style="width: 100%"></app-job-form>
+          </div>
+          <div class="scroll-indicator-container">
+            <div class="scroll-indicator"></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</ng-template>
+

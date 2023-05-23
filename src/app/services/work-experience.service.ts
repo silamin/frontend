@@ -64,7 +64,7 @@ export class WorkExperienceService implements SectionService{
     this.firestore
       .collection('users')
       .doc(userId)
-      .collection('skills', ref => ref.where('skill', '==', item.id))
+      .collection('skills', ref => ref.where('id', '==', item.id))
       .get()
       .subscribe(querySnapshot => {
         querySnapshot.forEach(doc => {
