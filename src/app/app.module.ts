@@ -31,7 +31,7 @@ import {AngularFireModule} from "@angular/fire/compat";
 import {UserStore} from "./stores/UserStore";
 import { LanguageFormComponent } from './components/language-form/language-form.component';
 import { ApplicationStatusComponent } from './pages/application-status/application-status.component';
-import {NgbCollapse} from "@ng-bootstrap/ng-bootstrap"; // import FontAwesomeModule
+import {NgbCollapse} from "@ng-bootstrap/ng-bootstrap";
 
 const routes: Routes = [
   { path: '', component: SignInComponent },
@@ -75,7 +75,7 @@ const firebaseConfig = {
     LikesJobsComponent,
     ChatComponent,
     LanguageFormComponent,
-    ApplicationStatusComponent
+    ApplicationStatusComponent,
   ],
     imports: [
         BrowserModule,

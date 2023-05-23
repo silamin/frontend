@@ -41,3 +41,20 @@ export interface  JobDto{
   jobBenefits: string,
   candidates?: any[];
 }
+
+interface AddressDTO {
+  street: string;
+  city: string;
+  postalCode: string;
+  country: string
+}
+
+export interface UserDTO{
+  isCompanyUser: boolean;
+  name: string;
+  summary: string;
+  email: string;
+  phoneNumber: string;
+  address: AddressDTO;
+  socialMediaProfiles: {}
+}

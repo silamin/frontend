@@ -46,3 +46,27 @@
 .star {
   display: inline-block;
 }
+
+.expandable-card {
+  max-height: none;
+  transition: max-height 0.01s ease-out, overflow-y 0.01s ease-out;
+}
+
+.scrollable-card {
+  height: 140px; /* Adjust this value to suit your layout */
+  overflow-y: auto;
+  transition: max-height 0.01s ease-out, overflow-y 0.01s ease-out;
+}
+
+@keyframes rotate {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(180deg); }
+}
+
+.rotate-icon {
+  animation: rotate 0.2s linear;
+}
+
+.toggle-button {
+  margin-top: 10px;
+}

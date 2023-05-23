@@ -50,14 +50,16 @@ export class ApplicationStatusComponent implements OnInit{
     // Add more applications here
   ];
   isCompanyUser!: boolean;
+  userData: any;
 
 
   constructor(private userStore: UserStore) { }
 
   ngOnInit(): void {
-    this.userStore.isCompanyUser$.subscribe(isCompanyUser => {
-      this.userType = isCompanyUser ? 'company' : 'regular';
-      this.isCompanyUser = isCompanyUser;
+    this.userStore.userData$.subscribe(userData => {
+      this.userData = userData;
+      this.userType = this.userData.isCompanyUser ? 'company' : 'regular';
+      this.isCompanyUser = this.userData.isCompanyUser;
     });  }
 
   changeStatus(application, newStatus: string) {

@@ -51,7 +51,7 @@ export class AuthServiceService {
           // If the user document exists, check if the user is a company user
           const userData: any = userDoc.data();
           if (userData) {
-            this.userStore.setIsCompanyUser(userData.isCompanyUser);
+            this.userStore.setUserData(userData);
             if (userData.isCompanyUser) {
               await this.router.navigate(['/company-main-page']);
             } else {

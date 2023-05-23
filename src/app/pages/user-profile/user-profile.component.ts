@@ -2,7 +2,7 @@ import {Component, Input, OnInit, ViewChild} from '@angular/core';
 import {WorkExperienceService} from "../../services/work-experience.service";
 import {UserStore} from "../../stores/UserStore";
 import {Observable, take} from "rxjs";
-import {WorkExperienceFormDTO} from "../../dtos/DTO's";
+import {JobDto, UserDTO, WorkExperienceFormDTO} from "../../dtos/DTO's";
 import {EducationService} from "../../services/education.service";
 import {SkillsService} from "../../services/skills.service";
 import {LanguageServiceService} from "../../services/language-service.service";
@@ -14,6 +14,7 @@ import {EducationFormComponent} from "../../components/education-form/education-
 import {LanguageFormComponent} from "../../components/language-form/language-form.component";
 import {HasForm} from "../../services/factories/FormFactory";
 import {user} from "@angular/fire/auth";
+import {FormBuilder} from "@angular/forms";
 
 
 interface Section {
@@ -36,6 +37,10 @@ export class UserProfileComponent implements OnInit{
 
   items: Observable<any>[] = [];
   showMore = {};
+  public showMoreUserInfo = true;
+  toggleShowMore() {
+    this.showMoreUserInfo = !this.showMoreUserInfo;
+  }
   isDisplay = false;
   isWorkExperienceFormVisible = false;
   isEducationFormVisible = false;
@@ -54,6 +59,7 @@ export class UserProfileComponent implements OnInit{
     private skillsService: SkillsService,
     private languageService: LanguageServiceService,
      private formFactoryProvider: FormFactoryProviderService,
+    private formBuilder: FormBuilder
   ) {
     this.sections.forEach(section => {
       section.items.subscribe(data => this.items = data);
@@ -69,10 +75,17 @@ export class UserProfileComponent implements OnInit{
     this.showMore[sectionTitle] = false;
   }
   isCompanyUser!: boolean;
+  userData!: UserDTO;
   async ngOnInit() {
+    this.createUserInfoFormGroup()
+    this.userStore.userData$.subscribe(userData => {
+      if (userData){
+        this.userData = userData;
+        console.log(userData)
+        this.socialMediaKeys = Object.keys(this.userData.socialMediaProfiles);
+        this.isCompanyUser = userData.isCompanyUser
+      }
 
-    this.userStore.isCompanyUser$.subscribe(isCompanyUser => {
-      this.isCompanyUser = isCompanyUser
     })
     this.userStore.user$.subscribe(async siUser => {
       if (!siUser.isCompanyUser) {
@@ -188,6 +201,7 @@ export class UserProfileComponent implements OnInit{
   @Input() visible: boolean = false ;
   @Input() isPopUp: boolean =false;
   starIndexes: number[] = [0, 1, 2, 3, 4]; // array for 5 star rating system
+  formGroup: any;
 
   resetData(sectionTitle: string) {
     this.getFormGroup(sectionTitle);
@@ -251,9 +265,29 @@ export class UserProfileComponent implements OnInit{
   getDisplayProperties(item: any, displayProperties: string[]): string {
     return displayProperties.map(prop => item[prop]).join(' ');
   }
+  editField:any;
+  socialMediaKeys: any;
 
-  getStarsArray(rating: number): number[] {
-    return [...Array(rating).keys()];
+  isEditing(field: string): boolean {
+    return this.editField === field;
   }
 
+  startEditing(field: string): void {
+    this.editField = field;
+  }
+
+  stopEditing(): void {
+    // here you would typically have a call to an API to save changes
+    // the API call could be different depending on this.editField value
+    this.editField = '';
+  }
+
+  private createUserInfoFormGroup() {
+    this.formGroup = this.formBuilder.group({
+      email: [ '', []],
+      phoneNumber: [ '', []],
+      address: [ '', []],
+      social: [ '', []]
+    });
+  }
 }

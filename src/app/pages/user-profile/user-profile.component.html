@@ -5,25 +5,84 @@
       <div class="col-12">
         <div class="card mb-4">
           <div class="row g-0">
-            <div class="col-md-2">
+            <div class="col-md-2 d-flex flex-column align-items-center">
               <img src="https://robohash.org/mockUser?size=104x104" class="img-fluid rounded-start" alt="Profile Picture">
+              <button class="toggle-button btn btn-outline-primary" (click)="toggleShowMore()">
+                {{ showMoreUserInfo ? 'Show Less' : 'Show More' }}
+                <i class="fa" [ngClass]="{'fa-chevron-down': !showMoreUserInfo, 'fa-chevron-up': showMoreUserInfo, 'rotate-icon': showMoreUserInfo}"></i>
+              </button>
             </div>
             <div class="col-md-10">
-              <div class="card-body">
-                <h5 class="card-title">silamin</h5>
-                <div class="card-text box position-relative">
-                  <div *ngIf="!editMode">
-                    <p>{{ description }}</p>
-                    <button class="btn btn-link position-absolute top-0 end-0" (click)="editMode = true">
-                      <i class="fa fa-edit"></i>
-                    </button>
+              <div class="card-body expandable-card">
+                <h5 class="card-title">{{userData.name}}</h5>
+                <div class="user-info-section" [ngClass]="{ 'scrollable-card': showMoreUserInfo, 'expandable-card': !showMoreUserInfo }">
+
+                  <!-- Email -->
+                  <div class="card-text box position-relative" [formGroup]="formGroup">
+                    <div *ngIf="!isEditing('email')">
+                      <span><i class="fa fa-envelope"></i>: {{ userData.email }}</span>
+                      <button class="btn btn-link position-absolute top-0 end-0" (click)="startEditing('email')">
+                        <i class="fa fa-edit"></i>
+                      </button>
+                    </div>
+                    <div *ngIf="isEditing('email')">
+                      <input type="email" class="form-control" formControlName="email">
+                      <button class="btn btn-link position-absolute top-0 end-0" (click)="stopEditing()">
+                        <i class="fa fa-check"></i>
+                      </button>
+                    </div>
                   </div>
-                  <div *ngIf="editMode">
-                    <textarea [(ngModel)]="description" class="form-control"></textarea>
-                    <button class="btn btn-link position-absolute top-0 end-0" (click)="editMode = false">
-                      <i class="fa fa-check"></i>
-                    </button>
+
+                  <!-- Phone Number -->
+                  <div class="card-text box position-relative" [formGroup]="formGroup">
+                    <div *ngIf="!isEditing('phoneNumber')">
+                      <span><i class="fa fa-phone"></i>: {{ userData.phoneNumber }}</span>
+                      <button class="btn btn-link position-absolute top-0 end-0" (click)="startEditing('phoneNumber')">
+                        <i class="fa fa-edit"></i>
+                      </button>
+                    </div>
+                    <div *ngIf="isEditing('phoneNumber')">
+                      <input type="tel" class="form-control" formControlName="phoneNumber">
+                      <button class="btn btn-link position-absolute top-0 end-0" (click)="stopEditing()">
+                        <i class="fa fa-check"></i>
+                      </button>
+                    </div>
                   </div>
+
+                  <!-- Address -->
+                  <div class="card-text box position-relative" [formGroup]="formGroup">
+                    <div *ngIf="!isEditing('address')">
+                      <span><i class="fa fa-address-card"></i>: {{ userData?.address?.street }}, {{ userData?.address?.city }}, {{ userData?.address?.postalCode }}, {{ userData?.address?.country }}</span>
+                      <button class="btn btn-link position-absolute top-0 end-0" (click)="startEditing('address')">
+                        <i class="fa fa-edit"></i>
+                      </button>
+                    </div>
+                    <div *ngIf="isEditing('address')">
+                      <textarea class="form-control" formControlName="address"></textarea>
+                      <button class="btn btn-link position-absolute top-0 end-0" (click)="stopEditing()">
+                        <i class="fa fa-check"></i>
+                      </button>
+                    </div>
+                  </div>
+
+                  <!-- Social Media Profiles -->
+                  <div class="card-body">
+                    <div class="card-text box position-relative" *ngFor="let social of socialMediaKeys" [formGroup]="formGroup">
+                      <div *ngIf="!isEditing(social)">
+                        <span><i class="fab fa-{{social.toLowerCase()}}"></i>: <a [href]="userData.socialMediaProfiles[social]">{{ userData.socialMediaProfiles[social] }}</a></span>
+                        <button class="btn btn-link position-absolute top-0 end-0" (click)="startEditing(social)">
+                          <i class="fa fa-edit"></i>
+                        </button>
+                      </div>
+                      <div *ngIf="isEditing(social)">
+                        <input class="form-control" formControlName="social">
+                        <button class="btn btn-link position-absolute top-0 end-0" (click)="stopEditing()">
+                          <i class="fa fa-check"></i>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
                 </div>
               </div>
             </div>
