@@ -167,4 +167,18 @@ export class JobServiceService {
     });
   }
 
+  async getJobById(id: any): Promise<any> {
+    if (!id && id !== 0) { // this will handle id = 0 case as well
+      throw new Error('Invalid ID');
+    }
+    const idStr = id.toString(); // convert to string to use with firestore
+    const jobDoc = await this.firestore.collection('jobs').doc(idStr).get().toPromise();
+    if (jobDoc && jobDoc.exists) {
+      return jobDoc.data();
+    } else {
+      throw new Error('Job not found');
+    }
+  }
+
+
 }

@@ -1,4 +1,8 @@
 import {Component, OnInit} from '@angular/core';
+import {UserStore} from "../../stores/UserStore";
+import {UserService} from "../../services/user.service";
+import {JobServiceService} from "../../services/job-service.service";
+import {JobDto} from "../../dtos/DTO's";
 
 @Component({
   selector: 'app-likes-jobs',
@@ -7,33 +11,36 @@ import {Component, OnInit} from '@angular/core';
 })
 export class LikesJobsComponent implements OnInit{
 
-  jobs = [
-    {id: 1, title: 'Job 1', company: 'Company 1', location: 'Location 1'},
-    {id: 2, title: 'Job 2', company: 'Company 2', location: 'Location 2'},
-    {id: 3, title: 'Job 2', company: 'Company 2', location: 'Location 2'},
-    {id: 4, title: 'Job 2', company: 'Company 2', location: 'Location 2'},
-    {id: 5, title: 'Job 2', company: 'Company 2', location: 'Location 2'},
-    {id: 6, title: 'Job 2', company: 'Company 2', location: 'Location 2'},
-    {id: 7, title: 'Job 2', company: 'Company 2', location: 'Location 2'},
-    {id: 8, title: 'Job 2', company: 'Company 2', location: 'Location 2'},
-    {id: 9, title: 'Job 2', company: 'Company 2', location: 'Location 2'},
-    {id: 10, title: 'Job 2', company: 'Company 2', location: 'Location 2'},
-
-  ];
+  jobs: JobDto[]=[];
   get paginatedJobs(): any[] {
     const startIndex = (this.currentPage - 1) * 9;
     const endIndex = startIndex + 9;
-    return this.jobs?.slice(startIndex, endIndex);
+    return this.jobs!.slice(startIndex, endIndex);
   }
   isCollapsed = {};
   currentPage = 1;
   itemsPerPage = 9;
+  isLoading =true;
 
-  constructor() { }
+  constructor(private userStore: UserStore, private jobsService: JobServiceService) { }
 
   ngOnInit(): void {
-    // Initialize isCollapsed object with all jobs collapsed
-    this.jobs.forEach(job => this.isCollapsed[job.id] = true);
+    this.userStore.user$.subscribe(user =>{
+      if (user){
+        this.jobsService.getLikedJobIds(user.uid).then(async r => {
+          if (r){
+            for (const id of r) {
+              this.jobs?.push(await this.jobsService.getJobById(id));
+            }
+            // Initialize isCollapsed object with all jobs collapsed
+            this.jobs?.forEach(job => this.isCollapsed[job.id] = true);
+            this.isLoading = false;
+          }
+
+        })
+      }
+
+    })
   }
 
   onApply(id: number) {
@@ -50,6 +57,5 @@ export class LikesJobsComponent implements OnInit{
 
   onPageChanged(newPage: number) {
     this.currentPage = newPage;
-
   }
 }

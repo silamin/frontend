@@ -1,16 +1,28 @@
 <app-navigation-bar></app-navigation-bar>
+<ng-container *ngIf="isLoading else jobsList">
+  <div class="loading-screen-content">
+    <div class="logo">
+      <img src="/assets/loading-logo.svg" alt="">
+    </div>
+    <div class="text">
+      <h1 class="loading-text">Preparing your experience...</h1>
+      <p class="subtext">Please wait while we gather all the amazing jobs for you.</p>
+    </div>
+  </div>
+</ng-container>
+<ng-template #jobsList>
 <div class="container my-5">
   <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
     <div *ngFor="let job of paginatedJobs" class="col">
       <div class="card h-100 shadow-sm">
         <div class="card-body">
-          <h5 class="card-title text-primary">{{ job.title }}</h5>
-          <h6 class="card-subtitle mb-2 text-muted">{{ job.company }}</h6>
-          <p class="card-text location-text"><i class="fas fa-map-marker-alt text-muted mr-2"></i>{{ job.location }}</p>
+          <h5 class="card-title text-primary">{{ job.jobTitle }}</h5>
+          <h6 class="card-subtitle mb-2 text-muted"><i class="fas fa-briefcase text-muted mr-2"></i> {{ job.workType }}</h6>
+          <p class="card-text location-text"><i class="fas fa-calendar-minus text-muted mr-2"></i> Deadline: {{ job.deadline }}</p>
           <div class="py-2" [ngbCollapse]="isCollapsed[job.id]">
             <div class="card mt-2">
               <div class="card-body">
-                Detailed job description goes here.
+                {{job.jobDescription}}
               </div>
             </div>
           </div>
@@ -25,7 +37,8 @@
   </div>
   <div class="row">
     <div class="col d-flex justify-content-end">
-      <app-app-pagination class="my-3" [currentPage]="currentPage" [itemsPerPage]="itemsPerPage" [totalItems]="jobs.length" (pageChanged)="onPageChanged($event)"></app-app-pagination>
+      <app-app-pagination *ngIf="jobs.length > itemsPerPage" class="my-3" [currentPage]="currentPage" [itemsPerPage]="itemsPerPage" [totalItems]="jobs.length" (pageChanged)="onPageChanged($event)"></app-app-pagination>
     </div>
   </div>
 </div>
+</ng-template>
