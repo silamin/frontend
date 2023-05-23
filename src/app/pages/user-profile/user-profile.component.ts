@@ -1,11 +1,7 @@
-import {Component, Input, OnInit, ViewChild} from '@angular/core';
-import {WorkExperienceService} from "../../services/work-experience.service";
+import {Component, Inject, Injector, Input, OnInit, ProviderToken, ViewChild} from '@angular/core';
 import {UserStore} from "../../stores/UserStore";
-import {Observable, take} from "rxjs";
-import {JobDto, UserDTO, WorkExperienceFormDTO} from "../../dtos/DTO's";
-import {EducationService} from "../../services/education.service";
-import {SkillsService} from "../../services/skills.service";
-import {LanguageServiceService} from "../../services/language-service.service";
+import {Observable} from "rxjs";
+import {UserDTO, WorkExperienceFormDTO} from "../../dtos/DTO's";
 import { of } from 'rxjs';
 import {FormFactoryProviderService} from "../../services/factories/form-factory-provider.service";
 import {WorkExperienceFormComponent} from "../../components/work-experience-form/work-experience-form.component";
@@ -13,8 +9,10 @@ import {SkillFormComponent} from "../../components/skill-form/skill-form.compone
 import {EducationFormComponent} from "../../components/education-form/education-form.component";
 import {LanguageFormComponent} from "../../components/language-form/language-form.component";
 import {HasForm} from "../../services/factories/FormFactory";
-import {user} from "@angular/fire/auth";
 import {FormBuilder} from "@angular/forms";
+import {SectionService} from "../../services/section-service";
+import { WORK_EXPERIENCE_SERVICE_TOKEN, EDUCATION_SERVICE_TOKEN, SKILLS_SERVICE_TOKEN, LANGUAGE_SERVICE_TOKEN } from '../../services/tokens';
+
 
 
 interface Section {
@@ -53,13 +51,14 @@ export class UserProfileComponent implements OnInit{
   data: any;
 
   constructor(
-    private workExperienceService: WorkExperienceService,
+    @Inject(WORK_EXPERIENCE_SERVICE_TOKEN) private workExperienceService: SectionService,
+    @Inject(EDUCATION_SERVICE_TOKEN) private educationService: SectionService,
+    @Inject(SKILLS_SERVICE_TOKEN) private skillsService: SectionService,
+    @Inject(LANGUAGE_SERVICE_TOKEN) private languageService: SectionService,
     private userStore: UserStore,
-    private educationService: EducationService,
-    private skillsService: SkillsService,
-    private languageService: LanguageServiceService,
      private formFactoryProvider: FormFactoryProviderService,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private injector: Injector
   ) {
     this.sections.forEach(section => {
       section.items.subscribe(data => this.items = data);
@@ -81,7 +80,6 @@ export class UserProfileComponent implements OnInit{
     this.userStore.userData$.subscribe(userData => {
       if (userData){
         this.userData = userData;
-        console.log(userData)
         this.socialMediaKeys = Object.keys(this.userData.socialMediaProfiles);
         this.isCompanyUser = userData.isCompanyUser
       }
@@ -90,7 +88,7 @@ export class UserProfileComponent implements OnInit{
     this.userStore.user$.subscribe(async siUser => {
       if (!siUser.isCompanyUser) {
         this.user = siUser;
-        this.workExperiences$ = await this.workExperienceService.getAllWorkExperiences(this.user?.uid);
+        this.workExperiences$ = await this.workExperienceService.fetchData(this.user?.uid);
 
         this.sections = [
           {
@@ -100,17 +98,17 @@ export class UserProfileComponent implements OnInit{
           },
           {
             title: 'Education',
-            items: this.educationService.getAllEducationBackground(this.user?.uid),
+            items: this.educationService.fetchData(this.user?.uid),
             displayProperty: ['degree']
           },
           {
             title: 'Skills',
-            items: this.skillsService.getAllSkills(this.user?.uid),
+            items: this.skillsService.fetchData(this.user?.uid),
             displayProperty: ['skill']
           },
           {
             title: 'Languages',
-            items: this.languageService.getAllLanguages(this.user?.uid),
+            items: this.languageService.fetchData(this.user?.uid),
             displayProperty: ['language']
           }
         ];
@@ -249,12 +247,26 @@ export class UserProfileComponent implements OnInit{
 
 
   deleteItem(item: any, sectionTitle: string) {
-    const section = this.sections.find(section => section.title === sectionTitle);
+    const section = this.sections.find((section) => section.title === sectionTitle);
     if (section) {
-      section.items.pipe(take(1)).subscribe(items => {
-        const updatedItems = items.filter(i => i.id !== item.id);
-        section.items = of(updatedItems);
-      });
+      const serviceToken = this.getServiceToken(sectionTitle);
+      const service = this.injector.get<SectionService>(serviceToken);
+      service.deleteItem(item, this.user.uid);
+    }
+  }
+
+  private getServiceToken(sectionTitle: string): ProviderToken<SectionService> {
+    switch (sectionTitle) {
+      case 'Work Experience':
+        return WORK_EXPERIENCE_SERVICE_TOKEN;
+      case 'Education':
+        return EDUCATION_SERVICE_TOKEN;
+      case 'Skills':
+        return SKILLS_SERVICE_TOKEN;
+      case 'Languages':
+        return LANGUAGE_SERVICE_TOKEN;
+      default:
+        throw new Error('Invalid section title');
     }
   }
 

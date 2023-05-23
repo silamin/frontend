@@ -20,7 +20,7 @@ export class SkillFormComponent implements HasForm{
   }
 
   onSubmit() {
-   this.skillsService.addSkill('tTGtgSdVyQSwf8hBO3yUC1dcGBV2',{
+   this.skillsService.addItem('tTGtgSdVyQSwf8hBO3yUC1dcGBV2',{
      rating: this.skillForm.get('rating')?.value,
      skill: this.skillForm.get('skill')?.value
    })

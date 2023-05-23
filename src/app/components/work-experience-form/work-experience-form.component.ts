@@ -49,7 +49,7 @@ export class WorkExperienceFormComponent implements HasForm, OnInit{
     startDate: new Date()
   };
   onSubmit() {
-      this.workExperienceService.addUserWorkExperience(this.user.uid,this.newWorkExperience)
+      this.workExperienceService.addItem(this.user.uid,this.newWorkExperience)
   }
 
   ngOnInit(): void {

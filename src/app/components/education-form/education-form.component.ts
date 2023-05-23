@@ -1,21 +1,25 @@
-import {Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
 import {FormBuilder, FormGroup} from "@angular/forms";
 import {EducationService} from "../../services/education.service";
 import {HasForm} from "../../services/factories/FormFactory";
+import {UserStore} from "../../stores/UserStore";
 
 @Component({
   selector: 'app-education-form',
   templateUrl: './education-form.component.html',
   styleUrls: ['./education-form.component.scss']
 })
-export class EducationFormComponent implements HasForm{
+export class EducationFormComponent implements HasForm, OnInit{
   @Input() visible: boolean = false;
   @Input() data;
   @Output() visibleChange: EventEmitter<boolean> = new EventEmitter<boolean>();
 
   educationForm: FormGroup;
+  user: any;
 
-  constructor(private formBuilder: FormBuilder, private educationService: EducationService) {
+  constructor(private formBuilder: FormBuilder,
+              private educationService: EducationService,
+              private userStore: UserStore) {
     this.educationForm = this.formBuilder.group({
       school: '',
       degree: '',
@@ -29,7 +33,7 @@ export class EducationFormComponent implements HasForm{
   }
 
   onSubmit(): void {
-    this.educationService.addUserEducationBackground('tTGtgSdVyQSwf8hBO3yUC1dcGBV2',{
+    this.educationService.addItem(this.user.uid,{
       activitiesAndSocieties: "Student Council, Debate Club",
       degree: "Bachelor of Science",
       description: "Managed project timelines and deliverables",
@@ -40,7 +44,6 @@ export class EducationFormComponent implements HasForm{
       startDate: new Date("2020-09-01")
     })
     // Handle form submission
-    console.log(this.educationForm.value);
     this.close();
   }
 
@@ -54,5 +57,13 @@ export class EducationFormComponent implements HasForm{
 
   getForm(): FormGroup {
     return this.educationForm;
+  }
+
+  ngOnInit(): void {
+    this.userStore.user$.subscribe(user =>{
+      if (user){
+        this.user = user;
+      }
+    })
   }
 }

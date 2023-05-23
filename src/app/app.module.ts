@@ -32,6 +32,16 @@ import {UserStore} from "./stores/UserStore";
 import { LanguageFormComponent } from './components/language-form/language-form.component';
 import { ApplicationStatusComponent } from './pages/application-status/application-status.component';
 import {NgbCollapse} from "@ng-bootstrap/ng-bootstrap";
+import {WorkExperienceService} from "./services/work-experience.service";
+import {EducationService} from "./services/education.service";
+import {SkillsService} from "./services/skills.service";
+import {LanguageServiceService} from "./services/language-service.service";
+import {
+  EDUCATION_SERVICE_TOKEN,
+  LANGUAGE_SERVICE_TOKEN,
+  SKILLS_SERVICE_TOKEN,
+  WORK_EXPERIENCE_SERVICE_TOKEN
+} from "./services/tokens";
 
 const routes: Routes = [
   { path: '', component: SignInComponent },
@@ -90,7 +100,13 @@ const firebaseConfig = {
         AngularFireFunctionsModule,
         NgbCollapse,
     ],
-  providers: [UserStore],
+  providers: [
+    UserStore,
+    { provide: WORK_EXPERIENCE_SERVICE_TOKEN, useClass: WorkExperienceService },
+    { provide: EDUCATION_SERVICE_TOKEN, useClass: EducationService },
+    { provide: SKILLS_SERVICE_TOKEN, useClass: SkillsService },
+    { provide: LANGUAGE_SERVICE_TOKEN, useClass: LanguageServiceService },
+  ],
   bootstrap: [AppComponent],
 
 })
