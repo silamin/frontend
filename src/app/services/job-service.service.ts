@@ -56,9 +56,6 @@ export class JobServiceService {
 
 
   async apply(jobId: string, userId: string): Promise<void> {
-
-
-
     // Reference to the specific 'job' document
     const jobDocRef = this.firestore.collection('jobs').doc(jobId.toString());
 
@@ -82,7 +79,6 @@ export class JobServiceService {
     const userDocRef = this.firestore.collection('users').doc(userId);
     const userDoc = await userDocRef.get().toPromise();
     const userData = userDoc?.data() as UserDTO;
-    console.log(userData)
 
     // If appliedJobsIds does not exist or is not an array, create it
     if (!Array.isArray(userData.jobApplicationIds)) {
@@ -197,10 +193,53 @@ export class JobServiceService {
 
 
   async removeCandidate(id: string, selectedCandidateIndex: string) {
-    console.log(id);
-    console.log(selectedCandidateIndex)
     await this.firestore.collection('jobs').doc(id).update({
       candidates: firebase.firestore.FieldValue.arrayRemove(selectedCandidateIndex)
     });
   }
+
+  editJob(job: JobDto) {
+    return this.firestore.collection('jobs').doc(job.id.toString()).update(job);
+  }
+
+  removeJob(jobId: string): Promise<void> {
+    return new Promise<void>((resolve, reject) => {
+      const batch = this.firestore.firestore.batch();
+
+      // Fetch users who have liked this job
+      const usersLikedRef = this.firestore.collection('users', ref => ref.where('likedJobs', 'array-contains', jobId));
+      usersLikedRef.get().subscribe(usersLikedSnapshot => {
+        usersLikedSnapshot.forEach(userLikedDoc => {
+          const userLikedRef = this.firestore.collection('users').doc(userLikedDoc.id).ref;
+          batch.update(userLikedRef, {
+            likedJobs: firebase.firestore.FieldValue.arrayRemove(jobId)
+          });
+        });
+
+        // Fetch users who have applied to this job
+        const usersAppliedRef = this.firestore.collection('users', ref => ref.where('jobApplicationIds', 'array-contains', jobId));
+        usersAppliedRef.get().subscribe(usersAppliedSnapshot => {
+          usersAppliedSnapshot.forEach(userAppliedDoc => {
+            const userAppliedRef = this.firestore.collection('users').doc(userAppliedDoc.id).ref;
+            batch.update(userAppliedRef, {
+              jobApplicationIds: firebase.firestore.FieldValue.arrayRemove(jobId)
+            });
+          });
+
+          // Delete the job
+          const jobRef = this.firestore.collection('jobs').doc(jobId).ref;
+          batch.delete(jobRef);
+
+          // Commit the batch
+          batch.commit().then(() => {
+            resolve();
+          }).catch(error => {
+            reject(error);
+          });
+        });
+      });
+    });
+  }
+
+
 }

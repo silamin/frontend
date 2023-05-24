@@ -136,6 +136,8 @@ export class CompanyMainPageComponent implements OnInit {
   }
   isPopUp: boolean= false
   selectedUser: any;
+  jobPopupVisible = false;
+  isEdit = false;
   showMore(selectedUser: any) {
     this.isUserProfileVisible =true
     this.isPopUp=true;
@@ -146,5 +148,24 @@ export class CompanyMainPageComponent implements OnInit {
     this.selectedJobIndex = jobIndex;
     this.selectedCandidateIndex = rowIndex;
     this.open(this.confirmRejectModal);
+  }
+
+  editJob(job: any) {
+    this.isEdit = true;
+    this.selectedJob = job;
+    this.jobPopupVisible = true;
+    console.log(this.isPopUp)
+  }
+
+  hideJobPopUp() {
+    this.jobPopupVisible = false;
+  }
+
+  onSelectedJobChange($event: any) {
+    this.selectedJob = $event;
+  }
+
+  deleteJob(job: JobDto) {
+    this.jobsService.removeJob(job.id.toString());
   }
 }

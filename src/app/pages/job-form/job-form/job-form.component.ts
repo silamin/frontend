@@ -32,9 +32,6 @@ export class JobFormComponent implements OnChanges, OnInit{
       this.jobForm.get('jobDescription')?.setValue(this.selectedJob?.jobDescription);
       this.jobForm.get('backgroundSkills')?.setValue(this.selectedJob?.backgroundSkills);
       this.jobForm.get('jobBenefits')?.setValue(this.selectedJob?.jobBenefits);
-      console.log(this.userData?.jobApplicationIds);
-      console.log(this.jobForm.get('id')?.value)
-
 
       if (this.userData?.jobApplicationIds?.includes(this.jobForm.get('id')?.value.toString())){
           this.isApplied = true;
@@ -82,15 +79,18 @@ export class JobFormComponent implements OnChanges, OnInit{
   userData:any;
 
   submitJobForm() {
-    this.jobForm.get('userId')?.setValue(this.userData.uid)
+    if (!this.isEdit){
+      this.jobForm.get('userId')?.setValue(this.userData.uid)
     this.jobService.addJob(this.jobForm.value)
+    }else {
+      this.jobService.editJob(this.jobForm.value).then(() => this.isEdit = false);
+    }
   }
-
+  @Input() isEdit: boolean = false;
   onApply() {
-    this.jobService.apply(this.jobForm.get('id')?.value, this.userData.id).then(()=>{
-      this.isApplied = true;
-      this.userData?.jobApplicationIds.push(this.jobForm.get('id')?.value.toString());
-      console.log(this.userData?.jobApplicationIds)
-    })
+      this.jobService.apply(this.jobForm.get('id')?.value, this.userData.id).then(()=>{
+        this.isApplied = true;
+        this.userData?.jobApplicationIds.push(this.jobForm.get('id')?.value.toString());
+      })
   }
 }

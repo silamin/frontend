@@ -161,7 +161,7 @@
           </div>
           <div *ngIf="!isDisplay" class="col-12 my-3 w-100">
 
-            <input type="submit" class="btn btn-success btn-send  pt-2 btn-block" value="Submit form" style="width: 100%">
+            <input type="submit" class="btn btn-success btn-send  pt-2 btn-block" value="{{isEdit ? 'Edit an existing job': 'Create a new job'}}" style="width: 100%">
           </div>
         </form>
         <div *ngIf="isDisplay" class="col-12 my-3 w-100">
