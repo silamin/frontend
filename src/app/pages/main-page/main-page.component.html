@@ -1,5 +1,5 @@
 <app-navigation-bar [isCompanyUser]="false" [showSearchBar]="true"></app-navigation-bar>
-<ng-container *ngIf="!likedJobIds else jobsList">
+<ng-container *ngIf="!displayedJobs else jobsList">
   <div class="loading-screen-content">
     <div class="logo">
       <img src="/assets/loading-logo.svg" alt="">
@@ -24,7 +24,10 @@
             </div>
             <p style="height: 92px; overflow: auto" class="mb-1">{{ job.jobDescription }}</p>
           </a>
-
+          <div *ngIf="showNoJobsModal" class="alert alert-warning alert-dismissible fade show" role="alert">
+            No jobs matched your search criteria. Please change your search and try again.
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" (click)="showNoJobsModal = false"></button>
+          </div>
           <div class="row my-2">
             <div class="col d-flex justify-content-center">
               <app-app-pagination  *ngIf="jobs?.length > 5" [currentPage]="currentPage" [itemsPerPage]="5" [totalItems]="jobs.length" (pageChanged)="onPageChanged($event)"></app-app-pagination>
@@ -32,7 +35,7 @@
           </div>
         </div>
       </div>
-      <div class="col-md-8 list-group-item">
+      <div class="col-md-8">
         <div class="h-100 scrollable" #scrollable [class.scrollable-end]="isScrollableEnd">
           <div class="content">
             <app-job-form [isPopUp]="false" [visible]="jobPopupVisible" (visibleChange)="hideJobPopUp()" [isDisplay]="isDisplay" [selectedJob]="selectedJob" (selectedJobChange)="onSelectedJobChange($event)" style="width: 100%"></app-job-form>
@@ -46,4 +49,3 @@
     </div>
   </div>
 </ng-template>
-

@@ -64,3 +64,73 @@
 .summary-item {
   margin-right: 10px;
 }
+/* styles.css */
+.modal-content {
+  background-color: #f8f9fa;
+  border-radius: 10px;
+}
+
+.onReject {
+  background-color: #dc3545;
+  color: white;
+}
+.onSelect {
+  background-color: #198754;
+  color: white;
+}
+
+.modal-footer {
+  background-color: #f8f9fa;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+}
+
+.close {
+  color: white;
+  font-size: 1.5rem;
+  padding: 0 1rem;
+}
+.custom-close-button {
+  border: none;
+  background-color: transparent;
+  color: white;
+  font-size: 20px;
+  padding: 0;
+  margin-right: -10px;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s ease;
+}
+
+.custom-close-button:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.custom-close-button:focus {
+  outline: none;
+}
+
+
+.close:hover {
+  color: #f8f9fa;
+  cursor: pointer;
+}
+
+.modal-title {
+  font-weight: bold;
+}
+
+.btn-outline-dark {
+  color: #007bff;
+  border-color: #007bff;
+}
+
+.btn-outline-dark:hover {
+  color: #fff;
+  background-color: #007bff;
+  border-color: #007bff;
+}

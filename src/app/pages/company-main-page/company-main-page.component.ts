@@ -1,10 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import { JobServiceService } from '../../services/job-service.service';
 import { UserStore } from '../../stores/UserStore';
 import {catchError, combineLatest, forkJoin, of, take, tap} from 'rxjs';
 import { switchMap, map } from 'rxjs/operators';
 import {JobDto} from "../../dtos/DTO's";
-import {error} from "@angular/compiler-cli/src/transformers/util";
+import {ModalDismissReasons, NgbModal} from "@ng-bootstrap/ng-bootstrap";
 
 @Component({
   selector: 'app-company-main-page',
@@ -12,8 +12,41 @@ import {error} from "@angular/compiler-cli/src/transformers/util";
   styleUrls: ['./company-main-page.component.scss'],
 })
 export class CompanyMainPageComponent implements OnInit {
-  constructor(private jobsService: JobServiceService, private userStore: UserStore) { }
+  constructor(private jobsService: JobServiceService, private userStore: UserStore,private modalService: NgbModal) { }
+  closeResult = '';
+  @ViewChild('confirmSelectModal') confirmSelectModal;
+  @ViewChild('confirmRejectModal') confirmRejectModal;
+  selectedJobIndex!: number;
+  selectedCandidateIndex!: number;
 
+  open(content) {
+    this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' }).result.then(
+      (result) => {
+        this.closeResult = `Closed with: ${result}`;
+        if (content === this.confirmSelectModal) {
+          this.selectCandidate(this.selectedJobIndex, this.selectedCandidateIndex);
+        } else if (content === this.confirmRejectModal) {
+          let candidateId = this.jobsToDisplay[this.selectedJobIndex]?.candidates?.[this.selectedCandidateIndex]?.id;
+          if (candidateId !== undefined) {
+            this.jobsService.removeCandidate(this.jobsToDisplay[this.selectedJobIndex].id.toString(), candidateId)
+              .then(() =>{console.log(this.jobsToDisplay[this.selectedJobIndex].candidates)});
+          }          this.jobsToDisplay[this.selectedJobIndex].candidates?.splice(this.selectedCandidateIndex, 1);
+        }
+      },
+      (reason) => {
+        this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+      }
+    );
+  }
+  private getDismissReason(reason: any): string {
+    if (reason === ModalDismissReasons.ESC) {
+      return 'by pressing ESC';
+    } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
+      return 'by clicking on a backdrop';
+    } else {
+      return `with: ${reason}`;
+    }
+  }
   itemsPerPage = 3;
   currentPage = 1;
   jobsToDisplay!: JobDto[];
@@ -72,7 +105,7 @@ export class CompanyMainPageComponent implements OnInit {
   isVisible = false;
   selectedJob: any = null;
   isUserProfileVisible = false;
-  showCandidates(jobIndex: number, rowIndex: number) {
+  selectCandidate(jobIndex: number, rowIndex: number) {
     this.selectedJob = this.jobsToDisplay[jobIndex];
     const card = document.getElementById(`card-${jobIndex}-${rowIndex}`);
     if (card) {
@@ -90,7 +123,6 @@ export class CompanyMainPageComponent implements OnInit {
         top: `${dropdownTop}px`,
         left: `${cardPosition.left}px`,
       };
-      this.isVisible = true;
       const rowBelow = document.getElementById(`row-${jobIndex}-${rowIndex + 1}`);
       if (rowBelow) {
         const rowHeight = rowBelow.offsetHeight;
@@ -99,13 +131,20 @@ export class CompanyMainPageComponent implements OnInit {
           rowBelow.style.top = `${dropdownHeight + cardHeight - rowHeight}px`;
       }
     }
+    this.open(this.confirmSelectModal);
+
   }
   isPopUp: boolean= false
   selectedUser: any;
   showMore(selectedUser: any) {
-    console.log(selectedUser)
     this.isUserProfileVisible =true
     this.isPopUp=true;
     this.selectedUser = selectedUser
+  }
+
+  rejectCandidate(jobIndex: number, rowIndex: number) {
+    this.selectedJobIndex = jobIndex;
+    this.selectedCandidateIndex = rowIndex;
+    this.open(this.confirmRejectModal);
   }
 }

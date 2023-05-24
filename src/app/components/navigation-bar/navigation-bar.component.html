@@ -1,14 +1,10 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark p-3">
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark ">
   <div class="container-fluid">
     <div class="d-flex justify-content-between w-100">
       <div class="d-flex align-items-center">
         <a class="navbar-brand" href="#">JobifyMe.com</a>
         <form class="d-flex d-none d-lg-flex" *ngIf="showSearchBar">
-          <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-          <button class="btn btn-outline-success btn-sm d-flex align-items-center" type="submit">
-            <span class="search-text mr-2">Search</span>
-            <i class="fa fa-search search-icon align-self-center"></i>
-          </button>
+          <input class="form-control me-2" type="search" placeholder="Search" [formControl]="searchControl" aria-label="Search">
         </form>
       </div>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation" (click)="handleNavToggle()">

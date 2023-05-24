@@ -3,6 +3,8 @@ import {Router} from "@angular/router";
 import {NavBarService} from "../../services/nav-bar.service";
 import {UserStore} from "../../stores/UserStore";
 import {user} from "@angular/fire/auth";
+import {FormControl, FormGroup} from "@angular/forms";
+import {SearchService} from "../../services/search.service";
 
 @Component({
   selector: 'app-navigation-bar',
@@ -10,6 +12,7 @@ import {user} from "@angular/fire/auth";
   styleUrls: ['./navigation-bar.component.scss']
 })
 export class NavigationBarComponent implements OnInit{
+  searchControl: FormControl = new FormControl();
   @Input() isCompanyUser
   navItems: any[] = [];
   jobPopupVisible = false;
@@ -18,7 +21,12 @@ export class NavigationBarComponent implements OnInit{
   isNavOpen = false;
   activeNavItemIndex: number = 0;
 
-  constructor(private router: Router, private navBarService: NavBarService, private userStore: UserStore) { }
+  constructor(private router: Router,
+              private navBarService: NavBarService,
+              private searchService: SearchService
+              ) {
+    this.searchControl.valueChanges.subscribe(query => this.searchService.updateSearchQuery(query));
+  }
 
 
   async handleIconClicked(title: string){

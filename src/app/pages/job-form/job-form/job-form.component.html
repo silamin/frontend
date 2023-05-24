@@ -1,5 +1,5 @@
 <div [hidden]="!visible" [ngClass]="{'popup': isPopUp}" class="popup w-100" (click)="close()">
-  <div class="modal-dialog modal-lg w-100" (click)="$event.stopPropagation()">
+  <div class="modal-dialog modal-lg w-100" [ngClass]="{'remove-margin': isDisplay} " (click)="$event.stopPropagation()">
     <div class="modal-content">
       <div class="modal-header">
         <h5 *ngIf="!isDisplay" class="modal-title">Create a job</h5>
@@ -166,8 +166,8 @@
         </form>
         <div *ngIf="isDisplay" class="col-12 my-3 w-100">
           <button class="btn btn-success btn-send pt-2 btn-block" (click)="onApply()" style="width: 100%"
-                  [disabled]="isApplied">
-            {{ isApplied ? 'Applied' : 'Apply' }}
+                  [ngClass]="{'btn-danger': isApplied}">
+            {{ isApplied ? 'Withdraw Application' : 'Apply' }}
           </button>
         </div>
       </div>

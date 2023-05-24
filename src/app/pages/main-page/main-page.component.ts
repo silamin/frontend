@@ -7,6 +7,8 @@ import {
 } from '@angular/core';
 import {JobServiceService} from "../../services/job-service.service";
 import {UserStore} from "../../stores/UserStore";
+import {SearchService} from "../../services/search.service";
+import {combineLatest} from "rxjs";
 
 @Component({
   selector: 'app-main-page',
@@ -17,38 +19,44 @@ export class MainPageComponent implements OnInit, AfterViewInit{
   @ViewChild('scrollable', { static: false }) scrollable!: ElementRef;
   @ViewChild('scrollableContainer') scrollableContainerRef!: ElementRef;
   currentPage = 1;
-  likedJobIds: any;
+  likedJobs: any;
+  displayedJobs;
   onPageChanged(newPage: number): void {
     this.currentPage = newPage;
     // Add logic to handle fetching or filtering the jobs for the current page
   }
   jobs;
+  filteredJobs;
   selectedJob = null;
   jobPopupVisible = true;
   isDisplay = true;
-  user: any;
+  userData: any;
+
 
   constructor(private jobsService: JobServiceService,
               private elementRef: ElementRef,
-              private userStore: UserStore
+              private userStore: UserStore,
+              private searchService: SearchService
   ) {
   }
 
   isScrollableEnd: boolean = false;
+  showNoJobsModal: any;
 
-  async ngOnInit() {
-    this.userStore.user$.subscribe(async user => {
-      if (user) {
-        this.user = user;
-        this.likedJobIds = await this.jobsService.getLikedJobIds(user.uid);
-      }
-    });
+  ngOnInit() {
+    combineLatest([
+      this.userStore.userData$,
+      this.jobsService.getAllJobs(),
+      this.searchService.searchObservable
+    ]).subscribe(async ([userData, jobs, query]) => {
+      // ...
 
-    await this.jobsService.getAllJobs().subscribe(jobs => {
+      this.userData = userData;
       this.jobs = jobs;
+      this.displayedJobs = jobs; // Initialize displayedJobs to jobs
+      this.filterJobs(query);
     });
   }
-
   onScroll() {
     const element = this.scrollable.nativeElement;
     const { scrollTop, clientHeight, scrollHeight } = element;
@@ -62,7 +70,9 @@ export class MainPageComponent implements OnInit, AfterViewInit{
   get paginatedJobs(): any[] {
     const startIndex = (this.currentPage - 1) * 5;
     const endIndex = startIndex + 5;
-    return this.jobs?.slice(startIndex, endIndex);
+    const paginatedJobs = this.displayedJobs?.length > 0 ? this.displayedJobs?.slice(startIndex, endIndex) : [];
+    this.showNoJobsModal = paginatedJobs?.length === 0;
+    return paginatedJobs;
   }
 
   hideJobPopUp() {
@@ -73,21 +83,38 @@ export class MainPageComponent implements OnInit, AfterViewInit{
     this.selectedJob=$event;
   }
   toggleLove(job: any) {
-    job.loved = !job.loved;
-    const index = this.likedJobIds.indexOf(job.id);
-    if (index !== -1) {
-      this.likedJobIds.splice(index, 1);
-      this.jobsService.removeLikedJob(this.user.uid, job.id);
-    } else {
-      this.likedJobIds.push(job.id);
-      this.jobsService.likeJob(this.user.uid, job.id);
+    if (this.userData && this.userData.likedJobs) {
+      const index = this.userData.likedJobs.indexOf(job.id);
+      if (index !== -1) {
+        this.userData.likedJobs.splice(index, 1);
+        this.jobsService.removeLikedJob(this.userData.id, job.id);
+      } else {
+        this.userData.likedJobs.push(job.id);
+        this.jobsService.likeJob(this.userData.id, job.id);
+      }
     }
   }
   isJobLiked(jobId: string): boolean {
-    return this.likedJobIds.includes(jobId);
+    return this.userData?.likedJobs?.includes(jobId);
   }
+
 
   ngAfterViewInit(): void {
     this.scrollable?.nativeElement?.addEventListener('scroll', this.onScroll.bind(this));
+  }
+
+
+  filterJobs(query: string) {
+    const lowerCaseQuery = query.toLowerCase();
+    this.filteredJobs = this.jobs.filter(job => {
+      const jobTitleMatch = job.jobTitle.toLowerCase().includes(lowerCaseQuery);
+      const jobDescriptionMatch = job.jobDescription.toLowerCase().includes(lowerCaseQuery);
+      const jobResponsibilitiesMatch = job.jobResponsibilities.toLowerCase().includes(lowerCaseQuery);
+      const jobBenefitsMatch = job.jobBenefits.toLowerCase().includes(lowerCaseQuery);
+      const workplaceMatch = job.workplace.toLowerCase().includes(lowerCaseQuery);
+      const backgroundSkillsMatch = job.backgroundSkills.toLowerCase().includes(lowerCaseQuery);
+      return jobTitleMatch || jobDescriptionMatch || jobResponsibilitiesMatch || jobBenefitsMatch || workplaceMatch || backgroundSkillsMatch;
+    });
+    this.displayedJobs = this.filteredJobs; // Update displayedJobs to filteredJobs
   }
 }

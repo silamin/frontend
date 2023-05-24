@@ -11,6 +11,40 @@
     </div>
   </div>
 </ng-container>
+
+<!--  Modal (Confirmation) -->
+<ng-template #confirmSelectModal let-modal>
+  <div class="modal-header onSelect">
+    <h4 class="modal-title" id="modal-basic-title">Confirmation</h4>
+    <button type="button" class="close custom-close-button" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body px-4 py-3">
+    Are you sure you want to select this candidate?
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-success" (click)="modal.close('Yes')">Yes</button>
+    <button type="button" class="btn btn-outline-primary" (click)="modal.dismiss('No')">No</button>
+  </div>
+</ng-template>
+
+<ng-template #confirmRejectModal let-modal>
+  <div class="modal-header onReject">
+    <h4 class="modal-title" id="modal-basic-title">Confirmation</h4>
+    <button type="button" class="close custom-close-button" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body px-4 py-3">
+    Are you sure you want to reject this candidate?
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-danger" (click)="modal.close('Yes')">Yes</button>
+    <button type="button" class="btn btn-outline-primary" (click)="modal.dismiss('No')">No</button>
+  </div>
+</ng-template>
+
   <ng-template #jobsList>
     <div class="container mt-4">
       <div class="row">
@@ -70,8 +104,8 @@
                       </td>
                       <td class="text-end">
                         <button class="btn btn-outline-primary mb-2 " (click)="showMore(candidate)">Show more <i class="fa fa-info-circle"></i></button>
-                        <button class="btn btn-outline-success  ms-2 mb-2" (click)="showCandidates(jobIndex, rowIndex)">Select <i class="fa fa-check"></i></button>
-                        <button class="btn btn-outline-danger mb-2 ms-2" (click)="showCandidates(jobIndex, rowIndex)">Reject <i class="fa fa-ban"></i></button>
+                        <button class="btn btn-outline-success  ms-2 mb-2" (click)="selectCandidate(jobIndex, rowIndex)">Select <i class="fa fa-check"></i></button>
+                        <button class="btn btn-outline-danger mb-2 ms-2" (click)="rejectCandidate(jobIndex, rowIndex)">Reject <i class="fa fa-ban"></i></button>
                       </td>
 
                     </tr>
@@ -83,8 +117,6 @@
                   </ng-template>
                   </tbody>
                 </table>
-
-
               </div>
             </div>
           </div>
@@ -93,27 +125,6 @@
       <div class="row">
         <div class="col d-flex justify-content-end">
           <app-app-pagination [currentPage]="currentPage" [itemsPerPage]="itemsPerPage" [totalItems]="jobsToDisplay.length" (pageChanged)="onPageChanged($event)"></app-app-pagination>
-        </div>
-      </div>
-    </div>
-
-    <!-- Candidates dropdown -->
-    <div class="dropdown" [class.show]="isVisible">
-      <div class="card">
-        <div class="card-body">
-          <h5 class="card-title">{{ selectedJob?.title }}</h5>
-          <h6 class="card-subtitle mb-2 text-muted">{{ selectedJob?.company }}</h6>
-          <p class="card-text">{{ selectedJob?.description }}</p>
-          <hr>
-          <div *ngFor="let candidate of selectedJob?.candidates">
-            <div class="card mb-2">
-              <div class="card-body">
-                <h5 class="card-title">{{ candidate.name }}</h5>
-                <h6 class="card-subtitle mb-2 text-muted">{{ candidate.education }}</h6>
-                <p class="card-text">{{ candidate.summary }}</p>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
     </div>

@@ -158,7 +158,7 @@ export class JobServiceService {
 
         return userRef.update({ likedJobs });
       } else {
-        return userRef.set({ likedJobs: [jobId] });
+        return userRef.set({ likedJobs: [jobId.toString()] });
       }
     });
   }
@@ -196,4 +196,11 @@ export class JobServiceService {
   }
 
 
+  async removeCandidate(id: string, selectedCandidateIndex: string) {
+    console.log(id);
+    console.log(selectedCandidateIndex)
+    await this.firestore.collection('jobs').doc(id).update({
+      candidates: firebase.firestore.FieldValue.arrayRemove(selectedCandidateIndex)
+    });
+  }
 }
