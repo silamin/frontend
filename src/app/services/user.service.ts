@@ -4,6 +4,7 @@ import {AngularFireFunctions} from "@angular/fire/compat/functions";
 import {AngularFirestore} from "@angular/fire/compat/firestore";
 import {take, tap} from "rxjs";
 import {UserStore} from "../stores/UserStore";
+import {UserDTO} from "../dtos/DTO's";
 
 @Injectable({
   providedIn: 'root'
@@ -47,4 +48,9 @@ export class UserService {
   }
 
 
+  async getAppliedJobIds(uid: string): Promise<string[]> {
+    const userRef = await this.firestore.collection('users').doc(uid.toString()).get().toPromise();
+    const userData = userRef?.data() as UserDTO;
+    return userData ? userData.jobApplicationIds : [];
+  }
 }

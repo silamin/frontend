@@ -21,11 +21,13 @@ export class LikesJobsComponent implements OnInit{
   currentPage = 1;
   itemsPerPage = 9;
   isLoading =true;
+  user: any;
 
   constructor(private userStore: UserStore, private jobsService: JobServiceService) { }
 
   ngOnInit(): void {
     this.userStore.user$.subscribe(user =>{
+      this.user =user;
       if (user){
         this.jobsService.getLikedJobIds(user.uid).then(async r => {
           if (r){
@@ -43,12 +45,17 @@ export class LikesJobsComponent implements OnInit{
     })
   }
 
-  onApply(id: number) {
-    console.log(`Applied for job id ${id}`);
+  async onApply(id: number) {
+    await this.jobsService.apply(id.toString(), this.user.uid)
   }
 
-  onDislike(id: number) {
-    console.log(`Disliked job id ${id}`);
+  async onDislike(id: number) {
+    const index = this.jobs.findIndex(job => job.id === id);
+    if (index !== -1) {
+      this.jobs.splice(index, 1);
+    }
+    await this.jobsService.removeLikedJob(this.user.uid, id.toString());
+
   }
 
   toggleCollapse(id: number) {

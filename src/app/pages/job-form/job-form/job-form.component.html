@@ -165,7 +165,10 @@
           </div>
         </form>
         <div *ngIf="isDisplay" class="col-12 my-3 w-100">
-          <button class="btn btn-success btn-send  pt-2 btn-block" (click)="onApply()" style="width: 100%">Apply</button>
+          <button class="btn btn-success btn-send pt-2 btn-block" (click)="onApply()" style="width: 100%"
+                  [disabled]="isApplied">
+            {{ isApplied ? 'Applied' : 'Apply' }}
+          </button>
         </div>
       </div>
     </div>

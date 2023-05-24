@@ -1,7 +1,8 @@
-import {Component, EventEmitter, Input, OnChanges, OnInit, Output} from '@angular/core';
+import {ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, Output} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {JobServiceService} from "../../../services/job-service.service";
 import {UserStore} from "../../../stores/UserStore";
+import {UserService} from "../../../services/user.service";
 
 
 
@@ -16,8 +17,10 @@ export class JobFormComponent implements OnChanges, OnInit{
   @Input() isDisplay = false;
   @Input() selectedJob;
   @Output() selectedJobChange = new EventEmitter<any>();
+  isApplied = false;
 
   ngOnChanges() {
+    this.isApplied = false;
     if (this.selectedJob) {
       this.jobForm.get('id')?.setValue(this.selectedJob?.id);
       this.jobForm.get('jobTitle')?.setValue(this.selectedJob?.jobTitle);
@@ -29,11 +32,21 @@ export class JobFormComponent implements OnChanges, OnInit{
       this.jobForm.get('jobDescription')?.setValue(this.selectedJob?.jobDescription);
       this.jobForm.get('backgroundSkills')?.setValue(this.selectedJob?.backgroundSkills);
       this.jobForm.get('jobBenefits')?.setValue(this.selectedJob?.jobBenefits);
+
+      this.userService.getAppliedJobIds(this.user.uid).then((response) =>{
+        if (response.includes(this.jobForm.get('id')?.value.toString())){
+          this.isApplied = true;
+        }
+      })
       this.selectedJobChange.emit(this.selectedJob);
     }
   }
   ngOnInit() {
-    this.userStore.user$.subscribe(user => this.user = user)
+    this.userStore.user$.subscribe(user => {
+      if (user) {
+        this.user = user;
+      }
+    })
   }
 
   jobForm: FormGroup;
@@ -44,7 +57,11 @@ export class JobFormComponent implements OnChanges, OnInit{
     this.visibleChange.emit(this.visible);
   }
 
-  constructor(private fb: FormBuilder, private jobService: JobServiceService, private userStore: UserStore) {
+  constructor(private fb: FormBuilder,
+              private jobService: JobServiceService,
+              private userStore: UserStore,
+              private userService: UserService,
+              private changeDetectorRef: ChangeDetectorRef) {
     this.jobForm = this.fb.group({
       id: ['', Validators.required],
       jobTitle: ['', Validators.required],
@@ -67,7 +84,8 @@ export class JobFormComponent implements OnChanges, OnInit{
   }
 
   onApply() {
-    this.jobForm.get('userId')?.setValue(this.user.uid)
-    this.jobService.apply(this.jobForm.get('id')?.value.toString(), this.user.uid)
+    this.jobService.apply(this.jobForm.get('id')?.value, this.user.uid);
+    this.isApplied = true;
+    this.changeDetectorRef.detectChanges();
   }
 }

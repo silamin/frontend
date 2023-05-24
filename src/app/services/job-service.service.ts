@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {AngularFireAuth} from "@angular/fire/compat/auth";
 import {AngularFireFunctions} from "@angular/fire/compat/functions";
-import {JobDto} from "../dtos/DTO's";
+import {JobDto, UserDTO} from "../dtos/DTO's";
 import {combineLatest, map, Observable} from "rxjs";
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import firebase from 'firebase/compat/app';
@@ -56,8 +56,10 @@ export class JobServiceService {
 
 
   async apply(jobId: string, userId: string): Promise<void> {
+    console.log('JobId:', jobId);
+
     // Reference to the specific 'job' document
-    const jobDocRef = this.firestore.collection('jobs').doc(jobId);
+    const jobDocRef = this.firestore.collection('jobs').doc(jobId.toString());
 
     // Get the job document
     const jobDoc = await jobDocRef.get().toPromise();
@@ -67,18 +69,23 @@ export class JobServiceService {
       throw new Error('Job does not exist');
     }
 
-    const jobData = jobDoc?.data() as JobDto; // Explicitly specify the data type
+    // Now add the jobId to the user's 'appliedJobsIds' array
+    // Get user reference
+    const userDocRef = this.firestore.collection('users').doc(userId);
+    const userDoc = await userDocRef.get().toPromise();
+    const userData = userDoc?.data() as UserDTO;
+    console.log(userData)
 
-    // If the 'candidates' field doesn't exist or isn't an array, create it
-    if (!Array.isArray(jobData.candidates)) {
-      jobData.candidates = [];
+    // If appliedJobsIds does not exist or is not an array, create it
+    if (!Array.isArray(userData.jobApplicationIds)) {
+      userData.jobApplicationIds = [];
     }
 
-    // Add the user ID to the 'candidates' field
-    jobData.candidates.push(userId);
+    // Add the jobId to the appliedJobsIds field
+    userData.jobApplicationIds.push(jobId.toString());
 
-    // Update the document with the new 'candidates' field
-    await jobDocRef.update(jobData);
+    // Update the user document with the new 'appliedJobsIds' field
+    await userDocRef.update(userData);
   }
 
 
