@@ -46,8 +46,6 @@ export class MainPageComponent implements OnInit, AfterViewInit{
 
     await this.jobsService.getAllJobs().subscribe(jobs => {
       this.jobs = jobs;
-      console.log(jobs);
-      this.onSelectedJobChange(this.jobs[0])
     });
   }
 
@@ -73,8 +71,6 @@ export class MainPageComponent implements OnInit, AfterViewInit{
 
   onSelectedJobChange($event: any) {
     this.selectedJob=$event;
-    console.log(this.selectedJob)
-
   }
   toggleLove(job: any) {
     job.loved = !job.loved;

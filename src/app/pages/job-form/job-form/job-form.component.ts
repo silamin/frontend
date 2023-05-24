@@ -32,22 +32,25 @@ export class JobFormComponent implements OnChanges, OnInit{
       this.jobForm.get('jobDescription')?.setValue(this.selectedJob?.jobDescription);
       this.jobForm.get('backgroundSkills')?.setValue(this.selectedJob?.backgroundSkills);
       this.jobForm.get('jobBenefits')?.setValue(this.selectedJob?.jobBenefits);
+      console.log(this.userData?.jobApplicationIds);
+      console.log(this.jobForm.get('id')?.value)
 
-      this.userService.getAppliedJobIds(this.user.uid).then((response) =>{
-        if (response.includes(this.jobForm.get('id')?.value.toString())){
+
+      if (this.userData?.jobApplicationIds?.includes(this.jobForm.get('id')?.value.toString())){
           this.isApplied = true;
         }
-      })
       this.selectedJobChange.emit(this.selectedJob);
     }
   }
   ngOnInit() {
-    this.userStore.user$.subscribe(user => {
-      if (user) {
-        this.user = user;
+    this.userStore.userData$.subscribe(userData => {
+      if (userData) {
+        this.userData = userData;
+        this.isApplied = this.userData?.jobApplicationIds?.includes(this.jobForm.get('id')?.value.toString()) ?? false;
       }
-    })
+    });
   }
+
 
   jobForm: FormGroup;
   @Input() isPopUp: boolean = false;
@@ -76,16 +79,18 @@ export class JobFormComponent implements OnChanges, OnInit{
       userId: ['', Validators.required]
     });
   }
-  user:any;
+  userData:any;
 
   submitJobForm() {
-    this.jobForm.get('userId')?.setValue(this.user.uid)
+    this.jobForm.get('userId')?.setValue(this.userData.uid)
     this.jobService.addJob(this.jobForm.value)
   }
 
   onApply() {
-    this.jobService.apply(this.jobForm.get('id')?.value, this.user.uid);
-    this.isApplied = true;
-    this.changeDetectorRef.detectChanges();
+    this.jobService.apply(this.jobForm.get('id')?.value, this.userData.id).then(()=>{
+      this.isApplied = true;
+      this.userData?.jobApplicationIds.push(this.jobForm.get('id')?.value.toString());
+      console.log(this.userData?.jobApplicationIds)
+    })
   }
 }

@@ -46,11 +46,4 @@ export class UserService {
         console.error('Error updating user data:', error);
       });
   }
-
-
-  async getAppliedJobIds(uid: string): Promise<string[]> {
-    const userRef = await this.firestore.collection('users').doc(uid.toString()).get().toPromise();
-    const userData = userRef?.data() as UserDTO;
-    return userData ? userData.jobApplicationIds : [];
-  }
 }

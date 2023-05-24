@@ -56,7 +56,8 @@ export class JobServiceService {
 
 
   async apply(jobId: string, userId: string): Promise<void> {
-    console.log('JobId:', jobId);
+
+
 
     // Reference to the specific 'job' document
     const jobDocRef = this.firestore.collection('jobs').doc(jobId.toString());
@@ -68,6 +69,13 @@ export class JobServiceService {
     if (!jobDoc?.exists) {
       throw new Error('Job does not exist');
     }
+    const jobData = jobDoc?.data() as JobDto; // Explicitly specify the data type
+    // If the 'candidates' field doesn't exist or isn't an array, create it
+    if (!Array.isArray(jobData.candidates)) {
+      jobData.candidates = [];
+    }
+    jobData.candidates.push(userId);
+    await jobDocRef.update(jobData);
 
     // Now add the jobId to the user's 'appliedJobsIds' array
     // Get user reference

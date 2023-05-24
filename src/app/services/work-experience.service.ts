@@ -49,17 +49,6 @@ export class WorkExperienceService implements SectionService{
     });
   }
 
-
-  editUserWorkExperience(userId: string, workExperienceId: string, updatedWorkExperience: WorkExperienceFormDTO): Promise<void> {
-    const workExperienceDocRef = this.firestore.collection('users').doc(userId).collection('workExperience').doc(workExperienceId);
-    return workExperienceDocRef.update(updatedWorkExperience);
-  }
-
-  removeUserWorkExperience(userId: string, workExperienceId: string): Promise<void> {
-    const workExperienceDocRef = this.firestore.collection('users').doc(userId).collection('workExperience').doc(workExperienceId);
-    return workExperienceDocRef.delete();
-  }
-
   deleteItem(item: any, userId: string): void {
     this.firestore
       .collection('users')
