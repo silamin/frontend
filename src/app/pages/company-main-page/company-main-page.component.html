@@ -46,87 +46,141 @@
 </ng-template>
 
   <ng-template #jobsList>
-    <div class="container mt-4">
-      <div class="row">
-        <div class="col">
-          <div class="card mb-4" *ngFor="let job of paginatedJobs; let jobIndex = index">
-            <div class="card-header d-flex align-items-center">
-              <div class="row w-100">
-                <div class="col-lg-9 col-md-8 col-sm-6">
-                  <h5 class="card-title">{{ job.jobTitle }}</h5>
-                  <h6 class="card-subtitle mb-2 text-muted">{{ job.jobDescription }}</h6>
+    <ng-container *ngIf="paginatedJobs.length === 0 else displayJobs">
+      <div class="container mt-4 mb-4">
+        <div class="card text-center">
+          <div class="card-body">
+            <h5 class="card-title">No jobs listed yet!</h5>
+            <p class="card-text">It seems like there are no jobs listed at the moment. But don't worry, adding a job is easy!</p>
+
+            <div class="row mt-4">
+              <div class="col-md-6">
+                <div class="info-card">
+                  <i class="fas fa-tasks fa-2x mb-3 text-muted"></i>
+                  <h5>Step-by-Step Guidance</h5>
+                  <p>We provide a simple, step-by-step process to post your job.</p>
                 </div>
-                <div class="col-lg-3 col-md-4 col-sm-6 col-xs-6 text-end">
-                  <button class="btn btn-outline-dark me-2" (click)="editJob(job)"><i class="fa fa-edit"></i> Edit</button>
-                  <button class="btn btn-outline-danger px-2" (click)="deleteJob(job)"><i class="fa fa-trash"></i> Delete</button>
+              </div>
+              <div class="col-md-6">
+                <div class="info-card">
+                  <i class="fas fa-users fa-2x mb-3 text-muted"></i>
+                  <h5>Quality Candidates</h5>
+                  <p>Reach a vast pool of talent waiting for opportunities just like yours. Posting jobs on our platform allows you to find skilled candidates who are excited to bring their abilities to your company.</p>
                 </div>
               </div>
             </div>
+            <ol class="list-group list-group-numbered">
+              <li class="list-group-item">Click on the "Add Job" button in the navigation bar.</li>
+              <li class="list-group-item">Fill out the job description and requirements.</li>
+              <li class="list-group-item">Click "Submit" to publish your job post.</li>
+            </ol>
 
-            <div class="card-body">
-              <p class="card-text">{{ job.description }}</p>
-              <div class="table-responsive">
-                <table class="table table-striped">
-                  <thead *ngIf="job.candidates && job.candidates.length > 0">
-                  <tr>
-                    <th>Name</th>
-                    <th>Summary</th>
-                    <th></th>
-                  </tr>
-                  </thead>
-                  <tbody>
-                  <ng-container *ngIf="job.candidates && job.candidates.length > 0; else noCandidates">
-                    <tr *ngFor="let candidate of job.candidates; let rowIndex = index">
-                      <td>{{ candidate.name }}</td>
-                      <td>
-                        <div class="summary-container">
-                          <div *ngIf="candidate.workExperience && candidate.workExperience.length > 0" class="summary-item">
-                            <span>{{ candidate.workExperience.length }}</span>
-                            <span *ngIf="candidate.workExperience.length === 1"> experience</span>
-                            <span *ngIf="candidate.workExperience.length > 1"> experiences</span>
-                          </div>
-                          <div *ngIf="candidate.education && candidate.education.length > 0" class="summary-item">
-                            <span>{{ candidate.education.length }}</span>
-                            <span *ngIf="candidate.education.length === 1"> education</span>
-                            <span *ngIf="candidate.education.length > 1"> educations</span>
-                          </div>
-                          <div *ngIf="candidate.languages && candidate.languages.length > 0" class="summary-item">
-                            <span>{{ candidate.languages.length }}</span>
-                            <span *ngIf="candidate.languages.length === 1"> language</span>
-                            <span *ngIf="candidate.languages.length > 1"> languages</span>
-                          </div>
-                          <div *ngIf="candidate.skills && candidate.skills.length > 0" class="summary-item">
-                            <span>{{ candidate.skills.length }}</span>
-                            <span *ngIf="candidate.skills.length === 1"> skill</span>
-                            <span *ngIf="candidate.skills.length > 1"> skills</span>
-                          </div>
-                        </div>
-                      </td>
-                      <td class="text-end">
-                        <button class="btn btn-outline-primary mb-2 " (click)="showMore(candidate)">Show more <i class="fa fa-info-circle"></i></button>
-                        <button class="btn btn-outline-success  ms-2 mb-2" (click)="selectCandidate(jobIndex, rowIndex)">Select <i class="fa fa-check"></i></button>
-                        <button class="btn btn-outline-danger mb-2 ms-2" (click)="rejectCandidate(jobIndex, rowIndex)">Reject <i class="fa fa-ban"></i></button>
-                      </td>
+            <h5 class="card-title mt-4">Why Post a Job?</h5>
+            <p class="card-text">Posting jobs on our platform allows you to reach a vast pool of talent. It's a great way to find skilled candidates who are excited to bring their abilities to your company.</p>
+            <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 16 16" style="cursor: pointer;">
+              <circle cx="8" cy="8" r="7" fill="black" />
+              <rect x="7" y="3" width="2" height="10" rx="0.5" ry="0.5" fill="white" />
+              <rect x="3" y="7" width="10" height="2" rx="0.5" ry="0.5" fill="white" />
+            </svg>
+            <p class="card-text">Click the icon above to start creating your job post</p>
 
-                    </tr>
-                  </ng-container>
-                  <ng-template #noCandidates>
-                    <tr>
-                      <td colspan="3">No candidates</td>
-                    </tr>
-                  </ng-template>
-                  </tbody>
-                </table>
+            <div class="card mt-4">
+              <div class="card-body">
+                <blockquote class="blockquote mb-0">
+                  <p>"The only way to do great work is to love what you do." - Steve Jobs</p>
+                </blockquote>
               </div>
             </div>
           </div>
         </div>
       </div>
-      <div class="row">
-        <div class="col d-flex justify-content-end">
-          <app-app-pagination [currentPage]="currentPage" [itemsPerPage]="itemsPerPage" [totalItems]="jobsToDisplay.length" (pageChanged)="onPageChanged($event)"></app-app-pagination>
+
+
+
+    </ng-container>
+    <ng-template #displayJobs>
+      <div class="container mt-4">
+        <div class="row">
+          <div class="col">
+            <div class="card mb-4" *ngFor="let job of paginatedJobs; let jobIndex = index">
+              <div class="card-header d-flex align-items-center">
+                <div class="row w-100">
+                  <div class="col-lg-9 col-md-8 col-sm-6">
+                    <h5 class="card-title">{{ job.jobTitle }}</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">{{ job.jobDescription }}</h6>
+                  </div>
+                  <div class="col-lg-3 col-md-4 col-sm-6 col-xs-6 text-end">
+                    <button class="btn btn-outline-dark me-2" (click)="editJob(job)"><i class="fa fa-edit"></i> Edit</button>
+                    <button class="btn btn-outline-danger px-2" (click)="deleteJob(job)"><i class="fa fa-trash"></i> Delete</button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="card-body">
+                <p class="card-text">{{ job.description }}</p>
+                <div class="table-responsive">
+                  <table class="table table-striped">
+                    <thead *ngIf="job.candidates && job.candidates.length > 0">
+                    <tr>
+                      <th>Name</th>
+                      <th>Summary</th>
+                      <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <ng-container *ngIf="job.candidates && job.candidates.length > 0; else noCandidates">
+                      <tr *ngFor="let candidate of job.candidates; let rowIndex = index">
+                        <td>{{ candidate.name }}</td>
+                        <td>
+                          <div class="summary-container">
+                            <div *ngIf="candidate.workExperience && candidate.workExperience.length > 0" class="summary-item">
+                              <span>{{ candidate.workExperience.length }}</span>
+                              <span *ngIf="candidate.workExperience.length === 1"> experience</span>
+                              <span *ngIf="candidate.workExperience.length > 1"> experiences</span>
+                            </div>
+                            <div *ngIf="candidate.education && candidate.education.length > 0" class="summary-item">
+                              <span>{{ candidate.education.length }}</span>
+                              <span *ngIf="candidate.education.length === 1"> education</span>
+                              <span *ngIf="candidate.education.length > 1"> educations</span>
+                            </div>
+                            <div *ngIf="candidate.languages && candidate.languages.length > 0" class="summary-item">
+                              <span>{{ candidate.languages.length }}</span>
+                              <span *ngIf="candidate.languages.length === 1"> language</span>
+                              <span *ngIf="candidate.languages.length > 1"> languages</span>
+                            </div>
+                            <div *ngIf="candidate.skills && candidate.skills.length > 0" class="summary-item">
+                              <span>{{ candidate.skills.length }}</span>
+                              <span *ngIf="candidate.skills.length === 1"> skill</span>
+                              <span *ngIf="candidate.skills.length > 1"> skills</span>
+                            </div>
+                          </div>
+                        </td>
+                        <td class="text-end">
+                          <button class="btn btn-outline-primary mb-2 " (click)="showMore(candidate)">Show more <i class="fa fa-info-circle"></i></button>
+                          <button class="btn btn-outline-success  ms-2 mb-2" (click)="selectCandidate(jobIndex, rowIndex)">Select <i class="fa fa-check"></i></button>
+                          <button class="btn btn-outline-danger mb-2 ms-2" (click)="rejectCandidate(jobIndex, rowIndex)">Reject <i class="fa fa-ban"></i></button>
+                        </td>
+
+                      </tr>
+                    </ng-container>
+                    <ng-template #noCandidates>
+                      <tr>
+                        <td colspan="3">No candidates</td>
+                      </tr>
+                    </ng-template>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col d-flex justify-content-end">
+            <app-app-pagination [currentPage]="currentPage" [itemsPerPage]="itemsPerPage" [totalItems]="jobsToDisplay.length" (pageChanged)="onPageChanged($event)"></app-app-pagination>
+          </div>
         </div>
       </div>
-    </div>
+    </ng-template>
     <app-user-profile [user]="selectedUser"  [isPopUp]="isPopUp" [visible]="isUserProfileVisible"></app-user-profile>
   </ng-template>

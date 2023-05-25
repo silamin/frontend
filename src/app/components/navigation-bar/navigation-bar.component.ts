@@ -47,7 +47,7 @@ export class NavigationBarComponent implements OnInit{
   }
 
   hideJobPopUp() {
-
+    this.jobPopupVisible = false;
   }
   ngOnInit(): void {
     this.navBarService.activeNavItemIndex$.subscribe(index => {

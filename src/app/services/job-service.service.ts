@@ -40,10 +40,16 @@ export class JobServiceService {
       // Add the ID to the jobDto object
       jobDto.id = newId;
 
+      // Check if userId is defined
+      if (!jobDto.userId) {
+        throw new Error("Invalid jobDto: userId is undefined");
+      }
+
       // Adding the new job to the 'jobs' collection with the new ID
       return jobsRef.doc(newId.toString()).set(jobDto);
     });
   }
+
 
 
   getAllJobs(userId?: string): Observable<any[]> {

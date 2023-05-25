@@ -80,7 +80,7 @@ export class JobFormComponent implements OnChanges, OnInit{
 
   submitJobForm() {
     if (!this.isEdit){
-      this.jobForm.get('userId')?.setValue(this.userData.uid)
+      this.jobForm.get('userId')?.setValue(this.userData.id)
     this.jobService.addJob(this.jobForm.value)
     }else {
       this.jobService.editJob(this.jobForm.value).then(() => this.isEdit = false);

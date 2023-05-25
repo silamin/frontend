@@ -168,4 +168,8 @@ export class CompanyMainPageComponent implements OnInit {
   deleteJob(job: JobDto) {
     this.jobsService.removeJob(job.id.toString());
   }
+
+  navigateToJobCreation() {
+
+  }
 }
