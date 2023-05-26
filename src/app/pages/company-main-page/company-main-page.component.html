@@ -1,12 +1,26 @@
 <app-job-form [isPopUp]="true" [isEdit]="isEdit" [visible]="jobPopupVisible" (visibleChange)="hideJobPopUp()" [selectedJob]="selectedJob" (selectedJobChange)="onSelectedJobChange($event)" style="width: 100%"></app-job-form>
 <app-navigation-bar [isCompanyUser]="true"></app-navigation-bar>
 
-<ng-container *ngIf="jobsToDisplay && jobsToDisplay.length > 0; else noJobs">
-  <ng-container *ngTemplateOutlet="displayJobs"></ng-container>
+<ng-container *ngIf="jobsToDisplay === undefined; else jobsReady">
+  <div class="loading-screen-content">
+    <div class="logo">
+      <img src="/assets/loading-logo.svg" alt="">
+    </div>
+    <div class="text">
+      <h1 class="loading-text">Preparing your experience...</h1>
+      <p class="subtext">Please wait while we gather all the amazing jobs for you.</p>
+    </div>
+  </div>
 </ng-container>
 
-<ng-template #noJobs>
-  <ng-container *ngTemplateOutlet="noJobsYet"></ng-container>
+<ng-template #jobsReady>
+  <ng-container *ngIf="jobsToDisplay.length > 0; else noJobs">
+    <ng-container *ngTemplateOutlet="displayJobs"></ng-container>
+  </ng-container>
+
+  <ng-template #noJobs>
+    <ng-container *ngTemplateOutlet="noJobsYet"></ng-container>
+  </ng-template>
 </ng-template>
 
 <!--  Modal (Confirmation) -->

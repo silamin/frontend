@@ -80,7 +80,7 @@ export class UserProfileComponent implements OnInit{
     this.userStore.userData$.subscribe(userData => {
       if (userData){
         this.userData = userData;
-        this.socialMediaKeys = Object.keys(this.userData.socialMediaProfiles);
+        this.socialMediaKeys = Object?.keys(this.userData.socialMediaProfiles);
         this.isCompanyUser = userData.isCompanyUser
       }
 
