@@ -156,8 +156,8 @@ export class CompanyMainPageComponent implements OnInit {
 
   }
 
-  processApplication(candidateId: number) {
-    this.router.navigate(['application-process', candidateId]);
+  processApplication(candidateId: number, jobId: number) {
+    this.router.navigate(['application-process', candidateId,jobId]);
   }
 
   isCandidateSelected(candidateId: string, jobId: string): Observable<boolean> {
@@ -166,7 +166,7 @@ export class CompanyMainPageComponent implements OnInit {
     });
     return this.applicationService.selectedCandidates.asObservable().pipe(
       map((selectedCandidatesSet) => {
-        const candidateJobKey = `${jobId}-${candidateId}`;  // Change the order here
+        const candidateJobKey = `${candidateId}-${jobId}`;  // Change the order here
         return selectedCandidatesSet.has(candidateJobKey)
       })
     );

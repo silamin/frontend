@@ -60,7 +60,10 @@ export interface UserDTO{
   socialMediaProfiles: {}
 }
 export interface ApplicationDTO{
+  invitationText?: string;
+  id: string;
   jobId: string;
   candidateId: string;
+  applicationDate: string
 
 }

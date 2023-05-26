@@ -118,7 +118,7 @@
                       <td class="text-end">
                         <button class="btn btn-outline-primary mb-2 " (click)="showMore(candidate)">Show more <i class="fa fa-info-circle"></i></button>
                         <ng-container *ngIf="(isCandidateSelected(candidate.id, job.id) | async); else showButtons">
-                          <button class="btn btn-outline-success  ms-2 mb-2" (click)="processApplication( candidate.id)">Process Application</button>
+                          <button class="btn btn-outline-success  ms-2 mb-2" (click)="processApplication( candidate.id, job.id)">Process Application</button>
                         </ng-container>
                         <ng-template #showButtons>
                           <button class="btn btn-outline-success  ms-2 mb-2" (click)="selectCandidate(job.id, candidate.id)">Select</button>

@@ -51,7 +51,7 @@ const routes: Routes = [
   {path:'user-profile', component: UserProfileComponent},
   {path:'liked-jobs', component: LikesJobsComponent},
   {path: 'status', component: ApplicationStatusComponent},
-  { path: 'application-process/:cid', component: ProcessApplicationComponent },
+  { path: 'application-process/:cid/:jid', component: ProcessApplicationComponent },
 
 ];
 const firebaseConfig = {

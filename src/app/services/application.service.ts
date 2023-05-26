@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import {AngularFirestore} from "@angular/fire/compat/firestore";
 import {BehaviorSubject, map, Observable} from "rxjs";
 import {ApplicationDTO} from "../dtos/DTO's";
+import firebase from "firebase/compat";
+import App = firebase.app.App;
 
 @Injectable({
   providedIn: 'root'
@@ -10,11 +12,12 @@ export class ApplicationService {
 
   constructor(private firestore: AngularFirestore) { }
 
-  startProcess(candidateId: number, jobId: number) {
+  startProcess(jobId: number, candidateId: number) {
     // create a new document in applications collection
     this.firestore.collection('applications').add({
       jobId: jobId,
-      candidateId: candidateId
+      candidateId: candidateId,
+      applicationDate: new Date()
     }).then(() => {
       console.log("Document successfully written!");
     }).catch((error) => {
@@ -39,20 +42,24 @@ export class ApplicationService {
     });
   }
 
+  getApplicationData(uid: string, jid: string): Observable<ApplicationDTO[]> {
+    return this.firestore.collection('applications', ref =>
+      ref.where('candidateId', '==', uid).where('jobId', '==', parseInt(jid))
+    )
+      .valueChanges()
+      .pipe(
+        map(data => data as ApplicationDTO[])
+      );
+  }
 
-
-
-
-
-
-
-
-  isCandidateSelected(candidateId: string, jobId: string): Observable<boolean> {
-    this.selectedCandidates.subscribe((selectedCandidatesSet) => {
-      console.log(selectedCandidatesSet); // Log the set of selected candidates
-    });
-    return this.selectedCandidates.asObservable().pipe(
-      map((selectedCandidatesSet) => selectedCandidatesSet.has(`${candidateId}-${jobId}`))
-    );
+  async sendInvitation(invitationText: string, applicationId: string): Promise<void> {
+    try {
+      const docRef = this.firestore.collection('applications').doc(applicationId);
+      await docRef.update({
+        invitation: invitationText
+      });
+    } catch (error) {
+      console.error("Error updating document: ", error);
+    }
   }
 }

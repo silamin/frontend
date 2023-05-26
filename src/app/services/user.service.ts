@@ -46,4 +46,8 @@ export class UserService {
         console.error('Error updating user data:', error);
       });
   }
+
+  getUserById(userId: string) {
+
+  }
 }

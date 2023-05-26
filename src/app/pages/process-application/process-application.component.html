@@ -10,14 +10,26 @@
     <div class="card-body">
       <div class="mb-4">
         <h5>Application Details:</h5>
-        <p id="application-date">Application Date: </p>
+        <p id="application-date">Application Date: {{convertedDate}}</p>
       </div>
       <div class="process-step">
-        <h5>1. Interview Invitation</h5>
+        <div class="d-flex justify-content-between align-items-center">
+          <h5>1. Interview Invitation</h5>
+          <div class="d-grid gap-2 d-md-flex">
+            <button id="use-template" class="btn btn-light" (click)="useTemplate()">Use Invitation Template</button>
+            <button id="clear-text" class="btn btn-light" (click)="clearText()">Clear</button>
+          </div>
+        </div>
         <p>Prepare an invitation for the selected candidate.</p>
-        <textarea id="invitation-text" class="form-control" placeholder="Write the invitation here..."></textarea>
-        <button id="send-invitation" class="btn btn-primary mt-2">Send Invitation</button>
+        <div class="form-floating">
+          <textarea id="invitation-text" class="form-control" [(ngModel)]="invitationText" placeholder="Write the invitation here..." style="height: 200px;">{{applicationData?.invitationText}}</textarea>
+          <label for="invitation-text">Invitation Text</label>
+        </div>
+        <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-2">
+          <button id="send-invitation" class="btn btn-primary" (click)="sendInvitation()">Send Invitation</button>
+        </div>
       </div>
+
 
       <div class="process-step">
         <h5 class="mt-4">2. Interview Scheduling</h5>
@@ -40,12 +52,24 @@
         <p>Use these resources to help prepare for the interview.</p>
         <!-- List of resources -->
         <ul id="interview-resources">
-          <li><a href="resource-link-1">Resource 1</a></li>
-          <li><a href="resource-link-2">Resource 2</a></li>
-          <li><a href="resource-link-3">Resource 3</a></li>
-          <!-- Add more resources as required -->
+          <li *ngFor="let resource of resources">
+            <a [href]="resource.url">{{ resource.name }}</a>
+            <button class="btn btn-link btn-sm" (click)="deleteResource(resource)">
+              <i class="fa fa-trash"></i>
+            </button>
+          </li>
+          <li>
+            <div class="input-group">
+              <input class="form-control me-2" type="text" [(ngModel)]="newResourceName" placeholder="Resource Name">
+              <input class="form-control me-2" type="text" [(ngModel)]="newResourceUrl" placeholder="Resource URL">
+              <button class="btn btn-outline-primary" (click)="addResource()">
+                <i class="fa fa-plus"></i> Add Resource
+              </button>
+            </div>
+          </li>
         </ul>
       </div>
+
 
       <div class="process-step">
         <h5 class="mt-4">4. Conducting the Interview</h5>
@@ -53,16 +77,19 @@
       </div>
 
       <div class="process-step">
+        <div class="d-flex align-items-center align-content-between">
         <h5 class="mt-4">Notes:</h5>
-        <textarea id="notes" class="form-control" placeholder="Write your notes here..." disabled></textarea>
-        <i id="edit-notes" class="fas fa-edit btn-edit mt-2" style="cursor: pointer;"></i>
+          <i id="edit-notes" class="fas fa-edit btn-edit mt-2 me-2" (click)="toggleEditNotes()" style="cursor: pointer;"></i>
+        </div>
+        <textarea id="notes" class="form-control" placeholder="Write your notes here..." [disabled]="!isEditingNotes" [style.height.px]="textareaHeight"></textarea>
       </div>
 
       <div class="process-step">
         <h5 class="mt-4">5. Post-Interview Actions</h5>
         <p>After the interview, decide whether to move forward with the candidate.</p>
         <button id="accept-candidate" class="btn btn-success mt-2">Accept Candidate</button>
-        <button id="reject-candidate" class="btn btn-danger mt-2">Reject Candidate</button>
+        <button id="reject-candidate" class="btn btn-danger mt-2 ms-2">Reject Candidate</button>
+
       </div>
     </div>
   </div>
