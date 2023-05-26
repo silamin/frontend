@@ -5,6 +5,7 @@ import {JobDto, UserDTO} from "../dtos/DTO's";
 import {combineLatest, map, Observable} from "rxjs";
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import firebase from 'firebase/compat/app';
+import {switchMap} from "rxjs/operators";
 @Injectable({
   providedIn: 'root'
 })
@@ -50,13 +51,30 @@ export class JobServiceService {
     });
   }
 
-
-
-  getAllJobs(userId?: string): Observable<any[]> {
+  getAllJobs(userId?: string, isCompanyUser?: boolean): Observable<JobDto[]> {
+    console.log(isCompanyUser)
     if (userId) {
-      return this.firestore.collection('jobs', ref => ref.where('userId', '==', userId)).valueChanges();
+      if (isCompanyUser){
+        return this.firestore.collection<JobDto>('jobs', ref => ref.where('userId', '==', userId)).valueChanges();
+      } else {
+        // Get appliedJobsIds for user
+        return this.firestore.collection<UserDTO>('users').doc(userId).get()
+          .pipe(switchMap(userDoc => {
+            const appliedJobsIds = userDoc.data()?.jobApplicationIds;
+            console.log(appliedJobsIds);
+
+            // Fetch all jobs
+            return this.firestore.collection<JobDto>('jobs').valueChanges()
+              .pipe(
+                map(jobs => jobs.filter(job => { console.log(jobs)
+                    appliedJobsIds?.includes(String(job.id)) && !job.candidates?.includes(userId)
+                  })
+                )
+              );
+          }));
+      }
     } else {
-      return this.firestore.collection('jobs').valueChanges();
+      return this.firestore.collection<JobDto>('jobs').valueChanges();
     }
   }
 
@@ -177,10 +195,11 @@ export class JobServiceService {
     });
   }
   removeLikedJob(uid: string, jobId: string): Promise<void> {
+
     const userRef = this.firestore.collection('users').doc(uid);
 
     return userRef.update({
-      likedJobs: firebase.firestore.FieldValue.arrayRemove(jobId)
+      likedJobs: firebase.firestore.FieldValue.arrayRemove(parseInt(jobId))
     });
   }
 

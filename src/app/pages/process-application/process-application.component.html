@@ -89,9 +89,40 @@
       <div class="process-step">
         <h5 class="mt-4">5. Post-Interview Actions</h5>
         <p>After the interview, decide whether to move forward with the candidate.</p>
-        <button id="accept-candidate" class="btn btn-success mt-2">Accept Candidate</button>
-        <button id="reject-candidate" class="btn btn-danger mt-2 ms-2">Reject Candidate</button>
+        <button id="accept-candidate" (click)="openModal('accept')" class="btn btn-success mt-2">Accept Candidate</button>
+        <button id="reject-candidate" (click)="openModal('reject')" class="btn btn-danger mt-2 ms-2">Reject Candidate</button>
       </div>
     </div>
   </div>
 </div>
+<ng-template #confirmSelectModal let-modal>
+  <div class="modal-header onSelect">
+    <h4 class="modal-title" id="modal-basic-confirmation-title">Confirmation</h4>
+    <button type="button" class="close custom-close-button" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body px-4 py-3">
+    Are you sure you want to hire this candidate? <br> By clicking yes, this job will be removed from the job listing.
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-success" (click)="modal.close('Yes')">Yes</button>
+    <button type="button" class="btn btn-outline-primary" (click)="modal.dismiss('No')">No</button>
+  </div>
+</ng-template>
+
+<ng-template #confirmRejectModal let-modal>
+  <div class="modal-header onReject">
+    <h4 class="modal-title" id="modal-basic-title">Confirmation</h4>
+    <button type="button" class="close custom-close-button" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body px-4 py-3">
+    Are you sure you want to reject this candidate? <br> In this case, he will not be able to apply again to this job.
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-danger" (click)="modal.close('Yes')">Yes</button>
+    <button type="button" class="btn btn-outline-primary" (click)="modal.dismiss('No')">No</button>
+  </div>
+</ng-template>

@@ -56,6 +56,7 @@ export class CompanyMainPageComponent implements OnInit {
   jobsToDisplay!: JobDto[];
 
   get paginatedJobs(): any[] {
+    console.log(this.jobsToDisplay)
     const startIndex = (this.currentPage - 1) * this.itemsPerPage;
     const endIndex = startIndex + this.itemsPerPage;
     return this.jobsToDisplay.slice(startIndex, endIndex);
@@ -65,45 +66,15 @@ export class CompanyMainPageComponent implements OnInit {
     this.currentPage = newPage;
   }
   user:any;
+
   async ngOnInit() {
     await this.applicationService.fetchSelectedCandidates();
     this.userStore.user$.subscribe(user => {
       this.user = user;
+      console.log('User:', this.user);
       if (user) {
-        this.jobsService.getAllJobs(user.uid).pipe(
-          switchMap((jobs: any[]) => {
-            if (!jobs || jobs.length === 0) {
-              return of([]);
-            }
-
-            const jobsWithCandidates$ = jobs.map(job => {
-              if (!job.candidates || job.candidates.length === 0) {
-                return of(job);
-              }
-
-              const candidateObservables = job.candidates.map(candidateId =>
-                this.jobsService.getCandidateWithDetails(candidateId).pipe(take(1))
-              );
-
-              return combineLatest(candidateObservables).pipe(
-                map(candidates => ({ ...job, candidates }))
-              );
-            });
-
-            return forkJoin(jobsWithCandidates$);
-          }),
-          catchError(err => {
-            console.error('Error occurred: ', err);
-            return of([]);
-          })
-        ).subscribe(jobsWithCandidates => {
-          this.jobsToDisplay = jobsWithCandidates;
-          console.log(this.jobsToDisplay);
-        });
-      } else {
-        this.jobsToDisplay = [];
-      }
-    });
+         this.jobsService.getAllJobs().subscribe((result) => this.jobsToDisplay = result)
+      }})
   }
 
   candidatesPosition: { top: string, left: string } = { top: '0', left: '0' };

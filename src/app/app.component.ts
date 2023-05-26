@@ -19,7 +19,6 @@ export class AppComponent implements OnInit {
   user: any;
 
   async ngOnInit() {
-    await this.authService.login('loulou@easv.dk', 'e50afeed0');
     this.userStore.user$.subscribe(user => {
       if (user) {
         this.user = user;

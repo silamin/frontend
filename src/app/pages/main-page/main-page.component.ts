@@ -8,7 +8,8 @@ import {
 import {JobServiceService} from "../../services/job-service.service";
 import {UserStore} from "../../stores/UserStore";
 import {SearchService} from "../../services/search.service";
-import {combineLatest} from "rxjs";
+import {combineLatest, of} from "rxjs";
+import {switchMap} from "rxjs/operators";
 
 @Component({
   selector: 'app-main-page',
@@ -44,19 +45,36 @@ export class MainPageComponent implements OnInit, AfterViewInit{
   showNoJobsModal: any;
 
   ngOnInit() {
-    combineLatest([
-      this.userStore.userData$,
-      this.jobsService.getAllJobs(),
-      this.searchService.searchObservable
-    ]).subscribe(async ([userData, jobs, query]) => {
-      // ...
+    this.userStore.userData$
+      .pipe(
+        switchMap((userData) => {
+          if (userData) {
+            console.log(userData)
+            this.userData = userData;
 
-      this.userData = userData;
-      this.jobs = jobs;
-      this.displayedJobs = jobs; // Initialize displayedJobs to jobs
-      this.filterJobs(query);
-    });
+            return combineLatest([
+              this.jobsService.getAllJobs(userData.id, userData.isCompanyUser),
+              this.searchService.searchObservable
+
+            ]);
+          } else {
+            // handle the situation when userData is not available
+            // return an appropriate Observable
+            // For now, let's return an empty Observable as a placeholder
+            return of([]);
+          }
+        })
+      )
+      .subscribe(([jobs, query]) => {
+        console.log(this.jobsService.getAllJobs(this.userData.id, this.userData.isCompanyUser))
+
+        // The rest of your code...
+        this.jobs = jobs;
+        this.displayedJobs = jobs; // Initialize displayedJobs to jobs
+        this.filterJobs(query);
+      });
   }
+
   onScroll() {
     const element = this.scrollable.nativeElement;
     const { scrollTop, clientHeight, scrollHeight } = element;

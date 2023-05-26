@@ -36,6 +36,7 @@ export class AuthServiceService {
   }
 
   async login(email: string, password: string): Promise<void> {
+
     try {
       const userCredential = await this.afAuth.signInWithEmailAndPassword(email, password);
       const user = userCredential.user;

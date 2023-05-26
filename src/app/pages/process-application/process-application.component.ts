@@ -1,9 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { ApplicationService } from "../../services/application.service";
 import { ActivatedRoute } from "@angular/router";
 import { UserService } from "../../services/user.service";
 import {ApplicationDTO, ScheduleDto} from "../../dtos/DTO's";
+import {ModalServiceService} from "../../services/modal-service.service";
+import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
+import {JobServiceService} from "../../services/job-service.service";
 
 export interface Resource {
   name: string;
@@ -42,7 +45,8 @@ export class ProcessApplicationComponent implements OnInit {
     private formBuilder: FormBuilder,
     private applicationService: ApplicationService,
     private route: ActivatedRoute,
-    private userService: UserService
+    private modalService: NgbModal,
+    private jobService: JobServiceService
   ) {}
 
   ngOnInit(): void {
@@ -183,5 +187,35 @@ export class ProcessApplicationComponent implements OnInit {
     // Implement your logic to calculate the progress percentage
     // Return the progress percentage as a number
     return 0;
+  }
+
+  @ViewChild('confirmSelectModal', { static: true }) confirmSelectModal: any;
+  @ViewChild('confirmRejectModal', { static: true }) confirmRejectModal: any;
+
+  openModal(action: 'accept' | 'reject') {
+    let modalRef;
+    if (action === 'accept') {
+      modalRef = this.modalService.open(this.confirmSelectModal);
+    } else if (action === 'reject') {
+      modalRef = this.modalService.open(this.confirmRejectModal);
+    }
+
+    modalRef.result.then((result) => {
+      if (result === 'Yes') {
+        // handle the 'Yes' action here
+        if (action === 'accept') {
+          this.jobService.removeJob(this.jobId)
+        } else {
+          this.jobService.removeCandidate(this.jobId,this.userId)
+          this.jobService.removeLikedJob(this.userId,this.jobId)
+
+        }
+      } else {
+        // handle the 'No' action here
+      }
+    }, (reason) => {
+      // this function will be invoked if the promise is rejected.
+      // handle the dismiss action here
+    });
   }
 }

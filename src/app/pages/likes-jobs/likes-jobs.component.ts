@@ -32,7 +32,7 @@ export class LikesJobsComponent implements OnInit{
         this.jobsService.getLikedJobIds(user.uid).then(async r => {
           if (r){
             for (const id of r) {
-              this.jobs?.push(await this.jobsService.getJobById(id));
+              this.jobs?.push(await this.jobsService?.getJobById(id));
             }
             // Initialize isCollapsed object with all jobs collapsed
             this.jobs?.forEach(job => this.isCollapsed[job.id] = true);

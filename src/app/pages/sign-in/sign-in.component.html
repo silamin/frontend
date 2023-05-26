@@ -12,11 +12,11 @@
             </p>
             <form id="loginForm" action="index.html">
               <div class="form-floating mb-3">
-                <input class="form-control" id="floatingInput" type="email" placeholder="name@example.com" required>
+                <input class="form-control" id="floatingInput" type="email" [ngModel]="email"  placeholder="name@example.com" required>
                 <label for="floatingInput">Email address</label>
               </div>
               <div class="form-floating mb-3">
-                <input class="form-control" id="floatingPassword" type="password" placeholder="Password" required>
+                <input class="form-control" id="floatingPassword" [ngModel]="passWord"  type="password" placeholder="Password" required>
                 <label for="floatingPassword">Password</label>
               </div>
               <div class="form-check mb-3">
@@ -48,7 +48,7 @@
             </form>
           </div>
           <div class="card-footer px-lg-5 py-lg-4">
-            <div class="text-sm text-muted">Don't have an account? <a (click)="user_register()">Register</a>.</div>
+            <div class="text-sm text-muted">Don't have an account? <a (click)="user_login()">Register</a>.</div>
           </div>
         </div>
       </div>
@@ -84,7 +84,7 @@
             </form>
           </div>
           <div class="card-footer px-lg-5 py-lg-4">
-            <div class="text-sm text-muted">Already have an account? <a (click)="user_login()">Login</a>.</div>
+            <div class="text-sm text-muted">Already have an account? <a (click)="user_register()">Login</a>.</div>
           </div>
         </div>
       </div>

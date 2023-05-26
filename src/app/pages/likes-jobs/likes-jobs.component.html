@@ -1,4 +1,4 @@
-<app-navigation-bar></app-navigation-bar>
+<app-navigation-bar [isCompanyUser]="false" ></app-navigation-bar>
 <ng-container *ngIf="isLoading else jobsList">
   <div class="loading-screen-content">
     <div class="logo">
