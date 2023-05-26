@@ -1,13 +1,12 @@
 import {ChangeDetectorRef, Component, OnInit, ViewChild} from '@angular/core';
 import { JobServiceService } from '../../services/job-service.service';
 import { UserStore } from '../../stores/UserStore';
-import {catchError, combineLatest, forkJoin, of, take, tap} from 'rxjs';
+import {catchError, combineLatest, forkJoin, Observable, of, take, tap} from 'rxjs';
 import { switchMap, map } from 'rxjs/operators';
 import {JobDto} from "../../dtos/DTO's";
 import {ModalDismissReasons, NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {Router} from "@angular/router";
-import {UserProfileComponent} from "../user-profile/user-profile.component";
-import {JobFormComponent} from "../job-form/job-form/job-form.component";
+import {ApplicationService} from "../../services/application.service";
 
 @Component({
   selector: 'app-company-main-page',
@@ -15,29 +14,29 @@ import {JobFormComponent} from "../job-form/job-form/job-form.component";
   styleUrls: ['./company-main-page.component.scss'],
 })
 export class CompanyMainPageComponent implements OnInit {
-  constructor(private jobsService: JobServiceService, private userStore: UserStore,private modalService: NgbModal,private router: Router, private cdRef:ChangeDetectorRef) { }
+  constructor(private jobsService: JobServiceService,
+              private userStore: UserStore,
+              private modalService: NgbModal,
+              private router: Router,
+              private cdRef:ChangeDetectorRef,
+              private applicationService: ApplicationService) { }
   closeResult = '';
   @ViewChild('confirmSelectModal') confirmSelectModal;
   @ViewChild('confirmRejectModal') confirmRejectModal;
 
-
-  selectedJobIndex!: number;
-  selectedCandidateIndex!: number;
+  jobId!: number;
+  candidateId!: number;
 
   open(content) {
     this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' }).result.then(
       (result) => {
         this.closeResult = `Closed with: ${result}`;
         if (content === this.confirmSelectModal) {
-          this.selectCandidate(this.selectedJobIndex, this.selectedCandidateIndex);
+          result === 'Yes' ? this.applicationService.startProcess(this.jobId, this.candidateId): {};
         } else if (content === this.confirmRejectModal) {
-          let candidateId = this.jobsToDisplay[this.selectedJobIndex]?.candidates?.[this.selectedCandidateIndex]?.id;
-          if (candidateId !== undefined) {
-            this.jobsService.removeCandidate(this.jobsToDisplay[this.selectedJobIndex].id.toString(), candidateId)
-              .then(() =>{console.log(this.jobsToDisplay[this.selectedJobIndex].candidates)});
-          }          this.jobsToDisplay[this.selectedJobIndex].candidates?.splice(this.selectedCandidateIndex, 1);
+          result === 'Yes' ? this.jobsToDisplay[this.jobId]?.candidates?.splice(this.candidateId, 1) : {};
         }
-      },
+        },
       (reason) => {
         this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
       }
@@ -66,7 +65,8 @@ export class CompanyMainPageComponent implements OnInit {
     this.currentPage = newPage;
   }
   user:any;
-  ngOnInit(): void {
+  async ngOnInit() {
+    await this.applicationService.fetchSelectedCandidates();
     this.userStore.user$.subscribe(user => {
       this.user = user;
       if (user) {
@@ -110,33 +110,9 @@ export class CompanyMainPageComponent implements OnInit {
   selectedJob: any = null;
   isUserProfileVisible = false;
   selectCandidate(jobIndex: number, rowIndex: number) {
-    this.selectedJob = this.jobsToDisplay[jobIndex];
-    const card = document.getElementById(`card-${jobIndex}-${rowIndex}`);
-    if (card) {
-      const cardPosition = card.getBoundingClientRect();
-      const dropdownHeight = document.getElementById('candidates-dropdown')?.offsetHeight;
-      const cardHeight = card.offsetHeight;
-      const cardTop = cardPosition.top;
-      const windowHeight = window.innerHeight;
-      let dropdownTop = cardTop + cardHeight;
-      if (dropdownHeight)
-        if (dropdownTop + dropdownHeight > windowHeight) {
-          dropdownTop = windowHeight - dropdownHeight;
-        }
-      this.candidatesPosition = {
-        top: `${dropdownTop}px`,
-        left: `${cardPosition.left}px`,
-      };
-      const rowBelow = document.getElementById(`row-${jobIndex}-${rowIndex + 1}`);
-      if (rowBelow) {
-        const rowHeight = rowBelow.offsetHeight;
-        rowBelow.style.position = 'relative';
-        if (dropdownHeight)
-          rowBelow.style.top = `${dropdownHeight + cardHeight - rowHeight}px`;
-      }
-    }
+    this.jobId = jobIndex;
+    this.candidateId = rowIndex;
     this.open(this.confirmSelectModal);
-
   }
   isPopUp: boolean= false
   selectedUser: any;
@@ -149,8 +125,8 @@ export class CompanyMainPageComponent implements OnInit {
   }
 
   rejectCandidate(jobIndex: number, rowIndex: number) {
-    this.selectedJobIndex = jobIndex;
-    this.selectedCandidateIndex = rowIndex;
+    this.jobId = jobIndex;
+    this.candidateId = rowIndex;
     this.open(this.confirmRejectModal);
   }
 
@@ -183,4 +159,17 @@ export class CompanyMainPageComponent implements OnInit {
   processApplication(candidateId: number) {
     this.router.navigate(['application-process', candidateId]);
   }
+
+  isCandidateSelected(candidateId: string, jobId: string): Observable<boolean> {
+    this.applicationService.selectedCandidates.subscribe((selectedCandidatesSet) => {
+      console.log(selectedCandidatesSet); // Log the set of selected candidates
+    });
+    return this.applicationService.selectedCandidates.asObservable().pipe(
+      map((selectedCandidatesSet) => {
+        const candidateJobKey = `${jobId}-${candidateId}`;  // Change the order here
+        return selectedCandidatesSet.has(candidateJobKey)
+      })
+    );
+  }
+
 }

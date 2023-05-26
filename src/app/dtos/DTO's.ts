@@ -59,3 +59,8 @@ export interface UserDTO{
   address: AddressDTO;
   socialMediaProfiles: {}
 }
+export interface ApplicationDTO{
+  jobId: string;
+  candidateId: string;
+
+}
