@@ -65,7 +65,6 @@ export class NavigationBarComponent implements OnInit{
       this.navItems = [
         { title: 'Home', href: '', icon: 'fa-home', active: true },
         { title: 'Post a job', href: '', icon: 'fa-plus' },
-        { title: 'Status', href: '', icon: 'fa-envelope' },
         { title: 'Log out', href: '', icon: 'fa-sign-out-alt' },
       ];
     }

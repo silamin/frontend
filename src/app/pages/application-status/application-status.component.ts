@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {UserStore} from "../../stores/UserStore";
 
 @Component({
@@ -92,3 +92,4 @@ export class ApplicationStatusComponent implements OnInit{
     application.showDetails = !application.showDetails;
   }
 }
+

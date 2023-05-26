@@ -4,7 +4,7 @@
       <div class="modal-header">
         <h5 *ngIf="!isDisplay" class="modal-title">Create a job</h5>
         <h5 *ngIf="isDisplay" class="modal-title">Apply to a job</h5>
-        <button type="button" class="btn-close" (click)="close()"></button>
+        <button type="button" class="btn-close" (click)="close(); $event.stopPropagation()"></button>
       </div>
       <div class="modal-body">
         <form [formGroup]="jobForm" (ngSubmit)="submitJobForm()">

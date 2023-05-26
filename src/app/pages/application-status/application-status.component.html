@@ -1,4 +1,4 @@
-<app-navigation-bar [isCompanyUser]="isCompanyUser"></app-navigation-bar>
+<app-navigation-bar [isCompanyUser]="!isCompanyUser"></app-navigation-bar>
 <div class="container mt-4">
   <div *ngIf="userType === 'company'">
     <h2>Selected Applicants</h2>
@@ -90,4 +90,3 @@
     </div>
   </div>
 </div>
-

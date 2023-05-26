@@ -1,21 +1,18 @@
 <app-job-form [isPopUp]="true" [isEdit]="isEdit" [visible]="jobPopupVisible" (visibleChange)="hideJobPopUp()" [selectedJob]="selectedJob" (selectedJobChange)="onSelectedJobChange($event)" style="width: 100%"></app-job-form>
 <app-navigation-bar [isCompanyUser]="true"></app-navigation-bar>
-<ng-container *ngIf="!jobsToDisplay else jobsList">
-  <div class="loading-screen-content">
-    <div class="logo">
-      <img src="/assets/loading-logo.svg" alt="">
-    </div>
-    <div class="text">
-      <h1 class="loading-text">Preparing your experience...</h1>
-      <p class="subtext">Please wait while we gather all the amazing jobs for you.</p>
-    </div>
-  </div>
+
+<ng-container *ngIf="jobsToDisplay && jobsToDisplay.length > 0; else noJobs">
+  <ng-container *ngTemplateOutlet="displayJobs"></ng-container>
 </ng-container>
+
+<ng-template #noJobs>
+  <ng-container *ngTemplateOutlet="noJobsYet"></ng-container>
+</ng-template>
 
 <!--  Modal (Confirmation) -->
 <ng-template #confirmSelectModal let-modal>
   <div class="modal-header onSelect">
-    <h4 class="modal-title" id="modal-basic-title">Confirmation</h4>
+    <h4 class="modal-title" id="modal-basic-confirmation-title">Confirmation</h4>
     <button type="button" class="close custom-close-button" aria-label="Close" (click)="modal.dismiss('Cross click')">
       <span aria-hidden="true">&times;</span>
     </button>
@@ -45,8 +42,98 @@
   </div>
 </ng-template>
 
-  <ng-template #jobsList>
-    <ng-container *ngIf="paginatedJobs.length === 0 else displayJobs">
+<!-- 'Display jobs' template -->
+
+  <ng-template #displayJobs>
+    <div class="container mt-4">
+      <div class="row">
+        <div class="col">
+          <div class="card mb-4" *ngFor="let job of paginatedJobs">
+            <div class="card-header d-flex align-items-center">
+              <div class="row w-100">
+                <div class="col-lg-9 col-md-8 col-sm-6">
+                  <h5 class="card-title">{{ job.jobTitle }}</h5>
+                  <h6 class="card-subtitle mb-2 text-muted">{{ job.jobDescription }}</h6>
+                </div>
+                <div class="col-lg-3 col-md-4 col-sm-6 col-xs-6 text-end">
+                  <button class="btn btn-outline-dark me-2" (click)="editJob(job)"><i class="fa fa-edit"></i> Edit</button>
+                  <button class="btn btn-outline-danger px-2" (click)="deleteJob(job)"><i class="fa fa-trash"></i> Delete</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="card-body">
+              <p class="card-text">{{ job.description }}</p>
+              <div class="table-responsive">
+                <table class="table table-striped">
+                  <thead *ngIf="job.candidates && job.candidates.length > 0">
+                  <tr>
+                    <th>Name</th>
+                    <th>Summary</th>
+                    <th></th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <ng-container *ngIf="job.candidates && job.candidates.length > 0; else noCandidates">
+                    <tr *ngFor="let candidate of job.candidates; let rowIndex = index">
+                      <td>{{ candidate.name }}</td>
+                      <td>
+                        <div class="summary-container">
+                          <div *ngIf="candidate.workExperience && candidate.workExperience.length > 0" class="summary-item">
+                            <span>{{ candidate.workExperience.length }}</span>
+                            <span *ngIf="candidate.workExperience.length === 1"> experience</span>
+                            <span *ngIf="candidate.workExperience.length > 1"> experiences</span>
+                          </div>
+                          <div *ngIf="candidate.education && candidate.education.length > 0" class="summary-item">
+                            <span>{{ candidate.education.length }}</span>
+                            <span *ngIf="candidate.education.length === 1"> education</span>
+                            <span *ngIf="candidate.education.length > 1"> educations</span>
+                          </div>
+                          <div *ngIf="candidate.languages && candidate.languages.length > 0" class="summary-item">
+                            <span>{{ candidate.languages.length }}</span>
+                            <span *ngIf="candidate.languages.length === 1"> language</span>
+                            <span *ngIf="candidate.languages.length > 1"> languages</span>
+                          </div>
+                          <div *ngIf="candidate.skills && candidate.skills.length > 0" class="summary-item">
+                            <span>{{ candidate.skills.length }}</span>
+                            <span *ngIf="candidate.skills.length === 1"> skill</span>
+                            <span *ngIf="candidate.skills.length > 1"> skills</span>
+                          </div>
+                        </div>
+                      </td>
+                      <td class="text-end">
+                        <button class="btn btn-outline-primary mb-2 " (click)="showMore(candidate)">Show more <i class="fa fa-info-circle"></i></button>
+                        <ng-container *ngIf="!candidate.processed">
+                          <button class="btn btn-outline-success  ms-2 mb-2" (click)="processApplication( candidate.id)">Process Application</button>
+                        </ng-container>
+                      </td>
+
+                    </tr>
+                  </ng-container>
+                  <ng-template #noCandidates>
+                    <tr>
+                      <td colspan="3">No candidates</td>
+                    </tr>
+                  </ng-template>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col d-flex justify-content-end">
+          <app-app-pagination *ngIf="jobsToDisplay.length > itemsPerPage" [currentPage]="currentPage" [itemsPerPage]="itemsPerPage" [totalItems]="jobsToDisplay.length" (pageChanged)="onPageChanged($event)"></app-app-pagination>
+        </div>
+      </div>
+    </div>
+    <app-user-profile [user]="selectedUser"  [isPopUp]="isPopUp" [visible]="isUserProfileVisible"></app-user-profile>
+  </ng-template>
+
+
+
+  <ng-template #noJobsYet>
       <div class="container mt-4 mb-4">
         <div class="card text-center">
           <div class="card-body">
@@ -94,93 +181,5 @@
           </div>
         </div>
       </div>
-
-
-
-    </ng-container>
-    <ng-template #displayJobs>
-      <div class="container mt-4">
-        <div class="row">
-          <div class="col">
-            <div class="card mb-4" *ngFor="let job of paginatedJobs; let jobIndex = index">
-              <div class="card-header d-flex align-items-center">
-                <div class="row w-100">
-                  <div class="col-lg-9 col-md-8 col-sm-6">
-                    <h5 class="card-title">{{ job.jobTitle }}</h5>
-                    <h6 class="card-subtitle mb-2 text-muted">{{ job.jobDescription }}</h6>
-                  </div>
-                  <div class="col-lg-3 col-md-4 col-sm-6 col-xs-6 text-end">
-                    <button class="btn btn-outline-dark me-2" (click)="editJob(job)"><i class="fa fa-edit"></i> Edit</button>
-                    <button class="btn btn-outline-danger px-2" (click)="deleteJob(job)"><i class="fa fa-trash"></i> Delete</button>
-                  </div>
-                </div>
-              </div>
-
-              <div class="card-body">
-                <p class="card-text">{{ job.description }}</p>
-                <div class="table-responsive">
-                  <table class="table table-striped">
-                    <thead *ngIf="job.candidates && job.candidates.length > 0">
-                    <tr>
-                      <th>Name</th>
-                      <th>Summary</th>
-                      <th></th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <ng-container *ngIf="job.candidates && job.candidates.length > 0; else noCandidates">
-                      <tr *ngFor="let candidate of job.candidates; let rowIndex = index">
-                        <td>{{ candidate.name }}</td>
-                        <td>
-                          <div class="summary-container">
-                            <div *ngIf="candidate.workExperience && candidate.workExperience.length > 0" class="summary-item">
-                              <span>{{ candidate.workExperience.length }}</span>
-                              <span *ngIf="candidate.workExperience.length === 1"> experience</span>
-                              <span *ngIf="candidate.workExperience.length > 1"> experiences</span>
-                            </div>
-                            <div *ngIf="candidate.education && candidate.education.length > 0" class="summary-item">
-                              <span>{{ candidate.education.length }}</span>
-                              <span *ngIf="candidate.education.length === 1"> education</span>
-                              <span *ngIf="candidate.education.length > 1"> educations</span>
-                            </div>
-                            <div *ngIf="candidate.languages && candidate.languages.length > 0" class="summary-item">
-                              <span>{{ candidate.languages.length }}</span>
-                              <span *ngIf="candidate.languages.length === 1"> language</span>
-                              <span *ngIf="candidate.languages.length > 1"> languages</span>
-                            </div>
-                            <div *ngIf="candidate.skills && candidate.skills.length > 0" class="summary-item">
-                              <span>{{ candidate.skills.length }}</span>
-                              <span *ngIf="candidate.skills.length === 1"> skill</span>
-                              <span *ngIf="candidate.skills.length > 1"> skills</span>
-                            </div>
-                          </div>
-                        </td>
-                        <td class="text-end">
-                          <button class="btn btn-outline-primary mb-2 " (click)="showMore(candidate)">Show more <i class="fa fa-info-circle"></i></button>
-                          <button class="btn btn-outline-success  ms-2 mb-2" (click)="selectCandidate(jobIndex, rowIndex)">Select <i class="fa fa-check"></i></button>
-                          <button class="btn btn-outline-danger mb-2 ms-2" (click)="rejectCandidate(jobIndex, rowIndex)">Reject <i class="fa fa-ban"></i></button>
-                        </td>
-
-                      </tr>
-                    </ng-container>
-                    <ng-template #noCandidates>
-                      <tr>
-                        <td colspan="3">No candidates</td>
-                      </tr>
-                    </ng-template>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col d-flex justify-content-end">
-            <app-app-pagination [currentPage]="currentPage" [itemsPerPage]="itemsPerPage" [totalItems]="jobsToDisplay.length" (pageChanged)="onPageChanged($event)"></app-app-pagination>
-          </div>
-        </div>
-      </div>
-    </ng-template>
     <app-user-profile [user]="selectedUser"  [isPopUp]="isPopUp" [visible]="isUserProfileVisible"></app-user-profile>
-  </ng-template>
+  </ng-template >

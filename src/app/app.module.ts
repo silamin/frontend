@@ -42,6 +42,7 @@ import {
   SKILLS_SERVICE_TOKEN,
   WORK_EXPERIENCE_SERVICE_TOKEN
 } from "./services/tokens";
+import { ProcessApplicationComponent } from './pages/process-application/process-application.component';
 
 const routes: Routes = [
   { path: '', component: SignInComponent },
@@ -49,7 +50,9 @@ const routes: Routes = [
   {path: 'user-main-page', component: MainPageComponent},
   {path:'user-profile', component: UserProfileComponent},
   {path:'liked-jobs', component: LikesJobsComponent},
-  {path: 'status', component: ApplicationStatusComponent}
+  {path: 'status', component: ApplicationStatusComponent},
+  { path: 'application-process/:cid', component: ProcessApplicationComponent },
+
 ];
 const firebaseConfig = {
   apiKey : "AIzaSyD-UXdqY60rn6MigvTq9jsU6dnDNI9jPLk" ,
@@ -86,6 +89,7 @@ const firebaseConfig = {
     ChatComponent,
     LanguageFormComponent,
     ApplicationStatusComponent,
+    ProcessApplicationComponent,
   ],
     imports: [
         BrowserModule,

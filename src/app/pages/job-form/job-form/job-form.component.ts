@@ -54,14 +54,14 @@ export class JobFormComponent implements OnChanges, OnInit{
 
   close() {
     this.visible = false;
+    this.isEdit = false;
+    this.selectedJob = null;
     this.visibleChange.emit(this.visible);
   }
 
   constructor(private fb: FormBuilder,
               private jobService: JobServiceService,
-              private userStore: UserStore,
-              private userService: UserService,
-              private changeDetectorRef: ChangeDetectorRef) {
+              private userStore: UserStore,) {
     this.jobForm = this.fb.group({
       id: ['', Validators.required],
       jobTitle: ['', Validators.required],
@@ -79,12 +79,14 @@ export class JobFormComponent implements OnChanges, OnInit{
   userData:any;
 
   submitJobForm() {
-    if (!this.isEdit){
+    console.log(this.isEdit)
+    if (!this.isEdit) {
       this.jobForm.get('userId')?.setValue(this.userData.id)
-    this.jobService.addJob(this.jobForm.value)
-    }else {
-      this.jobService.editJob(this.jobForm.value).then(() => this.isEdit = false);
+      this.jobService.addJob(this.jobForm.value)
+    } else {
+      this.jobService.editJob(this.jobForm.value);
     }
+    this.close()
   }
   @Input() isEdit: boolean = false;
   onApply() {

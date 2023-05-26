@@ -1,10 +1,13 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {ChangeDetectorRef, Component, OnInit, ViewChild} from '@angular/core';
 import { JobServiceService } from '../../services/job-service.service';
 import { UserStore } from '../../stores/UserStore';
 import {catchError, combineLatest, forkJoin, of, take, tap} from 'rxjs';
 import { switchMap, map } from 'rxjs/operators';
 import {JobDto} from "../../dtos/DTO's";
 import {ModalDismissReasons, NgbModal} from "@ng-bootstrap/ng-bootstrap";
+import {Router} from "@angular/router";
+import {UserProfileComponent} from "../user-profile/user-profile.component";
+import {JobFormComponent} from "../job-form/job-form/job-form.component";
 
 @Component({
   selector: 'app-company-main-page',
@@ -12,10 +15,12 @@ import {ModalDismissReasons, NgbModal} from "@ng-bootstrap/ng-bootstrap";
   styleUrls: ['./company-main-page.component.scss'],
 })
 export class CompanyMainPageComponent implements OnInit {
-  constructor(private jobsService: JobServiceService, private userStore: UserStore,private modalService: NgbModal) { }
+  constructor(private jobsService: JobServiceService, private userStore: UserStore,private modalService: NgbModal,private router: Router, private cdRef:ChangeDetectorRef) { }
   closeResult = '';
   @ViewChild('confirmSelectModal') confirmSelectModal;
   @ViewChild('confirmRejectModal') confirmRejectModal;
+
+
   selectedJobIndex!: number;
   selectedCandidateIndex!: number;
 
@@ -102,7 +107,6 @@ export class CompanyMainPageComponent implements OnInit {
   }
 
   candidatesPosition: { top: string, left: string } = { top: '0', left: '0' };
-  isVisible = false;
   selectedJob: any = null;
   isUserProfileVisible = false;
   selectCandidate(jobIndex: number, rowIndex: number) {
@@ -154,13 +158,16 @@ export class CompanyMainPageComponent implements OnInit {
     this.isEdit = true;
     this.selectedJob = job;
     this.jobPopupVisible = true;
-    console.log(this.isPopUp)
+    this.isPopUp = true;
   }
 
   hideJobPopUp() {
     this.jobPopupVisible = false;
+    this.isPopUp = false;
+    this.isEdit = false;
+    this.selectedJob = null;
+    this.cdRef.detectChanges();
   }
-
   onSelectedJobChange($event: any) {
     this.selectedJob = $event;
   }
@@ -171,5 +178,9 @@ export class CompanyMainPageComponent implements OnInit {
 
   navigateToJobCreation() {
 
+  }
+
+  processApplication(candidateId: number) {
+    this.router.navigate(['application-process', candidateId]);
   }
 }
