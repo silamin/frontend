@@ -59,9 +59,18 @@ export interface UserDTO{
   address: AddressDTO;
   socialMediaProfiles: {}
 }
+
+export interface ScheduleDto {
+  date: string;
+  location: string;
+}
+
 export interface ApplicationDTO{
+  resources: any[];
+  notes: string
+  scheduling: ScheduleDto;
   invitationText?: string;
-  id: string;
+  id: number;
   jobId: string;
   candidateId: string;
   applicationDate: string

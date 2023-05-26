@@ -1,17 +1,21 @@
 <app-navigation-bar [isCompanyUser]="true"></app-navigation-bar>
+
 <div class="container-fluid mt-4">
   <div class="card">
     <div class="card-header bg-primary text-white">
       <h3>Candidate Selection Process</h3>
       <div class="progress">
-        <div id="process-progress" class="progress-bar bg-success" role="progressbar" style="width: 0%" aria-valuemin="0" aria-valuemax="100"></div>
+        <div id="process-progress" class="progress-bar bg-success" role="progressbar" [style.width.%]="getProgress()" aria-valuemin="0" aria-valuemax="100"></div>
       </div>
     </div>
-    <div class="card-body">
-      <div class="mb-4">
+
+    <div class="card-body" [formGroup]="applicationForm">
+
+    <div class="mb-4">
         <h5>Application Details:</h5>
-        <p id="application-date">Application Date: {{convertedDate}}</p>
+        <p id="application-date">Application Date: {{ convertedDate }}</p>
       </div>
+
       <div class="process-step">
         <div class="d-flex justify-content-between align-items-center">
           <h5>1. Interview Invitation</h5>
@@ -22,7 +26,7 @@
         </div>
         <p>Prepare an invitation for the selected candidate.</p>
         <div class="form-floating">
-          <textarea id="invitation-text" class="form-control" [(ngModel)]="invitationText" placeholder="Write the invitation here..." style="height: 200px;">{{applicationData?.invitationText}}</textarea>
+          <textarea id="invitation-text" class="form-control" formControlName="invitationText" placeholder="Write the invitation here..." style="height: 200px;"></textarea>
           <label for="invitation-text">Invitation Text</label>
         </div>
         <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-2">
@@ -30,21 +34,20 @@
         </div>
       </div>
 
-
       <div class="process-step">
         <h5 class="mt-4">2. Interview Scheduling</h5>
         <p>Select a convenient date and time for the interview.</p>
         <div class="row">
           <div class="col-md-6">
             <label for="application-location" class="mt-2">Location:</label>
-            <input id="application-location" type="text" class="form-control"/>
+            <input id="application-location" type="text" class="form-control" formControlName="interviewLocation" />
           </div>
           <div class="col-md-6">
             <label for="interview-date" class="mt-2">Date:</label>
-            <input id="interview-date" type="datetime-local" class="form-control"/>
+            <input id="interview-date" type="datetime-local" class="form-control" formControlName="interviewDate" />
           </div>
         </div>
-        <button id="schedule-interview" class="btn btn-primary mt-2">Schedule Interview</button>
+        <button id="schedule-interview" class="btn btn-primary mt-2" (click)="scheduleInterview()">Schedule Interview</button>
       </div>
 
       <div class="process-step">
@@ -60,8 +63,8 @@
           </li>
           <li>
             <div class="input-group">
-              <input class="form-control me-2" type="text" [(ngModel)]="newResourceName" placeholder="Resource Name">
-              <input class="form-control me-2" type="text" [(ngModel)]="newResourceUrl" placeholder="Resource URL">
+              <input class="form-control me-2" type="text" formControlName="newResourceName" placeholder="Resource Name" />
+              <input class="form-control me-2" type="text" formControlName="newResourceUrl" placeholder="Resource URL" />
               <button class="btn btn-outline-primary" (click)="addResource()">
                 <i class="fa fa-plus"></i> Add Resource
               </button>
@@ -70,7 +73,6 @@
         </ul>
       </div>
 
-
       <div class="process-step">
         <h5 class="mt-4">4. Conducting the Interview</h5>
         <p>After scheduling, conduct the interview with the candidate.</p>
@@ -78,10 +80,10 @@
 
       <div class="process-step">
         <div class="d-flex align-items-center align-content-between">
-        <h5 class="mt-4">Notes:</h5>
+          <h5 class="mt-4">Notes:</h5>
           <i id="edit-notes" class="fas fa-edit btn-edit mt-2 me-2" (click)="toggleEditNotes()" style="cursor: pointer;"></i>
         </div>
-        <textarea id="notes" class="form-control" placeholder="Write your notes here..." [disabled]="!isEditingNotes" [style.height.px]="textareaHeight"></textarea>
+        <textarea id="notes" class="form-control" formControlName="notes" placeholder="Write your notes here..." [disabled]="!isEditingNotes" [style.height.px]="textareaHeight"></textarea>
       </div>
 
       <div class="process-step">
@@ -89,7 +91,6 @@
         <p>After the interview, decide whether to move forward with the candidate.</p>
         <button id="accept-candidate" class="btn btn-success mt-2">Accept Candidate</button>
         <button id="reject-candidate" class="btn btn-danger mt-2 ms-2">Reject Candidate</button>
-
       </div>
     </div>
   </div>

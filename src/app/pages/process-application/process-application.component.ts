@@ -1,12 +1,11 @@
-import {Component, OnInit} from '@angular/core';
-import {ApplicationDTO} from "../../dtos/DTO's";
-import {ApplicationService} from "../../services/application.service";
-import {ActivatedRoute} from "@angular/router";
-import firebase from "firebase/compat/app";
-import {UserService} from "../../services/user.service";
+import { Component, OnInit } from '@angular/core';
+import { FormGroup, FormBuilder } from '@angular/forms';
+import { ApplicationService } from "../../services/application.service";
+import { ActivatedRoute } from "@angular/router";
+import { UserService } from "../../services/user.service";
+import {ApplicationDTO, ScheduleDto} from "../../dtos/DTO's";
 
-
-interface Resource {
+export interface Resource {
   name: string;
   url: string;
 }
@@ -16,72 +15,40 @@ interface Resource {
   templateUrl: './process-application.component.html',
   styleUrls: ['./process-application.component.scss']
 })
-export class ProcessApplicationComponent implements OnInit{
-  userId!: string;
-  jobId!: string;
+export class ProcessApplicationComponent implements OnInit {
+  applicationForm!: FormGroup;
+  applicationData: ApplicationDTO = new class implements ApplicationDTO {
+    notes: string='';
+    resources: any[]=[];
+    scheduling: ScheduleDto= new class implements ScheduleDto {
+      date = '';
+      location= '';
+    };
+    applicationDate = '';
+    candidateId = '';
+    id = 0;
+    invitationText = '';
+    jobId = '0';
+  };
+
   isEditingNotes = false;
   textareaHeight = 150; // Adjust the desired height in pixels
-  selectedUser: any;
-
-
-  toggleEditNotes() {
-    this.isEditingNotes = !this.isEditingNotes;
-  }
   resources: Resource[] = [];
-  newResourceName: string = '';
-  newResourceUrl: string = '';
+  userId!: string;
+  jobId!: string;
   convertedDate: string | null | undefined;
 
-  addResource() {
-    if (this.newResourceName && this.newResourceUrl) {
-      const newResource: Resource = {
-        name: this.newResourceName,
-        url: this.newResourceUrl
-      };
-      this.resources.push(newResource);
-      this.newResourceName = '';
-      this.newResourceUrl = '';
-    }
-  }
-  constructor(private applicationService: ApplicationService,
-              private route: ActivatedRoute,
-              private userService: UserService) {
-  }
+  constructor(
+    private formBuilder: FormBuilder,
+    private applicationService: ApplicationService,
+    private route: ActivatedRoute,
+    private userService: UserService
+  ) {}
 
-  deleteResource(resource: Resource) {
-    const index = this.resources.indexOf(resource);
-    if (index !== -1) {
-      this.resources.splice(index, 1);
-    }
-  }
-  invitationText = '';
-
-  useTemplate() {
-    this.invitationText = 'Dear [Candidate],\n\nWe are pleased to invite you for an interview at our office for the position of [Job Role]. Please let us know when you are available.\n\nBest Regards,\n[Your Name]';
-  }
-
-  clearText() {
-    this.invitationText = '';
-  }
-
-  sendInvitation() {
-    this.applicationService.sendInvitation(this.invitationText, this.applicationData.id);
-  }
-  applicationData: ApplicationDTO = { id: '1', jobId: '', candidateId: '0', applicationDate: new Date().toDateString() };
   ngOnInit(): void {
-    this.route.params.subscribe(params => {
-      if (params){
-        this.userId = params['cid'];
-        this.jobId = params['jid'];
-      }
-    });
+    this.createForm();
+    this.initializeData();
 
-    this.applicationService.getApplicationData(this.userId, this.jobId).subscribe(data =>{
-      this.applicationData = data[0];
-      this.convertedDate = this.firestoreStringToJSDate(this.applicationData?.applicationDate)?.toDateString();
-
-      console.log(this.applicationData)
-    })
     window.onload = () => {
       const steps = document.getElementsByClassName("process-step");
       const progressBar = document.getElementById("process-progress") as HTMLDivElement;
@@ -89,7 +56,7 @@ export class ProcessApplicationComponent implements OnInit{
       const stepCompleted = (index: number) => {
         let progress = (index / steps.length) * 100;
         progressBar.style.width = `${progress}%`;
-      }
+      };
 
       for (let i = 0; i < steps.length; i++) {
         let step = steps[i];
@@ -99,9 +66,107 @@ export class ProcessApplicationComponent implements OnInit{
           button.onclick = () => stepCompleted(i + 1);
         }
       }
+    };
+  }
+
+  createForm(): void {
+    this.applicationForm = this.formBuilder.group({
+      invitationText: [''],
+      interviewLocation: [''],
+      interviewDate: [''],
+      newResourceName: [''],
+      newResourceUrl: [''],
+      notes: ['']
+    });
+  }
+
+  initializeData(): void {
+    this.route.params.subscribe((params) => {
+      if (params) {
+        this.userId = params['cid'];
+        this.jobId = params['jid'];
+      }
+    });
+
+    this.applicationService.getApplicationData(this.userId, this.jobId).subscribe((data) => {
+      if (data && data.length > 0) {
+        this.applicationData = data[0];
+        this.applicationForm.patchValue({
+          invitationText: this.applicationData.invitationText,
+          interviewLocation: this.applicationData.scheduling.location, // Populate with correct value
+          interviewDate: this.applicationData.scheduling.location,
+          notes: this.applicationData.notes
+        });
+      }
+      this.convertedDate = this.firestoreStringToJSDate(this.applicationData?.applicationDate)?.toDateString();
+      console.log(this.applicationData)
+    });
+  }
+
+  toggleEditNotes(): void {
+    this.isEditingNotes = !this.isEditingNotes;
+    if (!this.isEditingNotes) {
+      this.saveNotes();
     }
   }
-   firestoreStringToJSDate(dateString: string | undefined): Date | null {
+
+  addResource(): void {
+    const newResourceName = this.applicationForm.get('newResourceName')?.value;
+    const newResourceUrl = this.applicationForm.get('newResourceUrl')?.value;
+
+    if (newResourceName && newResourceUrl) {
+      const newResource: Resource = {
+        name: newResourceName,
+        url: newResourceUrl
+      };
+
+      this.resources.push(newResource);
+      this.applicationService.addResource(newResource, this.applicationData.id);
+
+      this.applicationForm.get('newResourceName')?.reset();
+      this.applicationForm.get('newResourceUrl')?.reset();
+    }
+  }
+
+  deleteResource(resource: Resource): void {
+    const index = this.resources.indexOf(resource);
+    if (index !== -1) {
+      this.resources.splice(index, 1);
+      this.applicationService.deleteResource(this.applicationData.id, resource);
+    }
+  }
+
+  useTemplate(): void {
+    this.applicationForm.get('invitationText')?.setValue('Dear [Candidate],\n\nWe are pleased to invite you for an interview at our office for the position of [Job Role]. Please let us know when you are available.\n\nBest Regards,\n[Your Name]');
+  }
+
+  clearText(): void {
+    this.applicationForm.get('invitationText')?.reset();
+  }
+
+  sendInvitation(): void {
+    const invitationText = this.applicationForm.get('invitationText')?.value;
+    this.applicationService.sendInvitation(invitationText, this.applicationData.id);
+  }
+
+  scheduleInterview(): void {
+    const interviewLocation = this.applicationForm.get('interviewLocation')?.value;
+    const interviewDate = this.applicationForm.get('interviewDate')?.value;
+
+    const interviewData = {
+      location: interviewLocation,
+      date: new Date(interviewDate)
+    };
+
+    this.applicationService.saveInterviewData(this.applicationData.id, interviewData);
+  }
+
+  saveNotes(): void {
+    const notes = this.applicationForm.get('notes')?.value;
+    this.applicationService.saveData(notes, this.applicationData.id);
+  }
+
+  firestoreStringToJSDate(dateString: string | undefined): Date | null {
     if (!dateString) {
       return null;
     }
@@ -112,5 +177,11 @@ export class ProcessApplicationComponent implements OnInit{
     }
 
     return new Date(timestamp);
+  }
+
+  getProgress(): number {
+    // Implement your logic to calculate the progress percentage
+    // Return the progress percentage as a number
+    return 0;
   }
 }
