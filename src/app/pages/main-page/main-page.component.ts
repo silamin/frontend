@@ -8,8 +8,10 @@ import {
 import {JobServiceService} from "../../services/job-service.service";
 import {UserStore} from "../../stores/UserStore";
 import {SearchService} from "../../services/search.service";
-import {combineLatest, of} from "rxjs";
+import {combineLatest, Observable, of} from "rxjs";
 import {switchMap} from "rxjs/operators";
+import {UserService} from "../../services/user.service";
+import {UserDTO} from "../../dtos/DTO's";
 
 @Component({
   selector: 'app-main-page',
@@ -37,7 +39,8 @@ export class MainPageComponent implements OnInit, AfterViewInit{
   constructor(private jobsService: JobServiceService,
               private elementRef: ElementRef,
               private userStore: UserStore,
-              private searchService: SearchService
+              private searchService: SearchService,
+              private userService: UserService
   ) {
   }
 
@@ -45,17 +48,26 @@ export class MainPageComponent implements OnInit, AfterViewInit{
   showNoJobsModal: any;
 
   ngOnInit() {
-    this.userStore.userData$
+    this.userStore.userId$
       .pipe(
-        switchMap((userData) => {
+        switchMap(userId => {
+          if (userId) {
+            return this.userService.getUserById(userId);
+          } else {
+            // handle the situation when userId is not available
+            // return an appropriate Observable
+            // For now, let's return an empty Observable as a placeholder
+            return of(null);
+          }
+        }),
+        switchMap(userData => {
           if (userData) {
-            console.log(userData)
             this.userData = userData;
+            console.log(userData);
 
             return combineLatest([
-              this.jobsService.getAllJobs(userData.id, userData.isCompanyUser),
+              this.jobsService.getAllJobs(this.userStore.userId$.getValue()?.toString(), userData.isCompanyUser),
               this.searchService.searchObservable
-
             ]);
           } else {
             // handle the situation when userData is not available
@@ -66,12 +78,14 @@ export class MainPageComponent implements OnInit, AfterViewInit{
         })
       )
       .subscribe(([jobs, query]) => {
-        console.log(this.jobsService.getAllJobs(this.userData.id, this.userData.isCompanyUser))
+        if (jobs && this.userData) {
+          console.log(this.jobsService.getAllJobs(this.userData.id, this.userData.isCompanyUser));
 
-        // The rest of your code...
-        this.jobs = jobs;
-        this.displayedJobs = jobs; // Initialize displayedJobs to jobs
-        this.filterJobs(query);
+          // The rest of your code...
+          this.jobs = jobs;
+          this.displayedJobs = jobs; // Initialize displayedJobs to jobs
+          this.filterJobs(query);
+        }
       });
   }
 
@@ -134,5 +148,9 @@ export class MainPageComponent implements OnInit, AfterViewInit{
       return jobTitleMatch || jobDescriptionMatch || jobResponsibilitiesMatch || jobBenefitsMatch || workplaceMatch || backgroundSkillsMatch;
     });
     this.displayedJobs = this.filteredJobs; // Update displayedJobs to filteredJobs
+  }
+
+  redirectToProfile() {
+
   }
 }

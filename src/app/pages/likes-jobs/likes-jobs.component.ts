@@ -2,7 +2,8 @@ import {Component, OnInit} from '@angular/core';
 import {UserStore} from "../../stores/UserStore";
 import {UserService} from "../../services/user.service";
 import {JobServiceService} from "../../services/job-service.service";
-import {JobDto} from "../../dtos/DTO's";
+import {JobDto, UserDTO} from "../../dtos/DTO's";
+import {Observable} from "rxjs";
 
 @Component({
   selector: 'app-likes-jobs',
@@ -23,26 +24,31 @@ export class LikesJobsComponent implements OnInit{
   isLoading =true;
   user: any;
 
-  constructor(private userStore: UserStore, private jobsService: JobServiceService) { }
+  constructor(private userStore: UserStore, private jobsService: JobServiceService, private userService: UserService) { }
 
   ngOnInit(): void {
-    this.userStore.user$.subscribe(user =>{
-      this.user =user;
-      if (user){
-        this.jobsService.getLikedJobIds(user.uid).then(async r => {
-          if (r){
-            for (const id of r) {
-              this.jobs?.push(await this.jobsService?.getJobById(id));
-            }
-            // Initialize isCollapsed object with all jobs collapsed
-            this.jobs?.forEach(job => this.isCollapsed[job.id] = true);
-            this.isLoading = false;
+    let userId = this.userStore.userId$.getValue();
+    if (userId){
+      let userData$: Observable<UserDTO> = this.userService.getUserById(userId);
+      userData$.subscribe(async userData => {
+        this.user = userData;
+        this.user.subscribe(user =>{
+          this.user =user;
+          if (user){
+            this.jobsService.getLikedJobIds(user.uid).then(async r => {
+              if (r){
+                for (const id of r) {
+                  this.jobs?.push(await this.jobsService?.getJobById(id));
+                }
+                // Initialize isCollapsed object with all jobs collapsed
+                this.jobs?.forEach(job => this.isCollapsed[job.id] = true);
+                this.isLoading = false;
+              }
+            })
           }
-
         })
-      }
 
-    })
+      })}
   }
 
   async onApply(id: number) {

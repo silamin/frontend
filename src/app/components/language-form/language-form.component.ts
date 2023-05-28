@@ -3,6 +3,9 @@ import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {LanguageServiceService} from "../../services/language-service.service";
 import {HasForm} from "../../services/factories/FormFactory";
 import {UserStore} from "../../stores/UserStore";
+import {Observable} from "rxjs";
+import {UserDTO} from "../../dtos/DTO's";
+import {UserService} from "../../services/user.service";
 
 @Component({
   selector: 'app-language-form',
@@ -16,7 +19,7 @@ export class LanguageFormComponent implements HasForm, OnInit{
 
   constructor(private fb: FormBuilder,
               private languageService: LanguageServiceService,
-              private userStore: UserStore) {
+              private userStore: UserStore, private userService: UserService) {
     this.languageForm = this.fb.group({
       language: ['', Validators.required],
       rating: ['', Validators.required],
@@ -44,8 +47,14 @@ export class LanguageFormComponent implements HasForm, OnInit{
   }
 
   ngOnInit(): void {
-    this.userStore.user$.subscribe(user => {
-      this.user = user;
-    })
+    let userId = this.userStore.userId$.getValue();
+    if (userId){
+      let userData$: Observable<UserDTO> = this.userService.getUserById(userId);
+      userData$.subscribe(async user => {
+        if (user){
+          this.user = user;
+        }
+      })
+    }
   }
 }

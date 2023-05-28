@@ -3,10 +3,11 @@ import { JobServiceService } from '../../services/job-service.service';
 import { UserStore } from '../../stores/UserStore';
 import {catchError, combineLatest, forkJoin, Observable, of, take, tap} from 'rxjs';
 import { switchMap, map } from 'rxjs/operators';
-import {JobDto} from "../../dtos/DTO's";
+import {JobDto, UserDTO} from "../../dtos/DTO's";
 import {ModalDismissReasons, NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {Router} from "@angular/router";
 import {ApplicationService} from "../../services/application.service";
+import {UserService} from "../../services/user.service";
 
 @Component({
   selector: 'app-company-main-page',
@@ -19,7 +20,8 @@ export class CompanyMainPageComponent implements OnInit {
               private modalService: NgbModal,
               private router: Router,
               private cdRef:ChangeDetectorRef,
-              private applicationService: ApplicationService) { }
+              private applicationService: ApplicationService,
+              private userService: UserService) { }
   closeResult = '';
   @ViewChild('confirmSelectModal') confirmSelectModal;
   @ViewChild('confirmRejectModal') confirmRejectModal;
@@ -56,7 +58,6 @@ export class CompanyMainPageComponent implements OnInit {
   jobsToDisplay!: JobDto[];
 
   get paginatedJobs(): any[] {
-    console.log(this.jobsToDisplay)
     const startIndex = (this.currentPage - 1) * this.itemsPerPage;
     const endIndex = startIndex + this.itemsPerPage;
     return this.jobsToDisplay.slice(startIndex, endIndex);
@@ -66,15 +67,26 @@ export class CompanyMainPageComponent implements OnInit {
     this.currentPage = newPage;
   }
   user:any;
+  userData:any;
 
   async ngOnInit() {
     await this.applicationService.fetchSelectedCandidates();
-    this.userStore.user$.subscribe(user => {
-      this.user = user;
-      console.log('User:', this.user);
-      if (user) {
-         this.jobsService.getAllJobs().subscribe((result) => this.jobsToDisplay = result)
-      }})
+    let userId = this.userStore.userId$.getValue();
+    if (userId){
+      let userData$: Observable<UserDTO> = this.userService.getUserById(userId);
+      userData$.subscribe(async userData => {
+        this.userData = userData;
+        this.userData.subscribe(user => {
+          this.user = user;
+          if (user) {
+            this.jobsService.getAllJobs().subscribe((result) => this.jobsToDisplay = result)
+          } else {
+            this.jobsToDisplay =[];
+          }})
+      })}
+
+
+
   }
 
   candidatesPosition: { top: string, left: string } = { top: '0', left: '0' };
@@ -133,7 +145,6 @@ export class CompanyMainPageComponent implements OnInit {
 
   isCandidateSelected(candidateId: string, jobId: string): Observable<boolean> {
     this.applicationService.selectedCandidates.subscribe((selectedCandidatesSet) => {
-      console.log(selectedCandidatesSet); // Log the set of selected candidates
     });
     return this.applicationService.selectedCandidates.asObservable().pipe(
       map((selectedCandidatesSet) => {
@@ -143,4 +154,8 @@ export class CompanyMainPageComponent implements OnInit {
     );
   }
 
+  openJobForm() {
+    this.jobPopupVisible = true;
+    this.isPopUp = true;
+  }
 }

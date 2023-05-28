@@ -12,6 +12,7 @@ import {HasForm} from "../../services/factories/FormFactory";
 import {FormBuilder} from "@angular/forms";
 import {SectionService} from "../../services/section-service";
 import { WORK_EXPERIENCE_SERVICE_TOKEN, EDUCATION_SERVICE_TOKEN, SKILLS_SERVICE_TOKEN, LANGUAGE_SERVICE_TOKEN } from '../../services/tokens';
+import {UserService} from "../../services/user.service";
 
 
 
@@ -58,7 +59,8 @@ export class UserProfileComponent implements OnInit{
     private userStore: UserStore,
      private formFactoryProvider: FormFactoryProviderService,
     private formBuilder: FormBuilder,
-    private injector: Injector
+    private injector: Injector,
+    private userService: UserService
   ) {
     this.sections.forEach(section => {
       section.items.subscribe(data => this.items = data);
@@ -73,73 +75,67 @@ export class UserProfileComponent implements OnInit{
   showLessItems(sectionTitle: string) {
     this.showMore[sectionTitle] = false;
   }
-  isCompanyUser!: boolean;
   userData!: UserDTO;
   async ngOnInit() {
-    this.createUserInfoFormGroup()
-    this.userStore.userData$.subscribe(userData => {
-      if (userData){
-        this.userData = userData;
-        this.socialMediaKeys = Object?.keys(this.userData.socialMediaProfiles);
-        this.isCompanyUser = userData.isCompanyUser
-      }
+    this.createUserInfoFormGroup();
+    let userId = this.userStore.userId$.getValue();
+    if (userId){
+      let userData$: Observable<UserDTO> = this.userService.getUserById(userId);
+      userData$.subscribe(async userData => {
+        this.userData = userData
+        if (!userData.isCompanyUser) {
+          this.workExperiences$ = await this.workExperienceService.fetchData(this.user?.uid);
 
-    })
-    this.userStore.user$.subscribe(async siUser => {
-      if (!siUser.isCompanyUser) {
-        this.user = siUser;
-        this.workExperiences$ = await this.workExperienceService.fetchData(this.user?.uid);
-
-        this.sections = [
-          {
-            title: 'Work Experience',
-            items: this.workExperiences$,
-            displayProperty: ['jobTitle']
-          },
-          {
-            title: 'Education',
-            items: this.educationService.fetchData(this.user?.uid),
-            displayProperty: ['degree']
-          },
-          {
-            title: 'Skills',
-            items: this.skillsService.fetchData(this.user?.uid),
-            displayProperty: ['skill']
-          },
-          {
-            title: 'Languages',
-            items: this.languageService.fetchData(this.user?.uid),
-            displayProperty: ['language']
-          }
-        ];
-      }else {
-        this.sections = [
-          {
-            title: 'Work Experience',
-            items: this.user.workExperience,
-            displayProperty: ['jobTitle']
-          },
-          {
-            title: 'Education',
-            items: this.user.education,
-            displayProperty: ['degree']
-          },
-          {
-            title: 'Skills',
-            items: this.user.skills,
-            displayProperty: ['skill']
-          },
-          {
-            title: 'Languages',
-            items: this.user.languages,
-            displayProperty: ['language']
-          }
-        ];
-      }
-
-    })
-
+          this.sections = [
+            {
+              title: 'Work Experience',
+              items: this.workExperiences$,
+              displayProperty: ['jobTitle']
+            },
+            {
+              title: 'Education',
+              items: this.educationService.fetchData(this.user?.uid),
+              displayProperty: ['degree']
+            },
+            {
+              title: 'Skills',
+              items: this.skillsService.fetchData(this.user?.uid),
+              displayProperty: ['skill']
+            },
+            {
+              title: 'Languages',
+              items: this.languageService.fetchData(this.user?.uid),
+              displayProperty: ['language']
+            }
+          ];
+        } else {
+          this.sections = [
+            {
+              title: 'Work Experience',
+              items: this.user.workExperience,
+              displayProperty: ['jobTitle']
+            },
+            {
+              title: 'Education',
+              items: this.user.education,
+              displayProperty: ['degree']
+            },
+            {
+              title: 'Skills',
+              items: this.user.skills,
+              displayProperty: ['skill']
+            },
+            {
+              title: 'Languages',
+              items: this.user.languages,
+              displayProperty: ['language']
+            }
+          ];
+        }
+      })
+    }
   }
+
   getDisplayPropertiesBrief(item: any, sectionTitle: string): string {
     let str = '';
 

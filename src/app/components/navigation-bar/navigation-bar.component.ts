@@ -5,6 +5,7 @@ import {UserStore} from "../../stores/UserStore";
 import {user} from "@angular/fire/auth";
 import {FormControl, FormGroup} from "@angular/forms";
 import {SearchService} from "../../services/search.service";
+import {AuthServiceService} from "../../services/auth-service.service";
 
 @Component({
   selector: 'app-navigation-bar',
@@ -23,7 +24,8 @@ export class NavigationBarComponent implements OnInit{
 
   constructor(private router: Router,
               private navBarService: NavBarService,
-              private searchService: SearchService
+              private searchService: SearchService,
+              private authService: AuthServiceService
               ) {
     this.searchControl.valueChanges.subscribe(query => this.searchService.updateSearchQuery(query));
   }
@@ -31,13 +33,18 @@ export class NavigationBarComponent implements OnInit{
 
   async handleIconClicked(title: string){
     this.activeNavItemIndex = this.navItems.findIndex(item => item.title === title);
-
     switch (title){
       case 'Profile': await this.router.navigate(['/user-profile']);break;
       case 'Liked jobs': await this.router.navigate(['/liked-jobs']);break;
       case 'Status': await this.router.navigate(['/status']);break;
       case 'Home': this.isCompanyUser ? await this.router.navigate(['/company-main-page']) :
       await this.router.navigate(['/user-main-page']);break;
+      case 'Log out':
+      {
+        await this.router.navigate(['/']);
+        await this.authService.logout()
+      };break;
+
       case 'Post a job': this.jobPopupVisible = true;
     }
     this.navBarService.setActiveNavItemIndex(this.activeNavItemIndex);

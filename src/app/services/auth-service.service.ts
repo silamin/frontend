@@ -12,20 +12,36 @@ export class AuthServiceService {
 
   constructor(private afAuth: AngularFireAuth, private functions: AngularFireFunctions, private firestore: AngularFirestore, private router: Router, private userStore: UserStore) {}
 
-  async register(email: string, password: string, isCompanyUser: boolean): Promise<void> {
+  async register(registerForm): Promise<void> {
     try {
-      const credential = await this.afAuth.createUserWithEmailAndPassword(email, password);
+      const email = registerForm.get('email')?.value;
+      const password = registerForm.get('password')?.value;
+      const isRecruiter = registerForm.get('isRecruiter')?.value;
 
-      if (credential.user) {
-        const uid = credential.user.uid; // Fetch uid from user object
+      const userCredential = await this.afAuth.createUserWithEmailAndPassword(email, password);
+
+      if (userCredential.user) {
+        const uid = userCredential.user.uid; // Fetch uid from user object
+
+        // Set the userId in the UserStore
+        this.userStore.setUserId(uid);
+
+        // Create a new document in Firestore for this user
         await this.firestore.collection('users').doc(uid).set({
           id: uid,
-          isCompanyUser: isCompanyUser
+          email: email,
+          isCompanyUser: isRecruiter
         })
+
+        // Redirect the user to the appropriate page based on whether they're a recruiter or not
+        if (isRecruiter) {
+          await this.router.navigate(['/company-main-page']);
+        } else {
+          await this.router.navigate(['/user-main-page']);
+        }
       }
     } catch (error: any) {
       console.error('Error during registration:', error);
-
       if (error.code === 'auth/email-already-in-use') {
         alert('The email address is already in use by another account.');
       } else {
@@ -35,36 +51,35 @@ export class AuthServiceService {
     }
   }
 
-  async login(email: string, password: string): Promise<void> {
 
+  async login(loginForm): Promise<void> {
     try {
+      const email = loginForm.get('email')?.value;
+      const password = loginForm.get('password')?.value;
+
       const userCredential = await this.afAuth.signInWithEmailAndPassword(email, password);
       const user = userCredential.user;
 
       if (user) {
-        this.userStore.setUser(user)
-
         // Check if a user document already exists
         const userDocRef = this.firestore.collection('users').doc(user.uid);
         const userDoc = await userDocRef.get().toPromise();
 
         if (userDoc?.exists) {
-          // If the user document exists, check if the user is a company user
+          // If the user document exists, set the userId in the UserStore
+          this.userStore.setUserId(user.uid);
+
+          // Determine the appropriate navigation based on user type
           const userData: any = userDoc.data();
-          if (userData) {
-            this.userStore.setUserData(userData);
-            if (userData.isCompanyUser) {
-              await this.router.navigate(['/company-main-page']);
-            } else {
-              await this.router.navigate(['/user-main-page']); // Navigate to different page for non-company users
-            }
+          if (userData?.isCompanyUser) {
+            await this.router.navigate(['/company-main-page']);
+          } else {
+            await this.router.navigate(['/user-main-page']);
           }
         } else {
-          // If the user document does not exist, create it
-          await userDocRef.set({
-            // Add any initial data you want for the user here
-          });
-          await this.router.navigate(['/company-main-page']);
+          // If the user document does not exist, throw an error
+          // (because a user document should be created at registration)
+          throw new Error("User document does not exist");
         }
       } else {
         console.error('Error during login: No user');
@@ -78,7 +93,6 @@ export class AuthServiceService {
   async logout(): Promise<void> {
     try {
       await this.afAuth.signOut();
-      this.userStore.setUser(null); // This will cause user$ to emit a new value
     } catch (error) {
       console.error('Error during logout:', error);
       throw error;

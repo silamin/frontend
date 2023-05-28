@@ -3,6 +3,9 @@ import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {JobServiceService} from "../../../services/job-service.service";
 import {UserStore} from "../../../stores/UserStore";
 import {UserService} from "../../../services/user.service";
+import {user} from "@angular/fire/auth";
+import {Observable} from "rxjs";
+import {UserDTO} from "../../../dtos/DTO's";
 
 
 
@@ -17,6 +20,7 @@ export class JobFormComponent implements OnChanges, OnInit{
   @Input() isDisplay = false;
   @Input() selectedJob;
   @Output() selectedJobChange = new EventEmitter<any>();
+  @Input() userId ;
   isApplied = false;
 
   ngOnChanges() {
@@ -40,13 +44,14 @@ export class JobFormComponent implements OnChanges, OnInit{
     }
   }
   ngOnInit() {
-    this.userStore.userData$.subscribe(userData => {
-      if (userData) {
+    let userId = this.userStore.userId$.getValue();
+    if (userId){
+      let userData$: Observable<UserDTO> = this.userService.getUserById(userId);
+      userData$.subscribe(async userData => {
         this.userData = userData;
         this.isApplied = this.userData?.jobApplicationIds?.includes(this.jobForm.get('id')?.value.toString()) ?? false;
-      }
-    });
-  }
+      })}
+       };
 
 
   jobForm: FormGroup;
@@ -61,7 +66,8 @@ export class JobFormComponent implements OnChanges, OnInit{
 
   constructor(private fb: FormBuilder,
               private jobService: JobServiceService,
-              private userStore: UserStore,) {
+              private userStore: UserStore,
+              private userService: UserService) {
     this.jobForm = this.fb.group({
       id: ['', Validators.required],
       jobTitle: ['', Validators.required],
@@ -90,7 +96,7 @@ export class JobFormComponent implements OnChanges, OnInit{
   }
   @Input() isEdit: boolean = false;
   onApply() {
-      this.jobService.apply(this.jobForm.get('id')?.value, this.userData.id).then(()=>{
+      this.jobService.apply(this.jobForm.get('id')?.value, this.userId).then(()=>{
         this.isApplied = true;
         this.userData?.jobApplicationIds.push(this.jobForm.get('id')?.value.toString());
       })

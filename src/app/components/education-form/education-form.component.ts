@@ -3,6 +3,9 @@ import {FormBuilder, FormGroup} from "@angular/forms";
 import {EducationService} from "../../services/education.service";
 import {HasForm} from "../../services/factories/FormFactory";
 import {UserStore} from "../../stores/UserStore";
+import {Observable} from "rxjs";
+import {UserDTO} from "../../dtos/DTO's";
+import {UserService} from "../../services/user.service";
 
 @Component({
   selector: 'app-education-form',
@@ -19,7 +22,7 @@ export class EducationFormComponent implements HasForm, OnInit{
 
   constructor(private formBuilder: FormBuilder,
               private educationService: EducationService,
-              private userStore: UserStore) {
+              private userStore: UserStore,private userService: UserService) {
     this.educationForm = this.formBuilder.group({
       school: '',
       degree: '',
@@ -60,10 +63,13 @@ export class EducationFormComponent implements HasForm, OnInit{
   }
 
   ngOnInit(): void {
-    this.userStore.user$.subscribe(user =>{
+    let userId = this.userStore.userId$.getValue();
+    if (userId){
+      let userData$: Observable<UserDTO> = this.userService.getUserById(userId);
+      userData$.subscribe(async user => {
       if (user){
         this.user = user;
       }
     })
   }
-}
+}}

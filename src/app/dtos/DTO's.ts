@@ -50,6 +50,7 @@ interface AddressDTO {
 }
 
 export interface UserDTO{
+  id: number;
   jobApplicationIds: string[];
   isCompanyUser: boolean;
   name: string;

@@ -19,14 +19,6 @@ export class AppComponent implements OnInit {
   user: any;
 
   async ngOnInit() {
-    this.userStore.user$.subscribe(user => {
-      if (user) {
-        this.user = user;
-        console.log(this.user.uid)
-      }
-    });
-
-
 
     /*this.userStore.user$.subscribe(user => {
       this.user =user;

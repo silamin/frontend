@@ -1,8 +1,8 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {AngularFireAuth} from "@angular/fire/compat/auth";
 import {AngularFireFunctions} from "@angular/fire/compat/functions";
 import {AngularFirestore} from "@angular/fire/compat/firestore";
-import {take, tap} from "rxjs";
+import {map, Observable} from "rxjs";
 import {UserStore} from "../stores/UserStore";
 import {UserDTO} from "../dtos/DTO's";
 
@@ -13,7 +13,8 @@ export class UserService {
 
   constructor(private afAuth: AngularFireAuth,
               private functions: AngularFireFunctions,
-              private firestore: AngularFirestore) {}
+              private firestore: AngularFirestore,
+              private userStore: UserStore) {}
   editUser(user) {
     console.log(user.id);
 
@@ -46,8 +47,28 @@ export class UserService {
         console.error('Error updating user data:', error);
       });
   }
+  async getUserData(userId: string): Promise<void> {
+    const userDocRef = this.firestore.collection('users').doc(userId);
+    const userDoc = await userDocRef.get().toPromise();
 
-  getUserById(userId: string) {
-
+    if(userDoc?.exists) {
+    } else {
+      // handle the case when the user document does not exist
+      console.error(`User document does not exist for userId: ${userId}`);
+    }
   }
+
+  getUserById(userId: string ) {
+      // This will return an Observable<UserDTO>
+      return this.firestore
+        .collection('users')
+        .doc(userId)
+        .snapshotChanges() // snapshotChanges() returns an Observable<DocumentSnapshot>
+        .pipe(
+          map(snapshot => {
+            const userData = snapshot.payload.data() as UserDTO;
+            return userData;
+          })
+        );
+    }
 }

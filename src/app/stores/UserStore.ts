@@ -1,18 +1,33 @@
-import {action, observable} from 'mobx-angular';
 import {Injectable} from "@angular/core";
 import {BehaviorSubject, Observable} from "rxjs";
 import {UserDTO} from "../dtos/DTO's";
 
 @Injectable()
 export class UserStore {
-  user$: BehaviorSubject<any> = new BehaviorSubject<any>({});
-  userData$: BehaviorSubject<any> = new BehaviorSubject<any>({});
+  userId$: BehaviorSubject<string | null>;
 
+  constructor() {
+    // Try to load the user id from localStorage
+    const storedUserId = localStorage.getItem('userId');
+    const initialUserId = storedUserId ? storedUserId : null;
 
-  setUser(user: any) {
-    this.user$.next(user); // Use next function to set the user
+    // Initialize the userId$ observable with the loaded data
+    this.userId$ = new BehaviorSubject<string | null>(initialUserId);
   }
-  setUserData(userData: UserDTO) {
-    this.userData$.next(userData); // Use next function to set the user
+
+  setUserId(userId: string) {
+    // Update the userId$ observable
+    this.userId$.next(userId);
+
+    // Also save the user id in localStorage
+    localStorage.setItem('userId', userId);
+  }
+
+  clearUserId() {
+    // Clear the userId$ observable
+    this.userId$.next(null);
+
+    // Also clear the user id from localStorage
+    localStorage.removeItem('userId');
   }
 }

@@ -80,6 +80,7 @@ export class JobServiceService {
 
 
   async apply(jobId: string, userId: string): Promise<void> {
+    console.log(userId)
     // Reference to the specific 'job' document
     const jobDocRef = this.firestore.collection('jobs').doc(jobId.toString());
 

@@ -2,8 +2,10 @@ import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges
 import {FormBuilder, FormGroup} from "@angular/forms";
 import {WorkExperienceService} from "../../services/work-experience.service";
 import {UserStore} from "../../stores/UserStore";
-import {WorkExperienceFormDTO} from "../../dtos/DTO's";
+import {UserDTO, WorkExperienceFormDTO} from "../../dtos/DTO's";
 import {HasForm} from "../../services/factories/FormFactory";
+import {Observable} from "rxjs";
+import {UserService} from "../../services/user.service";
 
 
 @Component({
@@ -26,7 +28,7 @@ export class WorkExperienceFormComponent implements HasForm, OnInit{
   getForm(): FormGroup {
     return this.formData;
   }
-  constructor(private fb: FormBuilder, private workExperienceService: WorkExperienceService, private userStore: UserStore) {
+  constructor(private fb: FormBuilder, private workExperienceService: WorkExperienceService, private userStore: UserStore, private userService: UserService) {
     this.formData = this.fb.group({
       jobTitle: [''],
       employmentType: [''],
@@ -51,8 +53,15 @@ export class WorkExperienceFormComponent implements HasForm, OnInit{
   onSubmit() {
       this.workExperienceService.addItem(this.user.uid,this.newWorkExperience)
   }
-
   ngOnInit(): void {
-    this.userStore.user$.subscribe(user => this.user = user)
+    let userId = this.userStore.userId$.getValue();
+    if (userId){
+      let userData$: Observable<UserDTO> = this.userService.getUserById(userId);
+      userData$.subscribe(async user => {
+        if (user){
+          this.user = user;
+        }
+      })
+    }
   }
 }

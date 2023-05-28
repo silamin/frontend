@@ -1,5 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {UserStore} from "../../stores/UserStore";
+import {Observable} from "rxjs";
+import {UserDTO} from "../../dtos/DTO's";
+import {UserService} from "../../services/user.service";
 
 @Component({
   selector: 'app-application-status',
@@ -53,14 +56,18 @@ export class ApplicationStatusComponent implements OnInit{
   userData: any;
 
 
-  constructor(private userStore: UserStore) { }
+  constructor(private userStore: UserStore,private userService: UserService) { }
 
   ngOnInit(): void {
-    this.userStore.userData$.subscribe(userData => {
-      this.userData = userData;
-      this.userType = this.userData.isCompanyUser ? 'company' : 'regular';
-      this.isCompanyUser = this.userData.isCompanyUser;
-    });  }
+    let userId = this.userStore.userId$.getValue();
+    if (userId){
+      let userData$: Observable<UserDTO> = this.userService.getUserById(userId);
+      userData$.subscribe(async userData => {
+        this.userData = userData;
+        this.userType = this.userData.isCompanyUser ? 'company' : 'regular';
+        this.isCompanyUser = this.userData.isCompanyUser;
+      })}
+    }
 
   changeStatus(application, newStatus: string) {
     application.status = newStatus;
