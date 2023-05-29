@@ -74,7 +74,6 @@ export class ApplicationStatusComponent implements OnInit{
   }
 
   saveNotes(application) {
-    console.log(application.notes);
     application.editNotes = false;
   }
 

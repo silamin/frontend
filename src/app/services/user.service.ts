@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {AngularFireAuth} from "@angular/fire/compat/auth";
 import {AngularFireFunctions} from "@angular/fire/compat/functions";
 import {AngularFirestore} from "@angular/fire/compat/firestore";
-import {map, Observable} from "rxjs";
+import {map} from "rxjs";
 import {UserStore} from "../stores/UserStore";
 import {UserDTO} from "../dtos/DTO's";
 
@@ -66,8 +66,7 @@ export class UserService {
         .snapshotChanges() // snapshotChanges() returns an Observable<DocumentSnapshot>
         .pipe(
           map(snapshot => {
-            const userData = snapshot.payload.data() as UserDTO;
-            return userData;
+            return snapshot.payload.data() as UserDTO;
           })
         );
     }

@@ -12,6 +12,7 @@ import {combineLatest, Observable, of} from "rxjs";
 import {switchMap} from "rxjs/operators";
 import {UserService} from "../../services/user.service";
 import {UserDTO} from "../../dtos/DTO's";
+import {user} from "@angular/fire/auth";
 
 @Component({
   selector: 'app-main-page',
@@ -63,12 +64,24 @@ export class MainPageComponent implements OnInit, AfterViewInit{
         switchMap(userData => {
           if (userData) {
             this.userData = userData;
-            console.log(userData);
+           if (!this.userData.likedJobs){
+             this.userData.likedJobs = []
+           }else {
+             this.likedJobs= this.jobsService.getLikedJobIds(userData.id.toString())
+           }
 
-            return combineLatest([
-              this.jobsService.getAllJobs(this.userStore.userId$.getValue()?.toString(), userData.isCompanyUser),
-              this.searchService.searchObservable
-            ]);
+            let userId = this.userStore.userId$.getValue();
+            if (userId) {
+              return combineLatest([
+                this.jobsService.getAllJobs(userId, userData.isCompanyUser),
+                this.searchService.searchObservable
+              ]);
+            } else {
+              // handle the situation when userId is not available
+              // return an appropriate Observable
+              // For now, let's return an empty Observable as a placeholder
+              return of([]);
+            }
           } else {
             // handle the situation when userData is not available
             // return an appropriate Observable
@@ -79,15 +92,17 @@ export class MainPageComponent implements OnInit, AfterViewInit{
       )
       .subscribe(([jobs, query]) => {
         if (jobs && this.userData) {
-          console.log(this.jobsService.getAllJobs(this.userData.id, this.userData.isCompanyUser));
 
           // The rest of your code...
           this.jobs = jobs;
           this.displayedJobs = jobs; // Initialize displayedJobs to jobs
+          console.log(this.displayedJobs)
           this.filterJobs(query);
         }
       });
   }
+
+
 
   onScroll() {
     const element = this.scrollable.nativeElement;
@@ -115,7 +130,6 @@ export class MainPageComponent implements OnInit, AfterViewInit{
     this.selectedJob=$event;
   }
   toggleLove(job: any) {
-    if (this.userData && this.userData.likedJobs) {
       const index = this.userData.likedJobs.indexOf(job.id);
       if (index !== -1) {
         this.userData.likedJobs.splice(index, 1);
@@ -125,7 +139,7 @@ export class MainPageComponent implements OnInit, AfterViewInit{
         this.jobsService.likeJob(this.userData.id, job.id);
       }
     }
-  }
+
   isJobLiked(jobId: string): boolean {
     return this.userData?.likedJobs?.includes(jobId);
   }

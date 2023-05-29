@@ -1,4 +1,14 @@
-import {Component, Inject, Injector, Input, OnInit, ProviderToken, ViewChild} from '@angular/core';
+import {
+  Component,
+  Inject,
+  Injector,
+  Input,
+  OnChanges,
+  OnInit,
+  ProviderToken,
+  SimpleChanges,
+  ViewChild
+} from '@angular/core';
 import {UserStore} from "../../stores/UserStore";
 import {Observable} from "rxjs";
 import {UserDTO, WorkExperienceFormDTO} from "../../dtos/DTO's";
@@ -18,7 +28,7 @@ import {UserService} from "../../services/user.service";
 
 interface Section {
   title: string;
-  items: Observable<any[]>;
+  items?: Observable<any[]>;
   displayProperty: string[];
 }
 
@@ -27,7 +37,7 @@ interface Section {
   templateUrl: './user-profile.component.html',
   styleUrls: ['./user-profile.component.scss']
 })
-export class UserProfileComponent implements OnInit{
+export class UserProfileComponent implements OnInit, OnChanges {
   @Input() user: any;
   @ViewChild('workExperienceForm') workExperienceForm!: WorkExperienceFormComponent;
   @ViewChild('skillForm') skillForm!: SkillFormComponent;
@@ -37,16 +47,18 @@ export class UserProfileComponent implements OnInit{
   items: Observable<any>[] = [];
   showMore = {};
   public showMoreUserInfo = true;
+
   toggleShowMore() {
     this.showMoreUserInfo = !this.showMoreUserInfo;
   }
+
   isDisplay = false;
   isWorkExperienceFormVisible = false;
   isEducationFormVisible = false;
   isLanguageFormVisible = false;
   description: string = 'no description';
   editMode: boolean = false;
-  workExperiences$: Observable<WorkExperienceFormDTO[]> =of([]);
+  workExperiences$: Observable<WorkExperienceFormDTO[]> = of([]);
   sections: Section[] = [];
   isSkillFormVisible = false;
   data: any;
@@ -57,83 +69,68 @@ export class UserProfileComponent implements OnInit{
     @Inject(SKILLS_SERVICE_TOKEN) private skillsService: SectionService,
     @Inject(LANGUAGE_SERVICE_TOKEN) private languageService: SectionService,
     private userStore: UserStore,
-     private formFactoryProvider: FormFactoryProviderService,
+    private formFactoryProvider: FormFactoryProviderService,
     private formBuilder: FormBuilder,
     private injector: Injector,
     private userService: UserService
   ) {
     this.sections.forEach(section => {
-      section.items.subscribe(data => this.items = data);
+      section.items?.subscribe(data => this.items = data);
     });
   }
+
   hidePopUp() {
     this.isWorkExperienceFormVisible = false;
   }
+
   showMoreItems(sectionTitle: string) {
     this.showMore[sectionTitle] = true;
   }
+
   showLessItems(sectionTitle: string) {
     this.showMore[sectionTitle] = false;
   }
+
   userData!: UserDTO;
+
   async ngOnInit() {
     this.createUserInfoFormGroup();
-    let userId = this.userStore.userId$.getValue();
-    if (userId){
-      let userData$: Observable<UserDTO> = this.userService.getUserById(userId);
-      userData$.subscribe(async userData => {
-        this.userData = userData
-        if (!userData.isCompanyUser) {
-          this.workExperiences$ = await this.workExperienceService.fetchData(this.user?.uid);
-
-          this.sections = [
-            {
-              title: 'Work Experience',
-              items: this.workExperiences$,
-              displayProperty: ['jobTitle']
-            },
-            {
-              title: 'Education',
-              items: this.educationService.fetchData(this.user?.uid),
-              displayProperty: ['degree']
-            },
-            {
-              title: 'Skills',
-              items: this.skillsService.fetchData(this.user?.uid),
-              displayProperty: ['skill']
-            },
-            {
-              title: 'Languages',
-              items: this.languageService.fetchData(this.user?.uid),
-              displayProperty: ['language']
-            }
-          ];
-        } else {
-          this.sections = [
-            {
-              title: 'Work Experience',
-              items: this.user.workExperience,
-              displayProperty: ['jobTitle']
-            },
-            {
-              title: 'Education',
-              items: this.user.education,
-              displayProperty: ['degree']
-            },
-            {
-              title: 'Skills',
-              items: this.user.skills,
-              displayProperty: ['skill']
-            },
-            {
-              title: 'Languages',
-              items: this.user.languages,
-              displayProperty: ['language']
-            }
-          ];
-        }
-      })
+    if (!this.user) {
+      let userId = this.userStore.userId$.getValue();
+      if (userId) {
+        let userData$: Observable<UserDTO> = this.userService.getUserById(userId);
+        userData$.subscribe(async userData => {
+          console.log(userData)
+          this.userData = userData
+          if (!userData.isCompanyUser) {
+            console.log(this.userData.id)
+            this.sections = [
+              {
+                title: 'Work Experience',
+                items: this.workExperienceService.fetchData(this.userData?.id),
+                displayProperty: ['jobTitle']
+              },
+              {
+                title: 'Education',
+                items: this.educationService.fetchData(this.userData?.id),
+                displayProperty: ['degree']
+              },
+              {
+                title: 'Skills',
+                items: this.skillsService.fetchData(this.userData?.id),
+                displayProperty: ['skill']
+              },
+              {
+                title: 'Languages',
+                items: this.languageService.fetchData(this.userData?.id),
+                displayProperty: ['language']
+              }
+            ];
+          }
+        })
+      }
     }
+
   }
 
   getDisplayPropertiesBrief(item: any, sectionTitle: string): string {
@@ -144,9 +141,9 @@ export class UserProfileComponent implements OnInit{
         str += `As a ${item.jobTitle} at ${item.companyName}, located in ${item.location}, `;
         str += `I work on a ${item.employmentType} basis. `;
 
-        if(item.currentlyWorkingHere) {
+        if (item.currentlyWorkingHere) {
           str += `I'm currently employed here. `;
-        } else if(item.endDate) {
+        } else if (item.endDate) {
           const endDate = new Date(item.endDate.seconds * 1000);
           str += `My employment ended on ${endDate.toLocaleDateString()}. `;
         }
@@ -179,21 +176,31 @@ export class UserProfileComponent implements OnInit{
 
     return str;
   }
+
   showPopUp(title: string) {
     this.resetData(title);
-    switch (title){
-      case 'Work Experience': this.isWorkExperienceFormVisible = true; this.data = {};break;
-      case 'Skills': this.isSkillFormVisible = true;break;
-      case 'Education': this.isEducationFormVisible = true;break;
-      case 'Languages': this.isLanguageFormVisible = true;
-      }
+    switch (title) {
+      case 'Work Experience':
+        this.isWorkExperienceFormVisible = true;
+        break;
+      case 'Skills':
+        this.isSkillFormVisible = true;
+        break;
+      case 'Education':
+        this.isEducationFormVisible = true;
+        break;
+      case 'Languages':
+        this.isLanguageFormVisible = true;
+    }
   }
+
   getSlicedItems(items: any[]): any[] {
     return items.length > 3 ? items.slice(0, 3) : items;
   }
-   formComponent: HasForm | undefined;
-  @Input() visible: boolean = false ;
-  @Input() isPopUp: boolean =false;
+
+  formComponent: HasForm | undefined;
+  @Input() visible: boolean = false;
+  @Input() isPopUp: boolean = false;
   starIndexes: number[] = [0, 1, 2, 3, 4]; // array for 5 star rating system
   formGroup: any;
 
@@ -208,11 +215,10 @@ export class UserProfileComponent implements OnInit{
 
 
   editItem(item: any, sectionTitle: string) {
-    this.data = {};
     this.data = item;
     const section = this.sections.find(section => section.title === sectionTitle);
     if (section) {
-        this.getFormGroup(section.title)
+      this.getFormGroup(section.title)
       if (this.formComponent) {
         let formGroup = this.formComponent.getForm();
         let formFactory = this.formFactoryProvider.getFormFactory(section.title);
@@ -220,8 +226,9 @@ export class UserProfileComponent implements OnInit{
       }
     }
   }
-  private getFormGroup(sectionTitle: string){
-    switch (sectionTitle){
+
+  private getFormGroup(sectionTitle: string) {
+    switch (sectionTitle) {
       case 'Work Experience':
         this.isWorkExperienceFormVisible = true;
         this.formComponent = this.workExperienceForm;
@@ -247,7 +254,7 @@ export class UserProfileComponent implements OnInit{
     if (section) {
       const serviceToken = this.getServiceToken(sectionTitle);
       const service = this.injector.get<SectionService>(serviceToken);
-      service.deleteItem(item, this.user.uid);
+      service.deleteItem(item, this.userData.id);
     }
   }
 
@@ -267,14 +274,17 @@ export class UserProfileComponent implements OnInit{
   }
 
   close() {
-    this.isPopUp =false
+    this.isPopUp = false
     this.visible = false;
   }
+
   getDisplayProperties(item: any, displayProperties: string[]): string {
     return displayProperties.map(prop => item[prop]).join(' ');
   }
-  editField:any;
+
+  editField: any;
   socialMediaKeys: any;
+  isEditingWorkExperience = false;
 
   isEditing(field: string): boolean {
     return this.editField === field;
@@ -292,10 +302,41 @@ export class UserProfileComponent implements OnInit{
 
   private createUserInfoFormGroup() {
     this.formGroup = this.formBuilder.group({
-      email: [ '', []],
-      phoneNumber: [ '', []],
-      address: [ '', []],
-      social: [ '', []]
+      email: ['', []],
+      phoneNumber: ['', []],
+      address: ['', []],
+      social: ['', []]
     });
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['user']) {
+      this.sections = [
+        {
+          title: 'Work Experience',
+          items: this.workExperienceService.fetchData(this.user.id),
+          displayProperty: ['jobTitle']
+        },
+        {
+          title: 'Education',
+          items: this.educationService.fetchData(this.user.id),
+          displayProperty: ['degree']
+        },
+        {
+          title: 'Skills',
+          items: this.skillsService.fetchData(this.user.id),
+          displayProperty: ['skill']
+        },
+        {
+          title: 'Languages',
+          items: this.languageService.fetchData(this.user.id),
+          displayProperty: ['language']
+        }
+      ]
+      console.log(this.user)
+      this.sections[0].items?.subscribe(items => {
+        console.log('items:', items);
+      });
+    }
   }
 }

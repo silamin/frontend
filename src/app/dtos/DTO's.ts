@@ -1,3 +1,5 @@
+import {Observable} from "rxjs";
+
 export interface WorkExperienceFormDTO{
   id?: number;
   companyName: string;
@@ -40,6 +42,8 @@ export interface  JobDto{
   backgroundSkills: string,
   jobBenefits: string,
   candidates?: any[];
+  candidates$?: Observable<UserDTO[]>;
+
 }
 
 interface AddressDTO {
@@ -51,7 +55,6 @@ interface AddressDTO {
 
 export interface UserDTO{
   id: number;
-  jobApplicationIds: string[];
   isCompanyUser: boolean;
   name: string;
   summary: string;
@@ -76,4 +79,13 @@ export interface ApplicationDTO{
   candidateId: string;
   applicationDate: string
 
+}
+export interface ApplicationDto{
+  id: any;
+  userId: any;
+  jobId: any;
+  Status: any;
+  notes: any;
+  status: any
+  candidateId: any;
 }

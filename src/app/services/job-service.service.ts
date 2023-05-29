@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {AngularFireAuth} from "@angular/fire/compat/auth";
 import {AngularFireFunctions} from "@angular/fire/compat/functions";
-import {JobDto, UserDTO} from "../dtos/DTO's";
+import {ApplicationDto, JobDto, UserDTO} from "../dtos/DTO's";
 import {combineLatest, map, Observable} from "rxjs";
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import firebase from 'firebase/compat/app';
@@ -50,72 +50,39 @@ export class JobServiceService {
       return jobsRef.doc(newId.toString()).set(jobDto);
     });
   }
-
-  getAllJobs(userId?: string, isCompanyUser?: boolean): Observable<JobDto[]> {
-    console.log(isCompanyUser)
-    if (userId) {
-      if (isCompanyUser){
-        return this.firestore.collection<JobDto>('jobs', ref => ref.where('userId', '==', userId)).valueChanges();
-      } else {
-        // Get appliedJobsIds for user
-        return this.firestore.collection<UserDTO>('users').doc(userId).get()
-          .pipe(switchMap(userDoc => {
-            const appliedJobsIds = userDoc.data()?.jobApplicationIds;
-            console.log(appliedJobsIds);
-
-            // Fetch all jobs
-            return this.firestore.collection<JobDto>('jobs').valueChanges()
+  getAllJobs(userId: string, isCompanyUser: boolean): Observable<JobDto[]> {
+    if (isCompanyUser) {
+      // Get postedJobs for company user
+      return this.firestore.collection<JobDto>('jobs', ref => ref.where('userId', '==', userId))
+        .valueChanges();
+    } else {
+      // Get appliedJobsIds for user
+      return this.firestore.collection<UserDTO>('users').doc(userId).get()
+        .pipe(
+          switchMap(userDoc => {
+            // Fetch all applications for the user
+            return this.firestore.collection<ApplicationDto>('applications', ref => ref.where('userId', '==', userId)).valueChanges()
               .pipe(
-                map(jobs => jobs.filter(job => { console.log(jobs)
-                    appliedJobsIds?.includes(String(job.id)) && !job.candidates?.includes(userId)
-                  })
-                )
+                switchMap(applications => {
+                  // Fetch all jobs
+                  return this.firestore.collection<JobDto>('jobs').valueChanges()
+                    .pipe(
+                      map(jobs => {
+                        // Filter jobs based on applications' status
+                        return jobs.filter(job => {
+                          // Find the application of this job
+                          const application = applications.find(app => app.jobId === job.id);
+                          // If the application is rejected, do not include the job
+                          return application?.status !== 'rejected';
+                        });
+                      })
+                    );
+                })
               );
           }));
-      }
-    } else {
-      return this.firestore.collection<JobDto>('jobs').valueChanges();
     }
   }
 
-
-  async apply(jobId: string, userId: string): Promise<void> {
-    console.log(userId)
-    // Reference to the specific 'job' document
-    const jobDocRef = this.firestore.collection('jobs').doc(jobId.toString());
-
-    // Get the job document
-    const jobDoc = await jobDocRef.get().toPromise();
-
-    // If the document doesn't exist, throw an error
-    if (!jobDoc?.exists) {
-      throw new Error('Job does not exist');
-    }
-    const jobData = jobDoc?.data() as JobDto; // Explicitly specify the data type
-    // If the 'candidates' field doesn't exist or isn't an array, create it
-    if (!Array.isArray(jobData.candidates)) {
-      jobData.candidates = [];
-    }
-    jobData.candidates.push(userId);
-    await jobDocRef.update(jobData);
-
-    // Now add the jobId to the user's 'appliedJobsIds' array
-    // Get user reference
-    const userDocRef = this.firestore.collection('users').doc(userId);
-    const userDoc = await userDocRef.get().toPromise();
-    const userData = userDoc?.data() as UserDTO;
-
-    // If appliedJobsIds does not exist or is not an array, create it
-    if (!Array.isArray(userData.jobApplicationIds)) {
-      userData.jobApplicationIds = [];
-    }
-
-    // Add the jobId to the appliedJobsIds field
-    userData.jobApplicationIds.push(jobId.toString());
-
-    // Update the user document with the new 'appliedJobsIds' field
-    await userDocRef.update(userData);
-  }
 
 
   getCandidate(candidateId: string): Observable<any> {
@@ -165,6 +132,8 @@ export class JobServiceService {
   }
 
   likeJob(uid: string, jobId: string): Promise<void> {
+    console.log(uid)
+    console.log(jobId)
     const userRef = this.firestore.collection('users').doc(uid);
 
     return userRef.get().toPromise().then(docSnapshot => {
@@ -229,42 +198,7 @@ export class JobServiceService {
   }
 
   removeJob(jobId: string): Promise<void> {
-    return new Promise<void>((resolve, reject) => {
-      const batch = this.firestore.firestore.batch();
-
-      // Fetch users who have liked this job
-      const usersLikedRef = this.firestore.collection('users', ref => ref.where('likedJobs', 'array-contains', jobId));
-      usersLikedRef.get().subscribe(usersLikedSnapshot => {
-        usersLikedSnapshot.forEach(userLikedDoc => {
-          const userLikedRef = this.firestore.collection('users').doc(userLikedDoc.id).ref;
-          batch.update(userLikedRef, {
-            likedJobs: firebase.firestore.FieldValue.arrayRemove(jobId)
-          });
-        });
-
-        // Fetch users who have applied to this job
-        const usersAppliedRef = this.firestore.collection('users', ref => ref.where('jobApplicationIds', 'array-contains', jobId));
-        usersAppliedRef.get().subscribe(usersAppliedSnapshot => {
-          usersAppliedSnapshot.forEach(userAppliedDoc => {
-            const userAppliedRef = this.firestore.collection('users').doc(userAppliedDoc.id).ref;
-            batch.update(userAppliedRef, {
-              jobApplicationIds: firebase.firestore.FieldValue.arrayRemove(jobId)
-            });
-          });
-
-          // Delete the job
-          const jobRef = this.firestore.collection('jobs').doc(jobId).ref;
-          batch.delete(jobRef);
-
-          // Commit the batch
-          batch.commit().then(() => {
-            resolve();
-          }).catch(error => {
-            reject(error);
-          });
-        });
-      });
-    });
+  return new Promise(resolve => resolve);
   }
 
 

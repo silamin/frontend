@@ -1,51 +1,101 @@
 <app-navigation-bar [isCompanyUser]="false" [showSearchBar]="true"></app-navigation-bar>
-<ng-container *ngIf="!displayedJobs else jobsList">
+<ng-container *ngIf="jobs; else loadingScreen">
+  <ng-container *ngIf="displayedJobs.length > 0; else noJobsMessage">
+    <ng-container *ngIf="!displayedJobs else jobsList">
+      <div class="loading-screen-content">
+        <div class="logo">
+          <img src="/assets/loading-logo.svg" alt="">
+        </div>
+        <div class="text">
+          <h1 class="loading-text">Preparing your experience...</h1>
+          <p class="subtext">Please wait while we gather all the amazing jobs for you.</p>
+        </div>
+      </div>
+    </ng-container>
+    <ng-template #jobsList>
+        <div class="container my-2">
+          <div class="row">
+            <div class="col-md-4">
+              <div class="list-group">
+                <a *ngFor="let job of paginatedJobs" class="list-group-item list-group-item-action" (click)="selectJob(job)">
+                  <div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-1">
+                      <span class="love-icon" [class.loved]="isJobLiked(job.id)" (click)="toggleLove(job)"><i class="far fa-heart"></i></span>
+                      {{ job.jobTitle }}
+                    </h5>
+                  </div>
+                  <p style="height: 92px; overflow: auto" class="mb-1">{{ job.jobDescription }}</p>
+                </a>
+                <div *ngIf="showNoJobsModal" class="alert alert-warning alert-dismissible fade show" role="alert">
+                  No jobs matched your search criteria. Please change your search and try again.
+                  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" (click)="showNoJobsModal = false"></button>
+                </div>
+                <div class="row my-2">
+                  <div class="col d-flex justify-content-center">
+                    <app-app-pagination  *ngIf="jobs?.length > 5" [currentPage]="currentPage" [itemsPerPage]="5" [totalItems]="jobs.length" (pageChanged)="onPageChanged($event)"></app-app-pagination>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-8">
+              <div class="h-100 scrollable" #scrollable [class.scrollable-end]="isScrollableEnd">
+                <div class="content">
+                  <app-job-form [userId]="userData.id"  [isPopUp]="false" [visible]="jobPopupVisible" (visibleChange)="hideJobPopUp()" [isDisplay]="isDisplay" [selectedJob]="selectedJob" (selectedJobChange)="onSelectedJobChange($event)" style="width: 100%"></app-job-form>
+                </div>
+                <div class="scroll-indicator-container">
+                  <div class="scroll-indicator"></div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+    </ng-template>
+  </ng-container>
+  <ng-template #noJobsMessage>
+    <div class="container mt-4 mb-4">
+      <div class="card text-center">
+        <div class="card-body">
+          <h5 class="card-title">No jobs found!</h5>
+          <p class="card-text">It seems there are no jobs currently matching your profile. But don't worry, boosting your profile is easy and can greatly increase your chances of finding a job!</p>
+
+          <div class="row mt-4">
+            <div class="col-md-6">
+              <div class="info-card">
+                <i class="fas fa-user-edit fa-2x mb-3 text-muted"></i>
+                <h5>Improve Your Profile</h5>
+                <p>We provide a simple, step-by-step process to enhance your profile. Being precise and concise with your descriptions can make a significant difference!</p>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="info-card">
+                <i class="fas fa-briefcase fa-2x mb-3 text-muted"></i>
+                <h5>Get Better Jobs</h5>
+                <p>An improved profile will increase your chances of being matched with more and better job opportunities. You can edit your work experience, education, skills, and languages at any time!</p>
+              </div>
+            </div>
+          </div>
+          <ol class="list-group list-group-numbered">
+            <li class="list-group-item">Click on the "My Profile" button in the navigation bar.</li>
+            <li class="list-group-item">Update your work experience, education, skills, and languages. Remember, specificity and brevity can make your profile stand out!</li>
+            <li class="list-group-item">Click "Submit" to save your changes.</li>
+          </ol>
+
+          <a (click)="redirectToProfile()" class="btn btn-primary mt-4">Boost My Profile</a>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+
+</ng-container>
+<ng-template #loadingScreen>
   <div class="loading-screen-content">
     <div class="logo">
       <img src="/assets/loading-logo.svg" alt="">
     </div>
     <div class="text">
-      <h1 class="loading-text">Preparing your experience...</h1>
-      <p class="subtext">Please wait while we gather all the amazing jobs for you.</p>
-    </div>
-  </div>
-</ng-container>
-<ng-template #jobsList>
-  <div class="container my-2">
-    <div class="row">
-      <div class="col-md-4">
-        <div class="list-group">
-          <a *ngFor="let job of paginatedJobs" class="list-group-item list-group-item-action" (click)="selectJob(job)">
-            <div class="d-flex w-100 justify-content-between">
-              <h5 class="mb-1">
-                <span class="love-icon" [class.loved]="isJobLiked(job.id)" (click)="toggleLove(job)"><i class="far fa-heart"></i></span>
-                {{ job.jobTitle }}
-              </h5>
-            </div>
-            <p style="height: 92px; overflow: auto" class="mb-1">{{ job.jobDescription }}</p>
-          </a>
-          <div *ngIf="showNoJobsModal" class="alert alert-warning alert-dismissible fade show" role="alert">
-            No jobs matched your search criteria. Please change your search and try again.
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" (click)="showNoJobsModal = false"></button>
-          </div>
-          <div class="row my-2">
-            <div class="col d-flex justify-content-center">
-              <app-app-pagination  *ngIf="jobs?.length > 5" [currentPage]="currentPage" [itemsPerPage]="5" [totalItems]="jobs.length" (pageChanged)="onPageChanged($event)"></app-app-pagination>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-8">
-        <div class="h-100 scrollable" #scrollable [class.scrollable-end]="isScrollableEnd">
-          <div class="content">
-            <app-job-form [userId]="userData.id"  [isPopUp]="false" [visible]="jobPopupVisible" (visibleChange)="hideJobPopUp()" [isDisplay]="isDisplay" [selectedJob]="selectedJob" (selectedJobChange)="onSelectedJobChange($event)" style="width: 100%"></app-job-form>
-          </div>
-          <div class="scroll-indicator-container">
-            <div class="scroll-indicator"></div>
-          </div>
-        </div>
-      </div>
-
+      <h1 class="loading-text">Loading...</h1>
+      <p class="subtext">Please wait while we prepare everything for you.</p>
     </div>
   </div>
 </ng-template>

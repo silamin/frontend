@@ -19,6 +19,8 @@ export class WorkExperienceService implements SectionService{
   ) {}
 
   addItem(userId: string, workExperience: WorkExperienceFormDTO): Promise<any> {
+    console.log(userId)
+    console.log(workExperience)
     // Reference to the specific user's work experiences collection
     const workExperiencesRef = this.firestore.collection('users').doc(userId).collection('workExperience');
 
@@ -53,7 +55,7 @@ export class WorkExperienceService implements SectionService{
     this.firestore
       .collection('users')
       .doc(userId)
-      .collection('skills', ref => ref.where('id', '==', item.id))
+      .collection('workExperience', ref => ref.where('id', '==', item.id))
       .get()
       .subscribe(querySnapshot => {
         querySnapshot.forEach(doc => {
@@ -68,5 +70,30 @@ export class WorkExperienceService implements SectionService{
 
     // Return the observable stream of the user's work experiences
     return workExperiencesRef.valueChanges();
+  }
+
+  editItem(id, data) {
+    console.log(data);
+    console.log(id)
+    // Check if data and data.id are defined before proceeding
+    if(data && data.id) {
+      this.firestore
+        .collection('users')
+        .doc(id)
+        .collection('workExperience', ref => ref.where('id', '==', data.id))
+        .get()
+        .subscribe(querySnapshot => {
+          querySnapshot.forEach(doc => {
+            // Update the document
+            doc.ref.update(data).then(() => {
+              console.log('Document successfully updated!');
+            }).catch((error) => {
+              console.error('Error updating document: ', error);
+            });
+          });
+        });
+    } else {
+      console.error('Data or data.id is undefined');
+    }
   }
 }

@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
 import {AngularFirestore, AngularFirestoreCollection} from "@angular/fire/compat/firestore";
-import {BehaviorSubject, map, Observable} from "rxjs";
-import {ApplicationDTO} from "../dtos/DTO's";
+import {BehaviorSubject, combineLatest, filter, map, Observable, tap} from "rxjs";
+import {ApplicationDto, ApplicationDTO, UserDTO} from "../dtos/DTO's";
 import 'firebase/firestore';
 import {Resource} from "../pages/process-application/process-application.component";
 import 'firebase/firestore';
 import firebase from "firebase/compat/app";
+import {switchMap} from "rxjs/operators";
 @Injectable({
   providedIn: 'root'
 })
@@ -38,21 +39,6 @@ export class ApplicationService {
   }
 
   selectedCandidates = new BehaviorSubject<Set<string>>(new Set());
-
-  fetchSelectedCandidates() {
-    this.firestore.collection('applications').get().toPromise().then((querySnapshot) => {
-      const selectedCandidatesSet = new Set<string>();
-      querySnapshot?.forEach((doc) => {
-        const data = doc.data() as ApplicationDTO;
-        if (!data?.candidateId || !data.jobId) {
-          console.error(`Invalid data in doc ${doc.id}:`, data);
-        } else {
-          selectedCandidatesSet.add(`${data.candidateId}-${data.jobId}`);
-        }
-      });
-      this.selectedCandidates.next(selectedCandidatesSet);
-    });
-  }
 
   getApplicationData(uid: string, jid: string): Observable<ApplicationDTO[]> {
     return this.firestore.collection('applications', ref =>
@@ -128,4 +114,75 @@ export class ApplicationService {
         console.error('Error saving notes: ', error);
       });
   }
+  getAllApplications(userId: string): Observable<ApplicationDto[]> {
+    return this.firestore.collection<ApplicationDto>('applications', ref => ref.where('candidateId', '==', userId))
+      .valueChanges();
   }
+
+  withdrawApplication(jobId: number, userId: number): Promise<void> {
+    const applicationsRef: AngularFirestoreCollection<any> = this.firestore.collection('applications');
+
+    return applicationsRef.ref
+      .where('jobId', '==', jobId)
+      .where('candidateId', '==', userId)
+      .get()
+      .then(querySnapshot => {
+        if (!querySnapshot.empty) {
+          // Delete the matching application document
+          const documentId = querySnapshot.docs[0].id;
+          return applicationsRef.doc(documentId).delete();
+        } else {
+          throw new Error('Matching application not found');
+        }
+      })
+      .then(() => {
+        console.log('Application successfully withdrawn!');
+      })
+      .catch(error => {
+        console.error('Error withdrawing application:', error);
+        throw error;
+      });
+  }
+  getAllCandidatesByJobId(jobId: string): Observable<UserDTO[]> {
+    return this.firestore.collection('applications', ref => ref.where('jobId', '==', parseInt(jobId))).valueChanges().pipe(
+      tap(applications => console.log('applications:', applications)),
+      switchMap((applications: any[]) => {
+        let candidatesObservables: Observable<UserDTO>[] = [];
+        applications.forEach(application => {
+          // Filter out applications with status 'rejected'
+          if (application.status !== 'rejected') {
+            const candidate$ = this.firestore.doc<UserDTO>(`users/${application.candidateId}`).valueChanges();
+            const validCandidate$ = candidate$.pipe(
+              filter(candidate => candidate !== undefined) // Filter out undefined values
+            ) as Observable<UserDTO>;
+            candidatesObservables.push(validCandidate$);
+          }
+        });
+        return combineLatest(candidatesObservables);
+      }),
+      tap(candidates => console.log('candidates:', candidates))
+    );
+  }
+
+
+
+  rejectApplication(jobId: number, candidateId: string) {
+    console.log(jobId);
+    console.log(candidateId);
+
+    // Query the collection
+    return this.firestore.collection('applications', ref => ref.where('jobId', '==', jobId).where('candidateId', '==', candidateId))
+      .get().toPromise().then(querySnapshot => {
+        if (querySnapshot && !querySnapshot.empty) {
+          const docRef = querySnapshot.docs[0].ref;  // Take the first matched document
+          return docRef.set({ status: 'rejected' }, { merge: true })
+            .then(() => console.log('Application rejected successfully'))
+            .catch(error => console.error('Error rejecting application: ', error));
+        }  else {
+          console.log(`No matching application found for jobId: ${jobId}, candidateId: ${candidateId}`);
+          return Promise.resolve();  // Resolve the promise in case of no matching document
+        }
+      }).catch(error => console.error('Error executing query: ', error));
+  }
+
+}

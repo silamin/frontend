@@ -16,10 +16,9 @@ import {UserService} from "../../services/user.service";
 export class WorkExperienceFormComponent implements HasForm, OnInit{
   @Input() visible: boolean=false;
   @Output() visibleChange: EventEmitter<boolean> = new EventEmitter<boolean>();
-  @Input() workExperienceData: WorkExperienceFormDTO | undefined;
   formData: FormGroup;
   user: any;
-
+  @Input() data;
   close() {
     this.visible = false;
     this.visibleChange.emit(this.visible);
@@ -30,6 +29,7 @@ export class WorkExperienceFormComponent implements HasForm, OnInit{
   }
   constructor(private fb: FormBuilder, private workExperienceService: WorkExperienceService, private userStore: UserStore, private userService: UserService) {
     this.formData = this.fb.group({
+      id:[''],
       jobTitle: [''],
       employmentType: [''],
       companyName: [''],
@@ -40,18 +40,13 @@ export class WorkExperienceFormComponent implements HasForm, OnInit{
       jobDescription: ['']
     });
   }
-   newWorkExperience: WorkExperienceFormDTO = {
-    companyName: 'OpenAI',
-    currentlyWorkingHere: true,
-    employmentType: 'Full-Time',
-    endDate: new Date(),
-    jobDescription: 'test',
-    jobTitle: 'Data Scientist',
-    location: 'San Francisco, CA',
-    startDate: new Date()
-  };
   onSubmit() {
-      this.workExperienceService.addItem(this.user.uid,this.newWorkExperience)
+    if (!this.data){
+      this.workExperienceService.addItem(this.user.id,this.formData.value)
+    }else {
+      this.data = this.formData.value
+      this.workExperienceService.editItem(this.user.id, this.data)
+    }
   }
   ngOnInit(): void {
     let userId = this.userStore.userId$.getValue();

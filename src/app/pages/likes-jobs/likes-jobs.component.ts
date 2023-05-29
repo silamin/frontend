@@ -4,6 +4,7 @@ import {UserService} from "../../services/user.service";
 import {JobServiceService} from "../../services/job-service.service";
 import {JobDto, UserDTO} from "../../dtos/DTO's";
 import {Observable} from "rxjs";
+import {ApplicationService} from "../../services/application.service";
 
 @Component({
   selector: 'app-likes-jobs',
@@ -24,7 +25,7 @@ export class LikesJobsComponent implements OnInit{
   isLoading =true;
   user: any;
 
-  constructor(private userStore: UserStore, private jobsService: JobServiceService, private userService: UserService) { }
+  constructor(private userStore: UserStore, private jobsService: JobServiceService, private userService: UserService, private applicationService: ApplicationService) { }
 
   ngOnInit(): void {
     let userId = this.userStore.userId$.getValue();
@@ -47,12 +48,12 @@ export class LikesJobsComponent implements OnInit{
             })
           }
         })
-
-      })}
+      })
+    }
   }
 
   async onApply(id: number) {
-    await this.jobsService.apply(id.toString(), this.user.uid)
+      this.applicationService.startProcess(id,parseInt(this.userStore.userId$.getValue()!))
   }
 
   async onDislike(id: number) {

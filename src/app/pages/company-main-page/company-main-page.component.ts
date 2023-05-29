@@ -1,9 +1,9 @@
-import {ChangeDetectorRef, Component, OnInit, ViewChild} from '@angular/core';
+import {ChangeDetectorRef, Component, OnChanges, OnInit, SimpleChanges, ViewChild} from '@angular/core';
 import { JobServiceService } from '../../services/job-service.service';
 import { UserStore } from '../../stores/UserStore';
 import {catchError, combineLatest, forkJoin, Observable, of, take, tap} from 'rxjs';
 import { switchMap, map } from 'rxjs/operators';
-import {JobDto, UserDTO} from "../../dtos/DTO's";
+import {ApplicationDto, JobDto, UserDTO} from "../../dtos/DTO's";
 import {ModalDismissReasons, NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {Router} from "@angular/router";
 import {ApplicationService} from "../../services/application.service";
@@ -36,14 +36,23 @@ export class CompanyMainPageComponent implements OnInit {
         if (content === this.confirmSelectModal) {
           result === 'Yes' ? this.applicationService.startProcess(this.jobId, this.candidateId): {};
         } else if (content === this.confirmRejectModal) {
-          result === 'Yes' ? this.jobsToDisplay[this.jobId]?.candidates?.splice(this.candidateId, 1) : {};
+          result === 'Yes' ?
+            this.applicationService.rejectApplication(this.jobId, this.candidateId.toString()).then(() => {
+              this.jobsToDisplay.forEach(job => {
+                if (job.id === this.jobId && job.candidates) {
+                  job.candidates = job.candidates.filter(candidate => candidate.id !== this.candidateId);
+                }
+              });
+            }): {};
         }
-        },
+      },
       (reason) => {
         this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
       }
     );
   }
+
+
   private getDismissReason(reason: any): string {
     if (reason === ModalDismissReasons.ESC) {
       return 'by pressing ESC';
@@ -68,26 +77,30 @@ export class CompanyMainPageComponent implements OnInit {
   }
   user:any;
   userData:any;
+  job
 
   async ngOnInit() {
-    await this.applicationService.fetchSelectedCandidates();
     let userId = this.userStore.userId$.getValue();
-    if (userId){
+    if (userId) {
       let userData$: Observable<UserDTO> = this.userService.getUserById(userId);
       userData$.subscribe(async userData => {
         this.userData = userData;
-        this.userData.subscribe(user => {
-          this.user = user;
-          if (user) {
-            this.jobsService.getAllJobs().subscribe((result) => this.jobsToDisplay = result)
-          } else {
-            this.jobsToDisplay =[];
-          }})
-      })}
-
-
-
+        this.user = userData;
+        this.jobsService.getAllJobs(userId!, this.user.isCompanyUser).subscribe(jobs => {
+          for (let job of jobs) {
+            this.applicationService.getAllCandidatesByJobId(job.id.toString()).subscribe(candidates =>{
+              job.candidates = candidates
+              console.log(candidates)
+            });
+          }
+          this.jobsToDisplay = jobs;
+        });
+      });
+    } else {
+      this.jobsToDisplay = [];
+    }
   }
+
 
   candidatesPosition: { top: string, left: string } = { top: '0', left: '0' };
   selectedJob: any = null;
@@ -102,9 +115,9 @@ export class CompanyMainPageComponent implements OnInit {
   jobPopupVisible = false;
   isEdit = false;
   showMore(selectedUser: any) {
-    this.isUserProfileVisible =true
-    this.isPopUp=true;
     this.selectedUser = selectedUser
+    this.isPopUp=true;
+    this.isUserProfileVisible =true
   }
 
   rejectCandidate(jobIndex: number, rowIndex: number) {
@@ -157,5 +170,9 @@ export class CompanyMainPageComponent implements OnInit {
   openJobForm() {
     this.jobPopupVisible = true;
     this.isPopUp = true;
+  }
+
+  getCandidates(job: any) {
+
   }
 }

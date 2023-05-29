@@ -6,6 +6,7 @@ import {UserStore} from "./stores/UserStore";
 import {AngularFirestore} from "@angular/fire/compat/firestore";
 import {UserService} from "./services/user.service";
 import {of} from "rxjs";
+import {ApplicationService} from "./services/application.service";
 
 @Component({
   selector: 'app-root',
@@ -13,12 +14,15 @@ import {of} from "rxjs";
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
-  constructor(private authService: AuthServiceService, private firestore: AngularFirestore, private userStore: UserStore, private userService: UserService) {
+  constructor(private authService: AuthServiceService, private firestore: AngularFirestore, private userStore: UserStore, private appSer: ApplicationService) {
   }
 
   user: any;
 
   async ngOnInit() {
+    this.appSer.getAllCandidatesByJobId('1').subscribe(data => {
+      console.log(data)
+    })
 
     /*this.userStore.user$.subscribe(user => {
       this.user =user;

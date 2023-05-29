@@ -9,6 +9,7 @@ export class WorkExperienceFormFactoryService implements FormFactory{
   constructor() { }
   populateForm(data: any, formData): void {
     formData.setValue({
+      id: data?.id,
       jobTitle: data?.jobTitle ?? '',
       companyName: data?.companyName ?? '',
       currentlyWorking: data?.currentlyWorkingHere ?? false,

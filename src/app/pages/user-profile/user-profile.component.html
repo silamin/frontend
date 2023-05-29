@@ -1,4 +1,4 @@
-<div *ngIf="userData.isCompanyUser === false ; else popUp">
+<div *ngIf="userData && userData.isCompanyUser === false ; else popUp">
   <app-navigation-bar class="my-2" [isCompanyUser]="false" [showSearchBar]="true"></app-navigation-bar>
   <div class="container my-2">
     <div class="row">
@@ -162,7 +162,7 @@
       </ng-container>
     </div>
   </div>
-  <app-work-experience-form #workExperienceForm [visible]="isWorkExperienceFormVisible" (visibleChange)="hidePopUp()"></app-work-experience-form>
+  <app-work-experience-form #workExperienceForm [data]="data" [visible]="isWorkExperienceFormVisible" (visibleChange)="hidePopUp()"></app-work-experience-form>
   <app-skill-form #skillForm  [visible]="isSkillFormVisible" (visibleChange)="hidePopUp()"></app-skill-form>
   <app-language-form #languageForm [visible]="isLanguageFormVisible" (visibleChange)="hidePopUp()"></app-language-form>
   <app-education-form #educationForm [visible]="isEducationFormVisible" (visibleChange)="hidePopUp()"></app-education-form>

@@ -4,8 +4,9 @@ import {JobServiceService} from "../../../services/job-service.service";
 import {UserStore} from "../../../stores/UserStore";
 import {UserService} from "../../../services/user.service";
 import {user} from "@angular/fire/auth";
-import {Observable} from "rxjs";
+import {map, Observable} from "rxjs";
 import {UserDTO} from "../../../dtos/DTO's";
+import {ApplicationService} from "../../../services/application.service";
 
 
 
@@ -22,6 +23,7 @@ export class JobFormComponent implements OnChanges, OnInit{
   @Output() selectedJobChange = new EventEmitter<any>();
   @Input() userId ;
   isApplied = false;
+  applications:any
 
   ngOnChanges() {
     this.isApplied = false;
@@ -36,20 +38,22 @@ export class JobFormComponent implements OnChanges, OnInit{
       this.jobForm.get('jobDescription')?.setValue(this.selectedJob?.jobDescription);
       this.jobForm.get('backgroundSkills')?.setValue(this.selectedJob?.backgroundSkills);
       this.jobForm.get('jobBenefits')?.setValue(this.selectedJob?.jobBenefits);
+      this.isApplied = this.applications.some(application => application.jobId === this.jobForm.get('id')?.value)
 
-      if (this.userData?.jobApplicationIds?.includes(this.jobForm.get('id')?.value.toString())){
-          this.isApplied = true;
-        }
       this.selectedJobChange.emit(this.selectedJob);
     }
   }
   ngOnInit() {
-    let userId = this.userStore.userId$.getValue();
-    if (userId){
-      let userData$: Observable<UserDTO> = this.userService.getUserById(userId);
+    if (!this.userId){
+      this.userId = this.userStore.userId$.getValue();
+    }
+    if (this.userId){
+      let userData$: Observable<UserDTO> = this.userService.getUserById(this.userId);
       userData$.subscribe(async userData => {
-        this.userData = userData;
-        this.isApplied = this.userData?.jobApplicationIds?.includes(this.jobForm.get('id')?.value.toString()) ?? false;
+        this.applicationService.getAllApplications(this.userId).subscribe(applications => {
+          this.applications = applications;
+          this.isApplied = this.applications.some(application => application.jobId === this.jobForm.get('id')?.value)
+        })
       })}
        };
 
@@ -67,7 +71,8 @@ export class JobFormComponent implements OnChanges, OnInit{
   constructor(private fb: FormBuilder,
               private jobService: JobServiceService,
               private userStore: UserStore,
-              private userService: UserService) {
+              private userService: UserService,
+              private applicationService: ApplicationService) {
     this.jobForm = this.fb.group({
       id: ['', Validators.required],
       jobTitle: ['', Validators.required],
@@ -82,12 +87,11 @@ export class JobFormComponent implements OnChanges, OnInit{
       userId: ['', Validators.required]
     });
   }
-  userData:any;
 
   submitJobForm() {
     console.log(this.isEdit)
     if (!this.isEdit) {
-      this.jobForm.get('userId')?.setValue(this.userData.id)
+      this.jobForm.get('userId')?.setValue(this.userId)
       this.jobService.addJob(this.jobForm.value)
     } else {
       this.jobService.editJob(this.jobForm.value);
@@ -96,9 +100,15 @@ export class JobFormComponent implements OnChanges, OnInit{
   }
   @Input() isEdit: boolean = false;
   onApply() {
-      this.jobService.apply(this.jobForm.get('id')?.value, this.userId).then(()=>{
+    if (this.isApplied){
+      this.applicationService.withdrawApplication(this.jobForm.get('id')?.value, this.userId).then(()=>{
+        this.isApplied = false;
+      });
+    }else {
+      this.applicationService.startProcess(this.jobForm.get('id')?.value, this.userId).then(()=>{
         this.isApplied = true;
-        this.userData?.jobApplicationIds.push(this.jobForm.get('id')?.value.toString());
-      })
+
+      });
+      }
   }
 }
