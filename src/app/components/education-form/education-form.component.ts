@@ -24,20 +24,20 @@ export class EducationFormComponent implements HasForm, OnInit{
               private educationService: EducationService,
               private userStore: UserStore,private userService: UserService) {
     this.educationForm = this.formBuilder.group({
-      school: '',
-      degree: '',
-      fieldOfStudy: '',
-      startDate: '',
-      endDate: '',
-      grade: '',
-      activitiesSocieties: '',
-      description: ''
+      school: ['',[]],
+      degree: ['',[]],
+      fieldOfStudy: ['',[]],
+      startDate: ['',[]],
+      endDate: ['',[]],
+      grade: ['',[]],
+      activitiesSocieties: ['',[]],
+      description: ['',[]]
     });
   }
 
   onSubmit(): void {
-    this.educationService.addItem(this.user.uid,{
-      activitiesAndSocieties: "Student Council, Debate Club",
+    this.educationService.addItem(this.user.id,{
+      activitiesSocieties: "Student Council, Debate Club",
       degree: "Bachelor of Science",
       description: "Managed project timelines and deliverables",
       endDate: new Date("2023-05-31"),

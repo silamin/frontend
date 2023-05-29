@@ -28,7 +28,7 @@ export class LanguageFormComponent implements HasForm, OnInit{
 
 
   onSubmit() {
-    this.languageService.addItem(this.user.uid,{
+    this.languageService.addItem(this.user.id,{
       rating: this.languageForm.get('rating')?.value,
       language: this.languageForm.get('language')?.value
     })

@@ -163,9 +163,9 @@
     </div>
   </div>
   <app-work-experience-form #workExperienceForm [data]="data" [visible]="isWorkExperienceFormVisible" (visibleChange)="hidePopUp()"></app-work-experience-form>
-  <app-skill-form #skillForm  [visible]="isSkillFormVisible" (visibleChange)="hidePopUp()"></app-skill-form>
-  <app-language-form #languageForm [visible]="isLanguageFormVisible" (visibleChange)="hidePopUp()"></app-language-form>
-  <app-education-form #educationForm [visible]="isEducationFormVisible" (visibleChange)="hidePopUp()"></app-education-form>
+  <app-skill-form #skillForm [data]="data"  [visible]="isSkillFormVisible" (visibleChange)="hidePopUp()"></app-skill-form>
+  <app-language-form #languageForm [data]="data"  [visible]="isLanguageFormVisible" (visibleChange)="hidePopUp()"></app-language-form>
+  <app-education-form #educationForm [data]="data"  [visible]="isEducationFormVisible" (visibleChange)="hidePopUp()"></app-education-form>
 </div>
 <ng-template #popUp>
   <!-- Content to display when the condition is false -->
