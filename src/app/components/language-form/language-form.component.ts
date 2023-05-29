@@ -1,6 +1,6 @@
 import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {LanguageServiceService} from "../../services/language-service.service";
+import {LanguageServiceService} from "../../services/forms-service/language-service.service";
 import {HasForm} from "../../services/factories/FormFactory";
 import {UserStore} from "../../stores/UserStore";
 import {Observable} from "rxjs";

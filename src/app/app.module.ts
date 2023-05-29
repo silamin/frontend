@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import {ErrorHandler, NgModule, NgZone} from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppComponent } from './app.component';
@@ -32,10 +32,10 @@ import {UserStore} from "./stores/UserStore";
 import { LanguageFormComponent } from './components/language-form/language-form.component';
 import { ApplicationStatusComponent } from './pages/application-status/application-status.component';
 import {NgbCollapse} from "@ng-bootstrap/ng-bootstrap";
-import {WorkExperienceService} from "./services/work-experience.service";
-import {EducationService} from "./services/education.service";
-import {SkillsService} from "./services/skills.service";
-import {LanguageServiceService} from "./services/language-service.service";
+import {WorkExperienceService} from "./services/forms-service/work-experience.service";
+import {EducationService} from "./services/forms-service/education.service";
+import {SkillsService} from "./services/forms-service/skills.service";
+import {LanguageServiceService} from "./services/forms-service/language-service.service";
 import {
   EDUCATION_SERVICE_TOKEN,
   LANGUAGE_SERVICE_TOKEN,
@@ -43,6 +43,9 @@ import {
   WORK_EXPERIENCE_SERVICE_TOKEN
 } from "./services/tokens";
 import { ProcessApplicationComponent } from './pages/process-application/process-application.component';
+import {ToastrModule, ToastrService} from "ngx-toastr";
+import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
+import {GlobalErrorHandlerService} from "./services/global-error-handler.service";
 
 const routes: Routes = [
   { path: '', component: SignInComponent },
@@ -96,7 +99,10 @@ const firebaseConfig = {
         FormsModule,
         RouterModule.forRoot(routes),
         FontAwesomeModule,
-        ReactiveFormsModule,
+        ToastrModule.forRoot(), // ToastrModule added
+      BrowserAnimationsModule,
+
+      ReactiveFormsModule,
 
         // Add AngularFire and Firebase configurations
         AngularFireModule.initializeApp(firebaseConfig),
@@ -110,6 +116,7 @@ const firebaseConfig = {
     { provide: EDUCATION_SERVICE_TOKEN, useClass: EducationService },
     { provide: SKILLS_SERVICE_TOKEN, useClass: SkillsService },
     { provide: LANGUAGE_SERVICE_TOKEN, useClass: LanguageServiceService },
+    { provide: ErrorHandler, useClass: GlobalErrorHandlerService },
   ],
   bootstrap: [AppComponent],
 

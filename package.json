@@ -26,6 +26,7 @@
     "bootstrap": "^5.2.3",
     "firebase": "^9.6.1",
     "mobx-angular": "^4.7.2",
+    "ngx-toastr": "^17.0.2",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.12.0"

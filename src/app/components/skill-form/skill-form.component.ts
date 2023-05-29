@@ -1,6 +1,6 @@
 import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {SkillsService} from "../../services/skills.service";
+import {SkillsService} from "../../services/forms-service/skills.service";
 import {HasForm} from "../../services/factories/FormFactory";
 import {Observable} from "rxjs";
 import {UserDTO} from "../../dtos/DTO's";

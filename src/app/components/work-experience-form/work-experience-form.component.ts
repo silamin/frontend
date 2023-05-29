@@ -1,6 +1,6 @@
 import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
 import {FormBuilder, FormGroup} from "@angular/forms";
-import {WorkExperienceService} from "../../services/work-experience.service";
+import {WorkExperienceService} from "../../services/forms-service/work-experience.service";
 import {UserStore} from "../../stores/UserStore";
 import {UserDTO, WorkExperienceFormDTO} from "../../dtos/DTO's";
 import {HasForm} from "../../services/factories/FormFactory";

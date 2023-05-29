@@ -31,9 +31,9 @@ export class SignInComponent {
 
   // Function to switch to login form
   async login(): Promise<void> {
-    await this.authService.login(this.loginRegisterForm);
-
+    this.authService.login(this.loginRegisterForm);
   }
+
 
   switchToRegister(): void {
     this.loginRegisterForm.get('isLogin')?.setValue(false);

@@ -4,13 +4,20 @@ import {AngularFirestore} from "@angular/fire/compat/firestore";
 import {AngularFireFunctions} from "@angular/fire/compat/functions";
 import {Router} from "@angular/router";
 import {UserStore} from "../stores/UserStore";
+import {GlobalErrorHandlerService} from "./global-error-handler.service";
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthServiceService {
 
-  constructor(private afAuth: AngularFireAuth, private functions: AngularFireFunctions, private firestore: AngularFirestore, private router: Router, private userStore: UserStore) {}
+  constructor(private afAuth: AngularFireAuth,
+              private functions: AngularFireFunctions,
+              private firestore: AngularFirestore,
+              private router: Router,
+              private userStore: UserStore,
+              private errorHandler: GlobalErrorHandlerService) {}
+
 
   async register(registerForm): Promise<void> {
     try {
@@ -43,14 +50,11 @@ export class AuthServiceService {
     } catch (error: any) {
       console.error('Error during registration:', error);
       if (error.code === 'auth/email-already-in-use') {
-        alert('The email address is already in use by another account.');
       } else {
-        alert('An error occurred during registration. Please try again later.');
         throw error;
       }
     }
   }
-
 
   async login(loginForm): Promise<void> {
     try {
@@ -58,7 +62,7 @@ export class AuthServiceService {
       const password = loginForm.get('password')?.value;
 
       const userCredential = await this.afAuth.signInWithEmailAndPassword(email, password);
-      const user = userCredential.user;
+      const user = userCredential?.user;
 
       if (user) {
         // Check if a user document already exists
@@ -76,19 +80,14 @@ export class AuthServiceService {
           } else {
             await this.router.navigate(['/user-main-page']);
           }
-        } else {
-          // If the user document does not exist, throw an error
-          // (because a user document should be created at registration)
-          throw new Error("User document does not exist");
         }
-      } else {
-        console.error('Error during login: No user');
       }
     } catch (error) {
-      console.error('Error during login:', error);
-      throw error;
+      // Delegate error handling to global error handler
+      this.errorHandler.handleError(error);
     }
   }
+
 
   async logout(): Promise<void> {
     try {

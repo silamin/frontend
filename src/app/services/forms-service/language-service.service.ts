@@ -1,34 +1,33 @@
-import {Inject, Injectable} from '@angular/core';
+import { Injectable} from '@angular/core';
 import {AngularFireAuth} from "@angular/fire/compat/auth";
 import {AngularFireFunctions} from "@angular/fire/compat/functions";
 import {AngularFirestore} from "@angular/fire/compat/firestore";
 import {Observable} from "rxjs";
-import {EducationBackgroundDto, SkillDto, WorkExperienceFormDTO} from "../dtos/DTO's";
-import {SectionService} from "./section-service";
-import {SKILLS_SERVICE_TOKEN, WORK_EXPERIENCE_SERVICE_TOKEN} from "./tokens";
+import {LanguageDto, SkillDto, WorkExperienceFormDTO} from "../../dtos/DTO\'s";
+import {SectionService} from "../section-service";
 
 @Injectable({
   providedIn: 'root'
 })
-export class SkillsService implements SectionService{
+export class LanguageServiceService implements SectionService{
 
   constructor(
-              private afAuth: AngularFireAuth,
+    private afAuth: AngularFireAuth,
               private functions: AngularFireFunctions,
               private firestore: AngularFirestore) {}
-  addItem(userId: string, skillDto: SkillDto): Promise<any> {
+  addItem(userId: string, languagesDto: LanguageDto): Promise<any> {
     // Reference to the specific user's work experiences collection
-    const educationBackgroundRef = this.firestore.collection('users').doc(userId).collection('skills');
+    const educationBackgroundRef = this.firestore.collection('users').doc(userId).collection('languages');
 
     // Adding the new work experience to the user's workExperience sub-collection
-    return educationBackgroundRef.add(skillDto);
+    return educationBackgroundRef.add(languagesDto);
   }
 
   deleteItem(item: any, userId: string): void {
     this.firestore
       .collection('users')
       .doc(userId)
-      .collection('skills', ref => ref.where('skill', '==', item.skill))
+      .collection('languages', ref => ref.where('language', '==', item.language))
       .get()
       .subscribe(querySnapshot => {
         querySnapshot.forEach(doc => {
@@ -39,7 +38,7 @@ export class SkillsService implements SectionService{
 
   fetchData(uid: any): Observable<any> {
     // Reference to the specific user's work experiences collection
-    const educationBackgroundRef = this.firestore.collection('users').doc(uid).collection<WorkExperienceFormDTO>('skills');
+    const educationBackgroundRef = this.firestore.collection('users').doc(uid).collection<WorkExperienceFormDTO>('languages');
 
     // Return the observable stream of the user's work experiences
     return educationBackgroundRef.valueChanges();
