@@ -52,6 +52,7 @@ export class EducationFormComponent implements HasForm, OnInit{
 
   close(): void {
     this.visible = false;
+    this.visibleChange.emit(this.visible);
   }
 
   open(): void {

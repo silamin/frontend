@@ -90,29 +90,59 @@
                   <tbody>
                   <ng-container *ngIf="job.candidates && job.candidates.length > 0; else noCandidates">
                     <tr *ngFor="let candidate of job.candidates; let rowIndex = index">
-                      <td>{{ candidate.name }}</td>
+                      <td>{{ candidate.name ?? candidate.email }}</td>
                       <td>
                         <div class="summary-container">
-                          <div *ngIf="candidate.workExperience && candidate.workExperience.length > 0" class="summary-item">
+                          <div *ngIf="candidate.workExperience?.length > 0; else noExperience" class="summary-item">
                             <span>{{ candidate.workExperience.length }}</span>
                             <span *ngIf="candidate.workExperience.length === 1"> experience</span>
                             <span *ngIf="candidate.workExperience.length > 1"> experiences</span>
                           </div>
-                          <div *ngIf="candidate.education && candidate.education.length > 0" class="summary-item">
+                          <ng-template #noExperience>
+                            <div class="summary-item">
+                              <span>0</span>
+                              <span> experiences</span>
+                            </div>
+                          </ng-template>
+                          <!-- For education -->
+                          <div *ngIf="candidate.education?.length > 0; else noEducation" class="summary-item">
                             <span>{{ candidate.education.length }}</span>
                             <span *ngIf="candidate.education.length === 1"> education</span>
                             <span *ngIf="candidate.education.length > 1"> educations</span>
                           </div>
-                          <div *ngIf="candidate.languages && candidate.languages.length > 0" class="summary-item">
+                          <ng-template #noEducation>
+                            <div class="summary-item">
+                              <span>0</span>
+                              <span> educations</span>
+                            </div>
+                          </ng-template>
+
+                          <!-- For languages -->
+                          <div *ngIf="candidate.languages?.length > 0; else noLanguages" class="summary-item">
                             <span>{{ candidate.languages.length }}</span>
                             <span *ngIf="candidate.languages.length === 1"> language</span>
                             <span *ngIf="candidate.languages.length > 1"> languages</span>
                           </div>
-                          <div *ngIf="candidate.skills && candidate.skills.length > 0" class="summary-item">
+                          <ng-template #noLanguages>
+                            <div class="summary-item">
+                              <span>0</span>
+                              <span> languages</span>
+                            </div>
+                          </ng-template>
+
+                          <!-- For skills -->
+                          <div *ngIf="candidate.skills?.length > 0; else noSkills" class="summary-item">
                             <span>{{ candidate.skills.length }}</span>
                             <span *ngIf="candidate.skills.length === 1"> skill</span>
                             <span *ngIf="candidate.skills.length > 1"> skills</span>
                           </div>
+                          <ng-template #noSkills>
+                            <div class="summary-item">
+                              <span>0</span>
+                              <span> skills</span>
+                            </div>
+                          </ng-template>
+
                         </div>
                       </td>
                       <td class="text-end">
@@ -146,7 +176,7 @@
         </div>
       </div>
     </div>
-    <app-user-profile [hidden]="!selectedUser"  [user]="selectedUser"  [isPopUp]="isPopUp" [visible]="isUserProfileVisible"></app-user-profile>
+    <app-user-profile (visibleChange)="hideUserProfilePopUp()"  [user]="selectedUser"  [isPopUp]="isPopUp" [visible]="isUserProfileVisible"></app-user-profile>
   </ng-template>
 
 

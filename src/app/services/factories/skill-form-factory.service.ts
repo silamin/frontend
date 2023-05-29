@@ -9,7 +9,11 @@ export class SkillFormFactoryService  implements FormFactory{
 
   constructor() { }
 
-  populateForm(data: any): void {
+  populateForm(data: any,formData): void {
+    formData.setValue({
+      skill: data.skill,
+      rating: data.rating
+    });
   }
 
   resetForm(formData: FormGroup): void {

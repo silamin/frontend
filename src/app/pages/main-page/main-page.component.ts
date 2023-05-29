@@ -97,6 +97,7 @@ export class MainPageComponent implements OnInit, AfterViewInit{
           this.jobs = jobs;
           this.displayedJobs = jobs; // Initialize displayedJobs to jobs
           console.log(this.displayedJobs)
+          this.selectedJob = this.displayedJobs[0]
           this.filterJobs(query);
         }
       });

@@ -11,7 +11,7 @@ export class LanguageFormFactoryService implements FormFactory{
 
   populateForm(data: any, formData): void {
     formData.setValue({
-      language: data?.language,
+      skill: data.skill,
       rating: data.rating
     })
   }

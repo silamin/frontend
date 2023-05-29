@@ -175,4 +175,9 @@ export class CompanyMainPageComponent implements OnInit {
   getCandidates(job: any) {
 
   }
+
+  hideUserProfilePopUp() {
+    this.isUserProfileVisible = false;
+    this.isPopUp = false;
+  }
 }

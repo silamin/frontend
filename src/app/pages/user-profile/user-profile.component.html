@@ -174,7 +174,7 @@
       <div class="modal-content popup-content">
         <div class="modal-header">
           <h5 class="modal-title">User profile</h5>
-          <button type="button" class="btn-close" (click)="close()"></button>
+          <button type="button" class="btn-close" (click)="close(); $event.stopPropagation()"></button>
         </div>
         <div class="modal-body">
           <div class="container my-2">

@@ -1,10 +1,10 @@
 import {
-  Component,
+  Component, EventEmitter,
   Inject,
   Injector,
   Input,
   OnChanges,
-  OnInit,
+  OnInit, Output,
   ProviderToken,
   SimpleChanges,
   ViewChild
@@ -43,6 +43,8 @@ export class UserProfileComponent implements OnInit, OnChanges {
   @ViewChild('skillForm') skillForm!: SkillFormComponent;
   @ViewChild('educationForm') educationForm!: EducationFormComponent;
   @ViewChild('languageForm') languageForm!: LanguageFormComponent;
+  @Output() visibleChange: EventEmitter<boolean> = new EventEmitter<boolean>();
+
 
   items: Observable<any>[] = [];
   showMore = {};
@@ -81,6 +83,9 @@ export class UserProfileComponent implements OnInit, OnChanges {
 
   hidePopUp() {
     this.isWorkExperienceFormVisible = false;
+    this.isEducationFormVisible = false;
+    this.isSkillFormVisible = false;
+    this.isLanguageFormVisible = false;
   }
 
   showMoreItems(sectionTitle: string) {
@@ -274,8 +279,11 @@ export class UserProfileComponent implements OnInit, OnChanges {
   }
 
   close() {
+
+    console.log()
     this.isPopUp = false
     this.visible = false;
+    this.visibleChange.emit(this.visible);
   }
 
   getDisplayProperties(item: any, displayProperties: string[]): string {
