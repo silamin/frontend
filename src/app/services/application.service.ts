@@ -146,22 +146,28 @@ export class ApplicationService {
     return this.firestore.collection('applications', ref => ref.where('jobId', '==', parseInt(jobId))).valueChanges().pipe(
       tap(applications => console.log('applications:', applications)),
       switchMap((applications: any[]) => {
-        let candidatesObservables: Observable<UserDTO>[] = [];
+        const candidatesObservables: Observable<UserDTO>[] = [];
+
         applications.forEach(application => {
-          // Filter out applications with status 'rejected'
           if (application.status !== 'rejected') {
-            const candidate$ = this.firestore.doc<UserDTO>(`users/${application.candidateId}`).valueChanges();
-            const validCandidate$ = candidate$.pipe(
-              filter(candidate => candidate !== undefined) // Filter out undefined values
+            const candidate$ = this.firestore.doc<UserDTO>(`users/${application.candidateId}`).valueChanges().pipe(
+              filter(candidate => candidate !== undefined), // Filter out undefined values
+              map(candidate => ({
+                ...candidate,
+                isCandidateSelected: application.status === 'in progress'
+              }))
             ) as Observable<UserDTO>;
-            candidatesObservables.push(validCandidate$);
+
+            candidatesObservables.push(candidate$);
           }
         });
+
         return combineLatest(candidatesObservables);
       }),
       tap(candidates => console.log('candidates:', candidates))
     );
   }
+
 
 
 
