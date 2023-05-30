@@ -1,13 +1,13 @@
 <app-navigation-bar [isCompanyUser]="false" [showSearchBar]="true"></app-navigation-bar>
-<ng-container *ngIf="jobs; else loadingScreen">
-  <ng-container *ngIf="displayedJobs.length > 0; else noJobsMessage">
+<ng-container *ngIf="jobs; else ingScreen">
+  <ng-container *ngIf="displayedJobs.length > 0 ; else noJobsMessage">
     <ng-container *ngIf="!displayedJobs else jobsList">
-      <div class="loading-screen-content">
+      <div class="ing-screen-content">
         <div class="logo">
           <img src="/assets/loading-logo.svg" alt="">
         </div>
         <div class="text">
-          <h1 class="loading-text">Preparing your experience...</h1>
+          <h1 class="ing-text">Preparing your experience...</h1>
           <p class="subtext">Please wait while we gather all the amazing jobs for you.</p>
         </div>
       </div>
@@ -88,7 +88,7 @@
   </ng-template>
 
 </ng-container>
-<ng-template #loadingScreen>
+<ng-template #ingScreen>
   <div class="loading-screen-content">
     <div class="logo">
       <img src="/assets/loading-logo.svg" alt="">

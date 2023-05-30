@@ -11,8 +11,6 @@ import {SearchService} from "../../services/search.service";
 import {combineLatest, Observable, of} from "rxjs";
 import {switchMap} from "rxjs/operators";
 import {UserService} from "../../services/user.service";
-import {UserDTO} from "../../dtos/DTO's";
-import {user} from "@angular/fire/auth";
 
 @Component({
   selector: 'app-main-page',
@@ -40,7 +38,7 @@ export class MainPageComponent implements OnInit, AfterViewInit{
   constructor(private jobsService: JobServiceService,
               private elementRef: ElementRef,
               private userStore: UserStore,
-              private searchService: SearchService,
+              public searchService: SearchService,
               private userService: UserService
   ) {
   }

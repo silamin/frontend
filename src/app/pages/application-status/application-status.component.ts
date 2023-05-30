@@ -16,7 +16,7 @@ import {JobServiceService} from "../../services/job-service.service";
 export class ApplicationStatusComponent implements OnInit{
 
   userData: any;
-  jobData: any;
+  isLoading = true;
   applications: any;
 
 
@@ -46,7 +46,7 @@ export class ApplicationStatusComponent implements OnInit{
             this.applications.forEach((application, index) => {
               application.jobData = jobDataArray[index];
             });
-            console.log(this.applications)
+            this.isLoading = false;
           });
 
       })}

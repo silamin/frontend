@@ -1,40 +1,54 @@
 <app-navigation-bar [isCompanyUser]="false"></app-navigation-bar>
-<div class="container mt-4">
-
-  <h2>My Applications</h2>
-  <div class="card mt-2 mb-2" *ngFor="let application of applications">
-    <div class="card-header d-flex justify-content-between align-items-center" (click)="toggleDetails(application)">
-      <div class="d-flex align-items-center">
-          <div class="mb-1">{{application.jobData.jobTitle}}</div>
-      </div>
-      <div class="toggle-icon">
-        <i class="fas fa-chevron-down" [class.rotate]="application.showDetails"></i>
-      </div>
+<ng-container *ngIf="isLoading else applicationsReady">
+  <div class="loading-screen-content">
+    <div class="logo">
+      <img src="/assets/loading-logo.svg" alt="">
     </div>
-    <div class="job-description-box">
-      <h5>Job Description</h5>
-      <div class="description-content">
-        <p>{{application.jobData.jobDescription || 'No description available yet.'}}</p>
-      </div>
-    </div>
-    <div class="card-body" [hidden]="!application.showDetails">
-      <h5>Application Info</h5>
-      <p>Application Date: {{getFormattedDate(application.applicationDate)}}</p>
-      <p>Status: <span [class]="getStatusClass(application.status)">{{application.status}}</span></p>
-      <p *ngIf="application.status === 'rejected' && application.rejectionReason">Rejection Reason: {{application.rejectionReason}}</p>
-      <p *ngIf="application.scheduling && getFormattedDate(application.scheduling.date)">Interview Date: {{getFormattedDate(application.scheduling.date)}}</p>
-      <p *ngIf="application.scheduling && application.scheduling.location">Interview Location: {{application.scheduling.location}}</p>
-      <p *ngIf="application.invitation">Invitation: {{application.invitation}}</p>
-      <div *ngIf="application.resources && application.resources.length">
-        <h5>Resources:</h5>
-        <ul>
-          <li *ngFor="let resource of application.resources">
-            <a [href]="resource.url" target="_blank">{{resource.name}}</a>
-          </li>
-        </ul>
-      </div>
+    <div class="text">
+      <h1 class="loading-text">Loading...</h1>
+      <p class="subtext">Please wait while we prepare everything for you.</p>
     </div>
   </div>
+</ng-container>
+<ng-template #applicationsReady>
+  <div class="container mt-4">
+
+    <h2>My Applications</h2>
+    <div class="card mt-2 mb-2" *ngFor="let application of applications">
+      <div class="card-header d-flex justify-content-between align-items-center" (click)="toggleDetails(application)">
+        <div class="d-flex align-items-center">
+          <div class="mb-1">{{application.jobData.jobTitle}}</div>
+        </div>
+        <div class="toggle-icon">
+          <i class="fas fa-chevron-down" [class.rotate]="application.showDetails"></i>
+        </div>
+      </div>
+      <div class="job-description-box">
+        <h5>Job Description</h5>
+        <div class="description-content">
+          <p>{{application.jobData.jobDescription || 'No description available yet.'}}</p>
+        </div>
+      </div>
+      <div class="card-body" [hidden]="!application.showDetails">
+        <h5>Application Info</h5>
+        <p>Application Date: {{getFormattedDate(application.applicationDate)}}</p>
+        <p>Status: <span [class]="getStatusClass(application.status)">{{application.status}}</span></p>
+        <p *ngIf="application.status === 'rejected' && application.rejectionReason">Rejection Reason: {{application.rejectionReason}}</p>
+        <p *ngIf="application.scheduling && getFormattedDate(application.scheduling.date)">Interview Date: {{getFormattedDate(application.scheduling.date)}}</p>
+        <p *ngIf="application.scheduling && application.scheduling.location">Interview Location: {{application.scheduling.location}}</p>
+        <p *ngIf="application.invitation">Invitation: {{application.invitation}}</p>
+        <div *ngIf="application.resources && application.resources.length">
+          <h5>Resources:</h5>
+          <ul>
+            <li *ngFor="let resource of application.resources">
+              <a [href]="resource.url" target="_blank">{{resource.name}}</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
 
 
-</div>
+  </div>
+
+</ng-template>
