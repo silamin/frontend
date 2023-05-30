@@ -1,8 +1,12 @@
 import {Component, OnInit} from '@angular/core';
 import {UserStore} from "../../stores/UserStore";
-import {Observable} from "rxjs";
+import {forkJoin, Observable} from "rxjs";
 import {UserDTO} from "../../dtos/DTO's";
 import {UserService} from "../../services/user.service";
+import {ApplicationService} from "../../services/application.service";
+import {Timestamp} from "firebase/firestore";
+import {switchMap} from "rxjs/operators";
+import {JobServiceService} from "../../services/job-service.service";
 
 @Component({
   selector: 'app-application-status',
@@ -10,53 +14,16 @@ import {UserService} from "../../services/user.service";
   styleUrls: ['./application-status.component.scss']
 })
 export class ApplicationStatusComponent implements OnInit{
-  userType!: 'company' | 'regular';
 
-  // Application statuses
-  statuses = ['Selected', 'Rejected', 'In-progress'];
-
-  // Mock application data
-
-  applications: any[] = [
-    {
-      userPicture: 'https://www.gravatar.com/avatar/USER_HASH?s=150',
-      applicantName: 'John Doe',
-      position: 'Software Developer',
-      jobDescription: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit....',
-      showDetails: false,
-      email: 'john.doe@example.com',
-      phoneNumber: '123-456-7890',
-      cv: 'path-to-cv',
-      summary: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit....',
-      applicationDate: new Date(),
-      status: 'Selected',
-      editNotes: false,
-      notes: '',
-      interviewDate: new Date()
-    },
-    {
-      userPicture: 'https://www.gravatar.com/avatar/USER_HASH?s=150',
-      applicantName: 'Jane Smith',
-      position: 'Front-end Developer',
-      jobDescription: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit....',
-      showDetails: false,
-      email: 'jane.smith@example.com',
-      phoneNumber: '987-654-3210',
-      cv: 'path-to-cv',
-      summary: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit....',
-      applicationDate: new Date(),
-      status: 'Pending',
-      editNotes: false,
-      notes: '',
-      interviewDate: new Date()
-    },
-    // Add more applications here
-  ];
-  isCompanyUser!: boolean;
   userData: any;
+  jobData: any;
+  applications: any;
 
 
-  constructor(private userStore: UserStore,private userService: UserService) { }
+  constructor(private userStore: UserStore,
+              private userService: UserService,
+              private applicationService: ApplicationService,
+              private jobService: JobServiceService) { }
 
   ngOnInit(): void {
     let userId = this.userStore.userId$.getValue();
@@ -64,22 +31,25 @@ export class ApplicationStatusComponent implements OnInit{
       let userData$: Observable<UserDTO> = this.userService.getUserById(userId);
       userData$.subscribe(async userData => {
         this.userData = userData;
-        this.userType = this.userData.isCompanyUser ? 'company' : 'regular';
-        this.isCompanyUser = this.userData.isCompanyUser;
+        this.applicationService.getAllApplications(this.userData.id.toString())
+          .pipe(
+            switchMap(applications => {
+              this.applications = applications;
+              let jobObservables = applications.map(application =>
+                this.jobService.getJobById(application.jobId));
+              return forkJoin(jobObservables);
+            }),
+          )
+          .subscribe(jobDataArray => {
+            // jobDataArray is an array of job data objects, in the same order as the applications array
+            this.applications.forEach((application, index) => {
+              application.jobData = jobDataArray[index];
+            });
+            console.log(this.applications)
+          });
+
       })}
     }
-
-  changeStatus(application, newStatus: string) {
-    application.status = newStatus;
-  }
-
-  saveNotes(application) {
-    application.editNotes = false;
-  }
-
-  scheduleInterview(application, date: Date) {
-    application.interviewDate = date;
-  }
 
   getStatusClass(status: string) {
     switch(status) {
@@ -96,6 +66,10 @@ export class ApplicationStatusComponent implements OnInit{
 
   toggleDetails(application: any) {
     application.showDetails = !application.showDetails;
+  }
+
+  getFormattedDate(applicationDate: Timestamp) {
+    return applicationDate?.toDate().toISOString().substring(0, 16); // Convert Timestamp to Date object
   }
 }
 

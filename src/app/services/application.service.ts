@@ -28,7 +28,8 @@ export class ApplicationService {
         id: newId,
         jobId: jobId,
         candidateId: candidateId,
-        applicationDate: new Date()
+        applicationDate: new Date(),
+        status: 'Application sent.'
       };
       await applicationsRef.doc(newId.toString()).set(applicationData);
       console.log("Document successfully written!");
@@ -114,7 +115,8 @@ export class ApplicationService {
       });
   }
   getAllApplications(userId: string): Observable<ApplicationDto[]> {
-    return this.firestore.collection<ApplicationDto>('applications', ref => ref.where('candidateId', '==', userId))
+    console.log(userId)
+    return this.firestore.collection<any>('applications', ref => ref.where('candidateId', '==', userId.toString()))
       .valueChanges();
   }
 
