@@ -316,7 +316,7 @@ export class UserProfileComponent implements OnInit, OnChanges {
     return this.formGroup.get('socialMediaProfiles') as FormArray;
   }
 
-  addSocialMediaProfile(profile: SocialMediaProfile = {id: uuidv4, type: '', url: ''}): void {
+  addSocialMediaProfile(profile: SocialMediaProfile = {id: uuidv4(), type: '', url: ''}): void {
     this.socialMediaProfiles.push(this.formBuilder.group(profile));
   }
 
@@ -404,5 +404,9 @@ export class UserProfileComponent implements OnInit, OnChanges {
         console.log('items:', items);
       });
     }
+  }
+
+  removeLink(id) {
+
   }
 }
