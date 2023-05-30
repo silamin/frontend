@@ -31,7 +31,6 @@ export class ApplicationService {
         applicationDate: new Date()
       };
       await applicationsRef.doc(newId.toString()).set(applicationData);
-
       console.log("Document successfully written!");
     } catch (error) {
       console.error("Error writing document: ", error);

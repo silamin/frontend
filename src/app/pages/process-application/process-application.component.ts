@@ -2,11 +2,10 @@ import {Component, OnInit, ViewChild} from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { ApplicationService } from "../../services/application.service";
 import { ActivatedRoute } from "@angular/router";
-import { UserService } from "../../services/user.service";
 import {ApplicationDTO, ScheduleDto} from "../../dtos/DTO's";
-import {ModalServiceService} from "../../services/modal-service.service";
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {JobServiceService} from "../../services/job-service.service";
+import {Timestamp} from "firebase/firestore";
 
 export interface Resource {
   name: string;
@@ -24,13 +23,13 @@ export class ProcessApplicationComponent implements OnInit {
     notes: string='';
     resources: any[]=[];
     scheduling: ScheduleDto= new class implements ScheduleDto {
-      date = '';
+      date = Timestamp.now();
       location= '';
     };
     applicationDate = '';
     candidateId = '';
     id = 0;
-    invitationText = '';
+    invitation = '';
     jobId = '0';
   };
 
@@ -80,7 +79,7 @@ export class ProcessApplicationComponent implements OnInit {
       interviewDate: [''],
       newResourceName: [''],
       newResourceUrl: [''],
-      notes: ['']
+      notes: [{ value: '', disabled: !this.isEditingNotes }]
     });
   }
 
@@ -94,23 +93,34 @@ export class ProcessApplicationComponent implements OnInit {
 
     this.applicationService.getApplicationData(this.userId, this.jobId).subscribe((data) => {
       if (data && data.length > 0) {
+        console.log(data[0].scheduling?.date)
         this.applicationData = data[0];
+
+        this.resources = this.applicationData.resources || [];
+        const interviewDate = this.applicationData.scheduling?.date?.toDate(); // Convert Timestamp to Date object
+        const formattedInterviewDate = interviewDate?.toISOString().substring(0, 16); // Format as "yyyy-MM-ddThh:mm"
+
         this.applicationForm.patchValue({
-          invitationText: this.applicationData.invitationText,
-          interviewLocation: this.applicationData.scheduling.location, // Populate with correct value
-          interviewDate: this.applicationData.scheduling.location,
+          invitationText: this.applicationData.invitation,
+          interviewLocation: this.applicationData.scheduling?.location, // Added '?.' operator
+          interviewDate: formattedInterviewDate,
           notes: this.applicationData.notes
         });
       }
       this.convertedDate = this.firestoreStringToJSDate(this.applicationData?.applicationDate)?.toDateString();
-      console.log(this.applicationData)
     });
   }
 
   toggleEditNotes(): void {
+    console.log(this.isEditingNotes);
     this.isEditingNotes = !this.isEditingNotes;
-    if (!this.isEditingNotes) {
-      this.saveNotes();
+    console.log(this.isEditingNotes);
+
+    if (this.isEditingNotes) {
+      this.applicationForm.get('notes')?.enable(); // Enable the form control
+    } else {
+      this.applicationForm.get('notes')?.disable(); // Disable the form control
+      this.saveNotes(); // Save notes if not in editing mode
     }
   }
 

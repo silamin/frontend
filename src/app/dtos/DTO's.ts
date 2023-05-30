@@ -1,4 +1,5 @@
 import {Observable} from "rxjs";
+import { Timestamp } from 'firebase/firestore';
 
 export interface WorkExperienceFormDTO{
   id?: number;
@@ -65,7 +66,7 @@ export interface UserDTO{
 }
 
 export interface ScheduleDto {
-  date: string;
+  date: Timestamp;
   location: string;
 }
 
@@ -73,7 +74,7 @@ export interface ApplicationDTO{
   resources: any[];
   notes: string
   scheduling: ScheduleDto;
-  invitationText?: string;
+  invitation?: string;
   id: number;
   jobId: string;
   candidateId: string;
