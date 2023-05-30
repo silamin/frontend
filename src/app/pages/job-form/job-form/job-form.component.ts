@@ -27,7 +27,7 @@ export class JobFormComponent implements OnChanges, OnInit{
 
   ngOnChanges() {
     this.isApplied = false;
-    if (this.selectedJob) {
+    if (this.selectedJob && this.applications) { // Check if applications is defined
       this.jobForm.get('id')?.setValue(this.selectedJob?.id);
       this.jobForm.get('jobTitle')?.setValue(this.selectedJob?.jobTitle);
       this.jobForm.get('workplace')?.setValue(this.selectedJob?.workplace);
@@ -38,11 +38,12 @@ export class JobFormComponent implements OnChanges, OnInit{
       this.jobForm.get('jobDescription')?.setValue(this.selectedJob?.jobDescription);
       this.jobForm.get('backgroundSkills')?.setValue(this.selectedJob?.backgroundSkills);
       this.jobForm.get('jobBenefits')?.setValue(this.selectedJob?.jobBenefits);
-      this.isApplied = this.applications.some(application => application.jobId === this.jobForm.get('id')?.value)
+      this.isApplied = this.applications.some(application => application.jobId === this.jobForm.get('id')?.value);
 
       this.selectedJobChange.emit(this.selectedJob);
     }
   }
+
   ngOnInit() {
     if (!this.userId){
       this.userId = this.userStore.userId$.getValue();

@@ -11,34 +11,74 @@
   </div>
 </ng-container>
 <ng-template #jobsList>
-<div class="container my-5">
-  <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
-    <div *ngFor="let job of paginatedJobs" class="col">
-      <div class="card h-100 shadow-sm">
-        <div class="card-body">
-          <h5 class="card-title text-primary">{{ job.jobTitle }}</h5>
-          <h6 class="card-subtitle mb-2 text-muted"><i class="fas fa-briefcase text-muted mr-2"></i> {{ job.workType }}</h6>
-          <p class="card-text location-text"><i class="fas fa-calendar-minus text-muted mr-2"></i> Deadline: {{ job.deadline }}</p>
-          <div class="py-2" [ngbCollapse]="isCollapsed[job.id]">
-            <div class="card mt-2">
-              <div class="card-body">
-                {{ job.jobDescription || 'No description' }}
+  <div class="container my-5" *ngIf="paginatedJobs.length; else noJobsYet">
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+      <div *ngFor="let job of paginatedJobs" class="col">
+        <div class="card h-100 shadow-sm">
+          <div class="card-body">
+            <h5 class="card-title text-primary">{{ job.jobTitle }}</h5>
+            <h6 class="card-subtitle mb-2 text-muted"><i class="fas fa-briefcase text-muted mr-2"></i> {{ job.workType }}</h6>
+            <p class="card-text location-text"><i class="fas fa-calendar-minus text-muted mr-2"></i> Deadline: {{ job.deadline }}</p>
+            <div class="py-2" [ngbCollapse]="isCollapsed[job.id]">
+              <div class="card mt-2">
+                <div class="card-body">
+                  {{ job.jobDescription || 'No description' }}
+                </div>
               </div>
             </div>
+            <button class="btn btn-link text-primary" (click)="toggleCollapse(job.id)"><i class="fas fa-chevron-down"></i> Show More</button>
           </div>
-          <button class="btn btn-link text-primary" (click)="toggleCollapse(job.id)"><i class="fas fa-chevron-down"></i> Show More</button>
-        </div>
-        <div class="card-footer d-flex justify-content-between align-items-center">
-          <button class="btn btn-outline-success" (click)="onApply(job.id)"><i class="fas fa-check-circle"></i> Apply</button>
-          <button class="btn btn-outline-danger" (click)="onDislike(job.id)"><i class="fas fa-times-circle"></i> Dislike</button>
+          <div class="card-footer d-flex justify-content-between align-items-center">
+            <button class="btn btn-outline-success" (click)="onApply(job.id)"><i class="fas fa-check-circle"></i> Apply</button>
+            <button class="btn btn-outline-danger" (click)="onDislike(job.id)"><i class="fas fa-times-circle"></i> Dislike</button>
+          </div>
         </div>
       </div>
     </div>
-  </div>
-  <div class="row">
-    <div class="col d-flex justify-content-end">
-      <app-app-pagination *ngIf="jobs.length > itemsPerPage" class="my-3" [currentPage]="currentPage" [itemsPerPage]="itemsPerPage" [totalItems]="jobs.length" (pageChanged)="onPageChanged($event)"></app-app-pagination>
+    <div class="row">
+      <div class="col d-flex justify-content-end">
+        <app-app-pagination *ngIf="jobs.length > itemsPerPage" class="my-3" [currentPage]="currentPage" [itemsPerPage]="itemsPerPage" [totalItems]="jobs.length" (pageChanged)="onPageChanged($event)"></app-app-pagination>
+      </div>
     </div>
   </div>
-</div>
+  <ng-template #noJobsYet>
+    <div class="container mt-4 mb-4">
+      <div class="card text-center">
+        <div class="card-body">
+          <h5 class="card-title">
+            Oops, your perfect job is playing hide and seek!
+          </h5>
+          <p class="card-text">
+            It seems that the stars have not yet aligned and we have yet to find the job that perfectly matches your unique profile. But fear not! We have a brilliant feature just for you: Save jobs you like for later and review them at your convenience.
+          </p>
+
+          <div class="row mt-4">
+            <div class="col-md-6">
+              <div class="info-card">
+                <i class="fas fa-heart fa-2x mb-3 text-muted"></i>
+                <h5>Fall in Love with Future Possibilities</h5>
+                <p>See something you like? Don't hesitate to save it to your "Liked" list. It's like window-shopping for your career! If you're not ready to apply now, keep these opportunities within arm's reach for when the time is right.</p>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="info-card">
+                <i class="fas fa-user-check fa-2x mb-3 text-muted"></i>
+                <h5>Get Closer to Destiny</h5>
+                <p>Your perfect job is just around the corner. By refining your profile and preferences, you allow us to better align our compass towards job suggestions that resonate with you. So, let's make your skills, education, and job preferences shine!</p>
+              </div>
+            </div>
+          </div>
+
+          <ol class="list-group list-group-numbered">
+            <li class="list-group-item">Embark on the journey - Browse through the jobs.</li>
+            <li class="list-group-item">Find a gem? Click on the "Like" button and keep it safe for your future self.</li>
+            <li class="list-group-item">Become the captain of your destiny - Visit "My Profile" and steer your career towards the perfect job.</li>
+          </ol>
+
+          <a (click)="redirectToProfile()" class="btn btn-primary mt-4 mx-2">Sparkle My Profile</a>
+          <a (click)="redirectToJobs()" class="btn btn-primary mt-4">Start the Journey</a>
+        </div>
+      </div>
+    </div>
+  </ng-template>
 </ng-template>

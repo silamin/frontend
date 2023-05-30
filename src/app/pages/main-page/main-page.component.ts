@@ -44,7 +44,7 @@ export class MainPageComponent implements OnInit, AfterViewInit{
   }
 
   isScrollableEnd: boolean = false;
-  showNoJobsModal: any;
+  isQuery = false;
 
   ngOnInit() {
     this.userStore.userId$
@@ -94,9 +94,9 @@ export class MainPageComponent implements OnInit, AfterViewInit{
           // The rest of your code...
           this.jobs = jobs;
           this.displayedJobs = jobs; // Initialize displayedJobs to jobs
-          console.log(this.displayedJobs)
           this.selectedJob = this.displayedJobs[0]
           this.filterJobs(query);
+          this.isQuery = query === ''; // Update showNoJobsModal variable
         }
       });
   }
@@ -117,7 +117,7 @@ export class MainPageComponent implements OnInit, AfterViewInit{
     const startIndex = (this.currentPage - 1) * 5;
     const endIndex = startIndex + 5;
     const paginatedJobs = this.displayedJobs?.length > 0 ? this.displayedJobs?.slice(startIndex, endIndex) : [];
-    this.showNoJobsModal = paginatedJobs?.length === 0;
+    this.isQuery = paginatedJobs?.length === 0;
     return paginatedJobs;
   }
 

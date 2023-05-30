@@ -357,15 +357,6 @@ export class UserProfileComponent implements OnInit, OnChanges {
     // Update the userData.socialMediaProfiles array
     this.userData.socialMediaProfiles = formArray.value;
 
-    // Initialize this.userData.address if it doesn't exist
-    if (!this.userData.address) {
-      this.userData.address = {
-        street: '',
-        city: '',
-        postalCode: '',
-        country: '',
-      };
-    }
 
     this.userData.address.street = this.formGroup.get('street').value;
     this.userData.address.city = this.formGroup.get('city').value;

@@ -69,4 +69,12 @@ export class LikesJobsComponent implements OnInit{
   onPageChanged(newPage: number) {
     this.currentPage = newPage;
   }
+
+  redirectToProfile() {
+
+  }
+
+  redirectToJobs() {
+
+  }
 }
