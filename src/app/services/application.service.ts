@@ -171,18 +171,34 @@ export class ApplicationService {
 
 
 
-  rejectApplication(jobId: number, candidateId: string) {
-    console.log(jobId);
-    console.log(candidateId);
+  rejectApplication(jobId: number, candidateId: string, rejectionReason?: string) {
+    // Query the collection
+    return this.firestore.collection('applications', ref => ref.where('jobId', '==', jobId).where('candidateId', '==', candidateId))
+      .get().toPromise().then(querySnapshot => {
+        if (querySnapshot && !querySnapshot.empty) {
+          const docRef = querySnapshot.docs[0].ref;  // Take the first matched document
+          const updateData = { status: 'rejected', rejectionReason: rejectionReason || '' };
+          return docRef.set(updateData, { merge: true })
+            .then(() => console.log('Application rejected successfully'))
+            .catch(error => console.error('Error rejecting application: ', error));
+        } else {
+          console.log(`No matching application found for jobId: ${jobId}, candidateId: ${candidateId}`);
+          return Promise.resolve();  // Resolve the promise in case of no matching document
+        }
+      }).catch(error => console.error('Error executing query: ', error));
+  }
+
+
+  acceptCandidate(jobId: number, candidateId: string) {
 
     // Query the collection
     return this.firestore.collection('applications', ref => ref.where('jobId', '==', jobId).where('candidateId', '==', candidateId))
       .get().toPromise().then(querySnapshot => {
         if (querySnapshot && !querySnapshot.empty) {
           const docRef = querySnapshot.docs[0].ref;  // Take the first matched document
-          return docRef.set({ status: 'rejected' }, { merge: true })
-            .then(() => console.log('Application rejected successfully'))
-            .catch(error => console.error('Error rejecting application: ', error));
+          return docRef.set({ status: 'accepted' }, { merge: true })
+            .then(() => console.log('Candidate accepted successfully'))
+            .catch(error => console.error('Error accepting candidate: ', error));
         }  else {
           console.log(`No matching application found for jobId: ${jobId}, candidateId: ${candidateId}`);
           return Promise.resolve();  // Resolve the promise in case of no matching document

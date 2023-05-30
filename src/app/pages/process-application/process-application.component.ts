@@ -1,7 +1,7 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { ApplicationService } from "../../services/application.service";
-import { ActivatedRoute } from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {ApplicationDTO, ScheduleDto} from "../../dtos/DTO's";
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {JobServiceService} from "../../services/job-service.service";
@@ -26,7 +26,7 @@ export class ProcessApplicationComponent implements OnInit {
       date = Timestamp.now();
       location= '';
     };
-    applicationDate = '';
+    applicationDate = Timestamp.now();
     candidateId = '';
     id = 0;
     invitation = '';
@@ -38,14 +38,14 @@ export class ProcessApplicationComponent implements OnInit {
   resources: Resource[] = [];
   userId!: string;
   jobId!: string;
-  convertedDate: string | null | undefined;
+  convertedDate : string = '';
 
   constructor(
     private formBuilder: FormBuilder,
     private applicationService: ApplicationService,
     private route: ActivatedRoute,
     private modalService: NgbModal,
-    private jobService: JobServiceService
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -107,7 +107,8 @@ export class ProcessApplicationComponent implements OnInit {
           notes: this.applicationData.notes
         });
       }
-      this.convertedDate = this.firestoreStringToJSDate(this.applicationData?.applicationDate)?.toDateString();
+      const interviewDate = this.applicationData.applicationDate?.toDate(); // Convert Timestamp to Date object
+      this.convertedDate = interviewDate?.toISOString().substring(0, 16)
     });
   }
 
@@ -212,18 +213,17 @@ export class ProcessApplicationComponent implements OnInit {
 
     modalRef.result.then((result) => {
       if (result === 'Yes') {
-        // handle the 'Yes' action here
+        this.router.navigate(['company-main-page'])
         if (action === 'accept') {
-          this.jobService.removeJob(this.jobId)
+          this.applicationService.acceptCandidate(parseInt(this.jobId), this.userId)
         } else {
-          this.jobService.removeCandidate(this.jobId,this.userId)
-          this.jobService.removeLikedJob(this.userId,this.jobId)
-
+          this.applicationService.rejectApplication(parseInt(this.jobId), this.userId)
         }
-      } else {
-        // handle the 'No' action here
-      }
+      } else if (result === 'No'){
+      console.log('rejected')}
     }, (reason) => {
+      console.log('dismissed');
+
       // this function will be invoked if the promise is rejected.
       // handle the dismiss action here
     });

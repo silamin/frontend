@@ -39,7 +39,7 @@ export class CompanyMainPageComponent implements OnInit {
           }
         } else if (content === this.confirmRejectModal) {
           result === 'Yes' ?
-            this.applicationService.rejectApplication(this.jobId, this.candidateId.toString()).then(() => {
+            this.applicationService.rejectApplication(this.jobId, this.candidateId.toString(), this.rejectionText).then(() => {
               this.jobsToDisplay.forEach(job => {
                 if (job.id === this.jobId && job.candidates) {
                   job.candidates = job.candidates.filter(candidate => candidate.id !== this.candidateId);
@@ -116,6 +116,7 @@ export class CompanyMainPageComponent implements OnInit {
   selectedUser: any;
   jobPopupVisible = false;
   isEdit = false;
+  rejectionText ='';
   showMore(selectedUser: any) {
     this.selectedUser = selectedUser
     this.isPopUp=true;

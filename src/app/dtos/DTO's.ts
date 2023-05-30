@@ -78,7 +78,7 @@ export interface ApplicationDTO{
   id: number;
   jobId: string;
   candidateId: string;
-  applicationDate: string
+  applicationDate: Timestamp
 
 }
 export interface ApplicationDto{
