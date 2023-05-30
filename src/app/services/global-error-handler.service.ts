@@ -10,12 +10,13 @@ export class GlobalErrorHandlerService implements ErrorHandler{
 
   handleError(error: any): void {
     this.ngZone.run(() => {
+      console.log(error);
       const toastrService = this.injector.get(ToastrService);
 
       if (error.message.includes('auth/user-not-found')) {
-        toastrService.error('No user found with the provided email address', 'Login Error');
+        //toastrService.error('No user found with the provided email address', 'Login Error');
       } else {
-        toastrService.error('An error occurred: ' + error.message, 'Login Error');
+        //toastrService.error('An error occurred: ' + error.message, 'Login Error');
       }
     });
   }}

@@ -22,7 +22,7 @@
           <div class="py-2" [ngbCollapse]="isCollapsed[job.id]">
             <div class="card mt-2">
               <div class="card-body">
-                {{job.jobDescription}}
+                {{ job.jobDescription || 'No description' }}
               </div>
             </div>
           </div>

@@ -33,10 +33,8 @@ export class LikesJobsComponent implements OnInit{
       let userData$: Observable<UserDTO> = this.userService.getUserById(userId);
       userData$.subscribe(async userData => {
         this.user = userData;
-        this.user.subscribe(user =>{
-          this.user =user;
-          if (user){
-            this.jobsService.getLikedJobIds(user.uid).then(async r => {
+          if (this.user){
+            this.jobsService.getLikedJobIds(this.user.id).then(async r => {
               if (r){
                 for (const id of r) {
                   this.jobs?.push(await this.jobsService?.getJobById(id));
@@ -48,7 +46,6 @@ export class LikesJobsComponent implements OnInit{
             })
           }
         })
-      })
     }
   }
 

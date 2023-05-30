@@ -70,3 +70,18 @@
 .toggle-button {
   margin-top: 10px;
 }
+.content-wrap {
+  display: flex;
+  align-items: center;
+}
+
+.edit-input {
+  margin-left: 10px; /* Adjust this value as needed */
+  height: 25px;
+  width: 200px;
+}
+
+/* You might want to add some padding to .btn to ensure it doesn't overlap */
+.btn {
+  padding: 5px;
+}

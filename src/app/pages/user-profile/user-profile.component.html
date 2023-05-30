@@ -25,14 +25,18 @@
                   <!-- Email -->
                   <div class="card-text box position-relative" [formGroup]="formGroup">
                     <div *ngIf="!isEditing('email')">
-                      <span><i class="fa fa-envelope"></i>: {{ userData.email }}</span>
+                      <div class="content-wrap">
+                        <i class="fa fa-envelope"></i>
+                        <span>: {{ userData.email }}</span>
+                      </div>
                       <button class="btn btn-link position-absolute top-0 end-0" (click)="startEditing('email')">
                         <i class="fa fa-edit"></i>
                       </button>
                     </div>
-                    <div *ngIf="isEditing('email')">
-                      <input type="email" class="form-control" formControlName="email">
-                      <button class="btn btn-link position-absolute top-0 end-0" (click)="stopEditing()">
+                    <div *ngIf="isEditing('email')" class="content-wrap">
+                      <i class="fa fa-envelope"></i>
+                      <input type="email" class="form-control edit-input" placeholder="email" formControlName="email">
+                      <button class="btn btn-link position-absolute top-0 end-0" (click)="stopEditing(); updateUserData()">
                         <i class="fa fa-check"></i>
                       </button>
                     </div>
@@ -41,13 +45,17 @@
                   <!-- Phone Number -->
                   <div class="card-text box position-relative" [formGroup]="formGroup">
                     <div *ngIf="!isEditing('phoneNumber')">
-                      <span><i class="fa fa-phone"></i>: {{ userData.phoneNumber }}</span>
+                      <div class="content-wrap">
+                        <i class="fa fa-phone"></i>
+                        <span>: {{ userData.phoneNumber || 'No phone number provided' }}</span>
+                      </div>
                       <button class="btn btn-link position-absolute top-0 end-0" (click)="startEditing('phoneNumber')">
                         <i class="fa fa-edit"></i>
                       </button>
                     </div>
-                    <div *ngIf="isEditing('phoneNumber')">
-                      <input type="tel" class="form-control" formControlName="phoneNumber">
+                    <div *ngIf="isEditing('phoneNumber')" class="content-wrap">
+                      <i class="fa fa-phone"></i>
+                      <input type="tel" class="form-control edit-input" placeholder="phone number" formControlName="phoneNumber">
                       <button class="btn btn-link position-absolute top-0 end-0" (click)="stopEditing()">
                         <i class="fa fa-check"></i>
                       </button>
@@ -56,17 +64,45 @@
 
                   <!-- Address -->
                   <div class="card-text box position-relative" [formGroup]="formGroup">
-                    <div *ngIf="!isEditing('address')">
-                      <span><i class="fa fa-address-card"></i>: {{ userData?.address?.street }}, {{ userData?.address?.city }}, {{ userData?.address?.postalCode }}, {{ userData?.address?.country }}</span>
+                    <div *ngIf="!isEditing('address') && userData?.address">
+                      <div class="content-wrap">
+                        <i class="fa fa-address-card"></i>
+                        <span>: {{ userData.address.street }}, {{ userData.address.city }}, {{ userData.address.postalCode }}, {{ userData.address.country }}</span>
+                      </div>
+                      <button class="btn btn-link position-absolute top-0 end-0" (click)="startEditing('address')">
+                        <i class="fa fa-edit"></i>
+                      </button>
+                    </div>
+                    <div *ngIf="!isEditing('address') && !userData?.address">
+                      <div class="content-wrap">
+                        <i class="fa fa-address-card"></i>
+                        <span>: No address provided</span>
+                      </div>
                       <button class="btn btn-link position-absolute top-0 end-0" (click)="startEditing('address')">
                         <i class="fa fa-edit"></i>
                       </button>
                     </div>
                     <div *ngIf="isEditing('address')">
-                      <textarea class="form-control" formControlName="address"></textarea>
-                      <button class="btn btn-link position-absolute top-0 end-0" (click)="stopEditing()">
-                        <i class="fa fa-check"></i>
-                      </button>
+                      <div class="content-wrap">
+                        <i class="fa fa-address-card"></i>
+                        <div class="row g-3">
+                          <div class="col">
+                            <input type="text" placeholder="Street" class="form-control edit-input" formControlName="street">
+                          </div>
+                          <div class="col">
+                            <input type="text" placeholder="City" class="form-control edit-input" formControlName="city">
+                          </div>
+                          <div class="col">
+                            <input type="text" placeholder="Postal Code" class="form-control edit-input" formControlName="postalCode">
+                          </div>
+                          <div class="col">
+                            <input type="text" placeholder="Country" class="form-control edit-input" formControlName="country">
+                          </div>
+                        </div>
+                        <button class="btn btn-link position-absolute top-0 end-0" (click)="stopEditing()">
+                          <i class="fa fa-check"></i>
+                        </button>
+                      </div>
                     </div>
                   </div>
 

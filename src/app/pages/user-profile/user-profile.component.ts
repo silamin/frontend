@@ -316,7 +316,11 @@ export class UserProfileComponent implements OnInit, OnChanges {
       social: ['', []]
     });
   }
+  updateUserData() {
+    this.userData.email = this.formGroup.get('email');
+    this.userService.editUser(this.user.id)
 
+  }
   ngOnChanges(changes: SimpleChanges) {
     if (changes['user']) {
       this.sections = [

@@ -153,6 +153,7 @@ export class JobServiceService {
     });
   }
   getLikedJobIds(uid: string): Promise<string[]> {
+    console.log(uid)
     const userRef = this.firestore.collection('users').doc(uid);
 
     return userRef.get().toPromise().then(docSnapshot => {
