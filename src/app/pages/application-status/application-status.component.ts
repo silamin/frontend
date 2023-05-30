@@ -41,6 +41,7 @@ export class ApplicationStatusComponent implements OnInit{
             }),
           )
           .subscribe(jobDataArray => {
+            console.log(jobDataArray)
             // jobDataArray is an array of job data objects, in the same order as the applications array
             this.applications.forEach((application, index) => {
               application.jobData = jobDataArray[index];
