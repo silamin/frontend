@@ -46,8 +46,8 @@ export class ApplicationStatusComponent implements OnInit{
             this.applications.forEach((application, index) => {
               application.jobData = jobDataArray[index];
             });
-            this.isLoading = false;
           });
+        this.isLoading = false;
 
       })}
     }
@@ -71,6 +71,10 @@ export class ApplicationStatusComponent implements OnInit{
 
   getFormattedDate(applicationDate: Timestamp) {
     return applicationDate?.toDate().toISOString().substring(0, 16); // Convert Timestamp to Date object
+  }
+
+  redirectToJobs() {
+
   }
 }
 

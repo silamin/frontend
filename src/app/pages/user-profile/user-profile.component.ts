@@ -318,6 +318,10 @@ export class UserProfileComponent implements OnInit, OnChanges {
   addSocialMediaProfile(profile: SocialMediaProfile = {id: uuidv4(), type: '', url: ''}): void {
     this.socialMediaProfiles.push(this.formBuilder.group(profile));
   }
+  removeSocialMediaProfile(profile: SocialMediaProfile = {id: uuidv4(), type: '', url: ''}): void {
+    this.socialMediaProfiles.controls = this.socialMediaProfiles.controls.filter(control => control.value.id !== profile.id);
+  }
+
 
   startEditing(field: string): void {
     this.editField = field;
@@ -347,6 +351,15 @@ export class UserProfileComponent implements OnInit, OnChanges {
         socialMediaProfiles: this.formBuilder.array([])
       });
     }
+    updateUserAddress(){
+
+      this.userData.address.street = this.formGroup.get('street').value;
+      this.userData.address.city = this.formGroup.get('city').value;
+      this.userData.address.postalCode = this.formGroup.get('postalCode').value;
+      this.userData.address.country = this.formGroup.get('country').value;
+
+      this.userService.editUser(this.userData)
+    }
   updateUserData() {
     this.userData.email = this.formGroup.get('email').value;
     this.userData.phoneNumber = this.formGroup.get('phoneNumber').value;
@@ -356,12 +369,6 @@ export class UserProfileComponent implements OnInit, OnChanges {
 
     // Update the userData.socialMediaProfiles array
     this.userData.socialMediaProfiles = formArray.value;
-
-
-    this.userData.address.street = this.formGroup.get('street').value;
-    this.userData.address.city = this.formGroup.get('city').value;
-    this.userData.address.postalCode = this.formGroup.get('postalCode').value;
-    this.userData.address.country = this.formGroup.get('country').value;
 
     this.userService.editUser(this.userData);
   }
@@ -396,7 +403,8 @@ export class UserProfileComponent implements OnInit, OnChanges {
     }
   }
 
-  removeLink(id) {
-
+  removeLink(link) {
+    this.userService.removeLink(this.userData.id.toString(), link)
+    this.removeSocialMediaProfile(link)
   }
 }

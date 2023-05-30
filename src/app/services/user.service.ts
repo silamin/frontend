@@ -5,6 +5,7 @@ import {AngularFirestore} from "@angular/fire/compat/firestore";
 import {map} from "rxjs";
 import {UserStore} from "../stores/UserStore";
 import {UserDTO} from "../dtos/DTO's";
+import firebase from "firebase/compat/app";
 
 @Injectable({
   providedIn: 'root'
@@ -69,4 +70,11 @@ export class UserService {
           })
         );
     }
+
+  removeLink(userId: string, linkObject: { id: string; type: string; url: string }) {
+    console.log(linkObject)
+    this.firestore.collection('users').doc(userId).update({
+      socialMediaProfiles: firebase.firestore.FieldValue.arrayRemove(linkObject)
+    });
+  }
 }

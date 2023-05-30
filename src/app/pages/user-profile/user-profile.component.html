@@ -100,7 +100,7 @@
                               <input type="text" placeholder="Country" class="form-control edit-input" formControlName="country">
                             </div>
                           </div>
-                          <button class="btn btn-link position-absolute top-0 end-0" (click)="stopEditing(); updateUserData()">
+                          <button class="btn btn-link position-absolute top-0 end-0" (click)="stopEditing(); updateUserAddress()">
                             <i class="fa fa-check"></i>
                           </button>
                         </div>
@@ -122,7 +122,7 @@
                                 <button *ngIf="isEditing(control.value.id)" class="btn btn-link me-2" (click)="stopEditing(); updateUserData()">
                                   <i class="fa fa-check"></i>
                                 </button>
-                                <button class="btn btn-link" (click)="removeLink(control.value.id)">
+                                <button class="btn btn-link" (click)="removeLink(control.value)">
                                   <i class="fa fa-trash"></i>
                                 </button>
                               </div>

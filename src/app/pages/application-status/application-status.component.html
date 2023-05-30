@@ -11,10 +11,36 @@
   </div>
 </ng-container>
 <ng-template #applicationsReady>
+  <h2>My Applications</h2>
   <div class="container mt-4">
-
-    <h2>My Applications</h2>
-    <div class="card mt-2 mb-2" *ngFor="let application of applications">
+    <div class="card text-center" *ngIf="applications.length === 0">
+      <div class="card-body">
+        <h5 class="card-title">
+          There's a world full of opportunities awaiting!
+        </h5>
+        <p class="card-text">
+          Seems like you haven't begun your adventure yet. The journey towards your dream job starts with a single step - applying.
+        </p>
+        <div class="row mt-4">
+          <div class="col-md-6">
+            <div class="info-card">
+              <i class="fas fa-binoculars fa-2x mb-3 text-muted"></i>
+              <h5>Unveil your Potential</h5>
+              <p>Each job is a new horizon, a chance to shine and prove your abilities. Search through countless opportunities and find the one that resonates with your ambitions.</p>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="info-card">
+              <i class="fas fa-rocket fa-2x mb-3 text-muted"></i>
+              <h5>Lift off Towards Success</h5>
+              <p>Your dream job is not a destination, it's a journey. Don't wait for the perfect moment, seize the opportunity now. Ignite your career rocket and soar high.</p>
+            </div>
+          </div>
+        </div>
+        <a (click)="redirectToJobs()" class="btn btn-primary mt-4">Embark on My Career Adventure</a>
+      </div>
+    </div>
+  <div class="card mt-2 mb-2" *ngFor="let application of applications">
       <div class="card-header d-flex justify-content-between align-items-center" (click)="toggleDetails(application)">
         <div class="d-flex align-items-center">
           <div class="mb-1">{{application.jobData.jobTitle}}</div>
