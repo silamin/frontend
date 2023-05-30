@@ -16,9 +16,7 @@ export class UserService {
               private firestore: AngularFirestore,
               private userStore: UserStore) {}
   editUser(user) {
-    console.log('sil')
-    console.log(user.id);
-
+    console.log(user)
     // Get a reference to the Firestore collection or node where user data is stored
     const usersRef = this.firestore.collection('users');
 
@@ -27,7 +25,7 @@ export class UserService {
 
     // Extract the necessary data from the User object
     const userData = {
-      ...user.uid && {id: user.uid},
+      ...user.id && {id: user.id},
       ...user.isCompanyUser !== undefined && {isCompanyUser: user.isCompanyUser},
       ...user.name && {name: user.name},
       ...user.summary && {summary: user.summary},
@@ -59,7 +57,7 @@ export class UserService {
     }
   }
 
-  getUserById(userId: string ) {
+   getUserById(userId: string ) {
       // This will return an Observable<UserDTO>
       return this.firestore
         .collection('users')

@@ -19,10 +19,12 @@ import {SkillFormComponent} from "../../components/skill-form/skill-form.compone
 import {EducationFormComponent} from "../../components/education-form/education-form.component";
 import {LanguageFormComponent} from "../../components/language-form/language-form.component";
 import {HasForm} from "../../services/factories/FormFactory";
-import {FormBuilder} from "@angular/forms";
+import {FormArray, FormBuilder} from "@angular/forms";
 import {SectionService} from "../../services/section-service";
 import { WORK_EXPERIENCE_SERVICE_TOKEN, EDUCATION_SERVICE_TOKEN, SKILLS_SERVICE_TOKEN, LANGUAGE_SERVICE_TOKEN } from '../../services/tokens';
 import {UserService} from "../../services/user.service";
+import { v4 as uuidv4 } from 'uuid';
+
 
 
 
@@ -30,6 +32,12 @@ interface Section {
   title: string;
   items?: Observable<any[]>;
   displayProperty: string[];
+}
+
+interface SocialMediaProfile {
+  id: string;
+  type: string;
+  url: string
 }
 
 @Component({
@@ -48,7 +56,7 @@ export class UserProfileComponent implements OnInit, OnChanges {
 
   items: Observable<any>[] = [];
   showMore = {};
-  public showMoreUserInfo = true;
+  public showMoreUserInfo = false;
 
   toggleShowMore() {
     this.showMoreUserInfo = !this.showMoreUserInfo;
@@ -59,8 +67,6 @@ export class UserProfileComponent implements OnInit, OnChanges {
   isEducationFormVisible = false;
   isLanguageFormVisible = false;
   description: string = 'no description';
-  editMode: boolean = false;
-  workExperiences$: Observable<WorkExperienceFormDTO[]> = of([]);
   sections: Section[] = [];
   isSkillFormVisible = false;
   data: any;
@@ -103,12 +109,21 @@ export class UserProfileComponent implements OnInit, OnChanges {
     if (!this.user) {
       let userId = this.userStore.userId$.getValue();
       if (userId) {
-        let userData$: Observable<UserDTO> = this.userService.getUserById(userId);
+        let userData$: Observable<UserDTO> = await this.userService.getUserById(userId);
         userData$.subscribe(async userData => {
-          console.log(userData)
-          this.userData = userData
+          this.userData = userData;
+          // Check if there are social media profiles in userData
+          if (this.userData.socialMediaProfiles && this.socialMediaProfiles.length === 0) {
+            console.log(this.userData.socialMediaProfiles)
+            // Create a form group for each profile
+            this.userData.socialMediaProfiles.forEach(profile => {
+              this.addSocialMediaProfile(profile);
+            });
+
+            // Set the value for the form array
+            this.formGroup.get('socialMediaProfiles').patchValue(this.userData.socialMediaProfiles);
+          }
           if (!userData.isCompanyUser) {
-            console.log(this.userData.id)
             this.sections = [
               {
                 title: 'Work Experience',
@@ -132,11 +147,11 @@ export class UserProfileComponent implements OnInit, OnChanges {
               }
             ];
           }
-        })
+        });
       }
     }
-
   }
+
 
   getDisplayPropertiesBrief(item: any, sectionTitle: string): string {
     let str = '';
@@ -297,30 +312,70 @@ export class UserProfileComponent implements OnInit, OnChanges {
   isEditing(field: string): boolean {
     return this.editField === field;
   }
+  get socialMediaProfiles(): FormArray {
+    return this.formGroup.get('socialMediaProfiles') as FormArray;
+  }
+
+  addSocialMediaProfile(profile: SocialMediaProfile = {id: uuidv4, type: '', url: ''}): void {
+    this.socialMediaProfiles.push(this.formBuilder.group(profile));
+  }
 
   startEditing(field: string): void {
     this.editField = field;
+    // Populate the form controls with existing data
+    this.formGroup.get('email').setValue(this.userData.email);
+    this.formGroup.get('phoneNumber').setValue(this.userData.phoneNumber);
+    if (this.userData.address) {
+      this.formGroup.get('street').setValue(this.userData.address.street);
+      this.formGroup.get('city').setValue(this.userData.address.city);
+      this.formGroup.get('postalCode').setValue(this.userData.address.postalCode);
+      this.formGroup.get('country').setValue(this.userData.address.country);
+    }
   }
 
   stopEditing(): void {
-    // here you would typically have a call to an API to save changes
-    // the API call could be different depending on this.editField value
     this.editField = '';
   }
 
   private createUserInfoFormGroup() {
-    this.formGroup = this.formBuilder.group({
-      email: ['', []],
-      phoneNumber: ['', []],
-      address: ['', []],
-      social: ['', []]
-    });
-  }
+      this.formGroup = this.formBuilder.group({
+        email: [this.userData?.email || '', []],
+        phoneNumber: [this.userData?.phoneNumber || '', []],
+        street: [this.userData?.address?.street || '', []],
+        city: [this.userData?.address?.city || '', []],
+        postalCode: [this.userData?.address?.postalCode || '', []],
+        country: [this.userData?.address?.country || '', []],
+        socialMediaProfiles: this.formBuilder.array([])
+      });
+    }
   updateUserData() {
-    this.userData.email = this.formGroup.get('email');
-    this.userService.editUser(this.user.id)
+    this.userData.email = this.formGroup.get('email').value;
+    this.userData.phoneNumber = this.formGroup.get('phoneNumber').value;
 
+    // Get the FormArray
+    let formArray = this.formGroup.get('socialMediaProfiles') as FormArray;
+
+    // Update the userData.socialMediaProfiles array
+    this.userData.socialMediaProfiles = formArray.value;
+
+    // Initialize this.userData.address if it doesn't exist
+    if (!this.userData.address) {
+      this.userData.address = {
+        street: '',
+        city: '',
+        postalCode: '',
+        country: '',
+      };
+    }
+
+    this.userData.address.street = this.formGroup.get('street').value;
+    this.userData.address.city = this.formGroup.get('city').value;
+    this.userData.address.postalCode = this.formGroup.get('postalCode').value;
+    this.userData.address.country = this.formGroup.get('country').value;
+
+    this.userService.editUser(this.userData);
   }
+
   ngOnChanges(changes: SimpleChanges) {
     if (changes['user']) {
       this.sections = [
@@ -345,7 +400,6 @@ export class UserProfileComponent implements OnInit, OnChanges {
           displayProperty: ['language']
         }
       ]
-      console.log(this.user)
       this.sections[0].items?.subscribe(items => {
         console.log('items:', items);
       });

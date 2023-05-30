@@ -56,7 +56,7 @@
                     <div *ngIf="isEditing('phoneNumber')" class="content-wrap">
                       <i class="fa fa-phone"></i>
                       <input type="tel" class="form-control edit-input" placeholder="phone number" formControlName="phoneNumber">
-                      <button class="btn btn-link position-absolute top-0 end-0" (click)="stopEditing()">
+                      <button class="btn btn-link position-absolute top-0 end-0" (click)="stopEditing(); updateUserData()">
                         <i class="fa fa-check"></i>
                       </button>
                     </div>
@@ -99,30 +99,40 @@
                             <input type="text" placeholder="Country" class="form-control edit-input" formControlName="country">
                           </div>
                         </div>
-                        <button class="btn btn-link position-absolute top-0 end-0" (click)="stopEditing()">
+                        <button class="btn btn-link position-absolute top-0 end-0" (click)="stopEditing(); updateUserData()">
                           <i class="fa fa-check"></i>
                         </button>
                       </div>
                     </div>
                   </div>
 
-                  <!-- Social Media Profiles -->
-                  <div class="card-body">
-                    <div class="card-text box position-relative" *ngFor="let social of socialMediaKeys" [formGroup]="formGroup">
-                      <div *ngIf="!isEditing(social)">
-                        <span><i class="fab fa-{{social.toLowerCase()}}"></i>: <a [href]="userData.socialMediaProfiles[social]">{{ userData.socialMediaProfiles[social] }}</a></span>
-                        <button class="btn btn-link position-absolute top-0 end-0" (click)="startEditing(social)">
-                          <i class="fa fa-edit"></i>
-                        </button>
+                  <div class="card-body" [formGroup]="formGroup">
+                    <div formArrayName="socialMediaProfiles">
+                      <div *ngFor="let control of socialMediaProfiles.controls; let i = index">
+                        <div [formGroupName]="i" class="card-text box position-relative">
+                          <div *ngIf="!isEditing(control.value.id)">
+                            <span><i class="fab fa-{{control.value.type.toLowerCase()}}"></i>: <a [href]="control.value.url">{{ control.value.url }}</a></span>
+                            <button class="btn btn-link position-absolute top-0 end-0" (click)="startEditing(control.value.id)">
+                              <i class="fa fa-edit"></i>
+                            </button>
+                          </div>
+                          <div *ngIf="isEditing(control.value.id)">
+                            <input class="form-control mb-1" formControlName="type" placeholder="Social media type">
+                            <input class="form-control" formControlName="url" placeholder="Social media URL">
+                            <button class="btn btn-link position-absolute top-0 end-0" (click)="stopEditing(); updateUserData()">
+                              <i class="fa fa-check"></i>
+                            </button>
+                          </div>
+                        </div>
                       </div>
-                      <div *ngIf="isEditing(social)">
-                        <input class="form-control" formControlName="social">
-                        <button class="btn btn-link position-absolute top-0 end-0" (click)="stopEditing()">
-                          <i class="fa fa-check"></i>
-                        </button>
+                      <div class="mt-3">
+                        <button class="btn btn-link" (click)="addSocialMediaProfile()"><i class="fa fa-plus"></i> Add Social Media Profile</button>
                       </div>
                     </div>
                   </div>
+
+
+
 
                 </div>
               </div>

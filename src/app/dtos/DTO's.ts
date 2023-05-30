@@ -61,7 +61,7 @@ export interface UserDTO{
   email: string;
   phoneNumber: string;
   address: AddressDTO;
-  socialMediaProfiles: {}
+  socialMediaProfiles: any
 }
 
 export interface ScheduleDto {
