@@ -43,5 +43,26 @@ export class SkillsService implements SectionService{
     // Return the observable stream of the user's work experiences
     return educationBackgroundRef.valueChanges();
   }
-  editItems
+  editItem(id, data) {
+    // Check if data and data.id are defined before proceeding
+    if(data && data.id) {
+      this.firestore
+        .collection('users')
+        .doc(id)
+        .collection('skills', ref => ref.where('id', '==', data.id))
+        .get()
+        .subscribe(querySnapshot => {
+          querySnapshot.forEach(doc => {
+            // Update the document
+            doc.ref.update(data).then(() => {
+              console.log('Document successfully updated!');
+            }).catch((error) => {
+              console.error('Error updating document: ', error);
+            });
+          });
+        });
+    } else {
+      console.error('Data or data.id is undefined');
+    }
+  }
 }

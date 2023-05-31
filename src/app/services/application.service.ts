@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import {AngularFirestore, AngularFirestoreCollection} from "@angular/fire/compat/firestore";
-import {BehaviorSubject, combineLatest, filter, map, Observable, tap} from "rxjs";
+import {combineLatest, filter, map, Observable, tap} from "rxjs";
 import {ApplicationDto, ApplicationDTO, UserDTO} from "../dtos/DTO's";
 import 'firebase/firestore';
 import {Resource} from "../pages/process-application/process-application.component";
@@ -37,9 +37,6 @@ export class ApplicationService {
       console.error("Error writing document: ", error);
     }
   }
-
-  selectedCandidates = new BehaviorSubject<Set<string>>(new Set());
-
   getApplicationData(uid: string, jid: string): Observable<ApplicationDTO[]> {
     return this.firestore.collection('applications', ref =>
       ref.where('candidateId', '==', uid).where('jobId', '==', parseInt(jid))
@@ -115,7 +112,6 @@ export class ApplicationService {
       });
   }
   getAllApplications(userId: string): Observable<ApplicationDto[]> {
-    console.log(userId)
     return this.firestore.collection<any>('applications', ref => ref.where('candidateId', '==', userId.toString()))
       .valueChanges();
   }
@@ -169,10 +165,6 @@ export class ApplicationService {
       tap(candidates => console.log('candidates:', candidates))
     );
   }
-
-
-
-
   rejectApplication(jobId: number, candidateId: string, rejectionReason?: string) {
     // Query the collection
     return this.firestore.collection('applications', ref => ref.where('jobId', '==', jobId).where('candidateId', '==', candidateId))
@@ -207,5 +199,4 @@ export class ApplicationService {
         }
       }).catch(error => console.error('Error executing query: ', error));
   }
-
 }

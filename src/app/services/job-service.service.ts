@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {AngularFireAuth} from "@angular/fire/compat/auth";
 import {AngularFireFunctions} from "@angular/fire/compat/functions";
 import {ApplicationDto, JobDto, UserDTO} from "../dtos/DTO's";
-import {combineLatest, map, Observable} from "rxjs";
+import { map, Observable} from "rxjs";
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import firebase from 'firebase/compat/app';
 import {switchMap} from "rxjs/operators";
@@ -12,7 +12,9 @@ import {switchMap} from "rxjs/operators";
 export class JobServiceService {
 
 
-  constructor(private afAuth: AngularFireAuth, private functions: AngularFireFunctions, private firestore: AngularFirestore) {
+  constructor(private afAuth: AngularFireAuth,
+              private functions: AngularFireFunctions,
+              private firestore: AngularFirestore) {
   }
 
   async addJob(jobDto: JobDto): Promise<any> {
@@ -83,57 +85,7 @@ export class JobServiceService {
     }
   }
 
-
-
-  getCandidate(candidateId: string): Observable<any> {
-    console.log(this.firestore.collection('users').doc(candidateId).valueChanges())
-    return this.firestore.collection('users').doc(candidateId).valueChanges();
-  }
-  getCandidateWithWorkExperience(candidateId: string): Observable<any> {
-    const candidateDoc = this.firestore.collection('users').doc(candidateId);
-
-    return combineLatest([
-      candidateDoc.valueChanges(),
-      candidateDoc.collection('workExperience').valueChanges()
-    ]).pipe(
-      map(([candidate, workExperience]) => {
-        const candidateData = candidate as any; // Specify the type of candidate object
-        return {
-          ...candidateData,
-          workExperience: workExperience
-        };
-      })
-    );
-  }
-
-  getCandidateWithDetails(candidateId: string): Observable<any> {
-    const candidateDoc = this.firestore.collection('users').doc(candidateId);
-
-    return combineLatest([
-      candidateDoc.valueChanges(),
-      candidateDoc.collection('workExperience').valueChanges(),
-      candidateDoc.collection('education').valueChanges(),
-      candidateDoc.collection('skills').valueChanges(),
-      candidateDoc.collection('languages').valueChanges()
-
-
-    ]).pipe(
-      map(([candidate, workExperience, education, skills, languages]) => {
-        const candidateData = candidate as any; // Specify the type of candidate object
-        return {
-          ...candidateData,
-          workExperience: workExperience,
-          education: education,
-          skills: skills,
-          languages: languages
-        };
-      })
-    );
-  }
-
   likeJob(uid: string, jobId: string): Promise<void> {
-    console.log(uid)
-    console.log(jobId)
     const userRef = this.firestore.collection('users').doc(uid);
 
     return userRef.get().toPromise().then(docSnapshot => {
@@ -153,7 +105,6 @@ export class JobServiceService {
     });
   }
   getLikedJobIds(uid: string): Promise<string[]> {
-    console.log(uid)
     const userRef = this.firestore.collection('users').doc(uid);
 
     return userRef.get().toPromise().then(docSnapshot => {
@@ -187,13 +138,6 @@ export class JobServiceService {
     }
   }
 
-
-  async removeCandidate(id: string, selectedCandidateIndex: string) {
-    await this.firestore.collection('jobs').doc(id).update({
-      candidates: firebase.firestore.FieldValue.arrayRemove(selectedCandidateIndex)
-    });
-  }
-
   editJob(job: JobDto) {
     return this.firestore.collection('jobs').doc(job.id.toString()).update(job);
   }
@@ -201,6 +145,4 @@ export class JobServiceService {
   removeJob(jobId: string): Promise<void> {
   return new Promise(resolve => resolve);
   }
-
-
 }

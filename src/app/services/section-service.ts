@@ -3,4 +3,5 @@ export interface SectionService {
 
   fetchData(uid: any): any;
   addItem(uid: any, item): any;
+  editItem(uid, item): any;
 }

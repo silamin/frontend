@@ -1,9 +1,8 @@
-import {ChangeDetectorRef, Component, OnChanges, OnInit, SimpleChanges, ViewChild} from '@angular/core';
+import {ChangeDetectorRef, Component, OnInit, ViewChild} from '@angular/core';
 import { JobServiceService } from '../../services/job-service.service';
 import { UserStore } from '../../stores/UserStore';
-import {catchError, combineLatest, forkJoin, Observable, of, take, tap} from 'rxjs';
-import { switchMap, map } from 'rxjs/operators';
-import {ApplicationDto, JobDto, UserDTO} from "../../dtos/DTO's";
+import {Observable} from 'rxjs';
+import { JobDto, UserDTO} from "../../dtos/DTO's";
 import {ModalDismissReasons, NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {Router} from "@angular/router";
 import {ApplicationService} from "../../services/application.service";
@@ -151,32 +150,13 @@ export class CompanyMainPageComponent implements OnInit {
     this.jobsService.removeJob(job.id.toString());
   }
 
-  navigateToJobCreation() {
-
-  }
-
   processApplication(candidateId: number, jobId: number) {
     this.router.navigate(['application-process', candidateId,jobId]);
-  }
-
-  isCandidateSelected(candidateId: string, jobId: string): Observable<boolean> {
-    this.applicationService.selectedCandidates.subscribe((selectedCandidatesSet) => {
-    });
-    return this.applicationService.selectedCandidates.asObservable().pipe(
-      map((selectedCandidatesSet) => {
-        const candidateJobKey = `${candidateId}-${jobId}`;  // Change the order here
-        return selectedCandidatesSet.has(candidateJobKey)
-      })
-    );
   }
 
   openJobForm() {
     this.jobPopupVisible = true;
     this.isPopUp = true;
-  }
-
-  getCandidates(job: any) {
-
   }
 
   hideUserProfilePopUp() {

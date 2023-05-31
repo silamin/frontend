@@ -71,7 +71,6 @@ export class UserService {
     }
 
   removeLink(userId: string, linkObject: { id: string; type: string; url: string }) {
-    console.log(linkObject)
     this.firestore.collection('users').doc(userId).update({
       socialMediaProfiles: firebase.firestore.FieldValue.arrayRemove(linkObject)
     });
