@@ -28,6 +28,7 @@ export interface SkillDto{
   rating: string;
 }
 export interface LanguageDto{
+  id: any;
   language: string;
   rating: string;
 }

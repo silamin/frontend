@@ -15,7 +15,7 @@ export class LanguageServiceService implements SectionService{
     private afAuth: AngularFireAuth,
               private functions: AngularFireFunctions,
               private firestore: AngularFirestore) {}
-  addItem(userId: string, skillDto: SkillDto): Promise<any> {
+  addItem(userId: string, languageDto: LanguageDto): Promise<any> {
     // Reference to the specific user's skills collection
     const skillsRef = this.firestore.collection('users').doc(userId).collection('languages');
 
@@ -25,9 +25,9 @@ export class LanguageServiceService implements SectionService{
       const previousIds: number[] = [];
 
       snapshot?.forEach(doc => {
-        const skill = doc.data() as SkillDto;
-        if (skill.id) {
-          previousIds.push(skill.id);
+        const language = doc.data() as LanguageDto;
+        if (language.id) {
+          previousIds.push(language.id);
         }
       });
 
@@ -39,10 +39,10 @@ export class LanguageServiceService implements SectionService{
       }
 
       // Add the ID to the skillDto object
-      skillDto.id = newId;
+      languageDto.id = newId;
 
       // Adding the new skill to the user's skills sub-collection
-      return skillsRef.add(skillDto);
+      return skillsRef.add(languageDto);
     });
   }
 

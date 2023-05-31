@@ -23,7 +23,7 @@ export class FormFactoryProviderService {
         return this.workExperienceFormFactory;
       case 'Skills':
         return this.skillFormFactory;
-      case 'Language':
+      case 'Languages':
         return this.languageFormFactory;
       case 'Education':
         return this.educationFormFactory;
