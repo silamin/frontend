@@ -1,4 +1,4 @@
-import {Inject, Injectable} from '@angular/core';
+import { Injectable} from '@angular/core';
 import {AngularFireAuth} from "@angular/fire/compat/auth";
 import {AngularFireFunctions} from "@angular/fire/compat/functions";
 import {AngularFirestore} from "@angular/fire/compat/firestore";
@@ -43,4 +43,5 @@ export class SkillsService implements SectionService{
     // Return the observable stream of the user's work experiences
     return educationBackgroundRef.valueChanges();
   }
+  editItems
 }

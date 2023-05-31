@@ -17,7 +17,6 @@ export class UserService {
               private firestore: AngularFirestore,
               private userStore: UserStore) {}
   editUser(user) {
-    console.log(user)
     // Get a reference to the Firestore collection or node where user data is stored
     const usersRef = this.firestore.collection('users');
 

@@ -23,8 +23,8 @@ import {SectionService} from "../../services/section-service";
 import { WORK_EXPERIENCE_SERVICE_TOKEN, EDUCATION_SERVICE_TOKEN, SKILLS_SERVICE_TOKEN, LANGUAGE_SERVICE_TOKEN } from '../../services/tokens';
 import {UserService} from "../../services/user.service";
 import { v4 as uuidv4 } from 'uuid';
-
-
+import {ToastrService} from "ngx-toastr";
+import {AddressDTO} from "../../dtos/DTO's";
 
 
 interface Section {
@@ -79,7 +79,8 @@ export class UserProfileComponent implements OnInit, OnChanges {
     private formFactoryProvider: FormFactoryProviderService,
     private formBuilder: FormBuilder,
     private injector: Injector,
-    private userService: UserService
+    private userService: UserService,
+    private toastr: ToastrService
   ) {
     this.sections.forEach(section => {
       section.items?.subscribe(data => this.items = data);
@@ -355,15 +356,30 @@ export class UserProfileComponent implements OnInit, OnChanges {
         socialMediaProfiles: this.formBuilder.array([])
       });
     }
-    updateUserAddress(){
-
-      this.userData.address.street = this.formGroup.get('street').value;
-      this.userData.address.city = this.formGroup.get('city').value;
-      this.userData.address.postalCode = this.formGroup.get('postalCode').value;
-      this.userData.address.country = this.formGroup.get('country').value;
-
-      this.userService.editUser(this.userData)
+  async updateUserAddress() {
+    if (!this.userData.address){
+      this.userData.address = {
+        city: '',
+        country: '',
+        postalCode: '',
+        street: ''
+      };
     }
+
+    this.userData.address.street = this.formGroup.get('street').value;
+    this.userData.address.city = this.formGroup.get('city').value;
+    this.userData.address.postalCode = this.formGroup.get('postalCode').value;
+    this.userData.address.country = this.formGroup.get('country').value;
+
+    try {
+      await this.userService.editUser(this.userData);
+      this.toastr.success('User address has been successfully updated');
+    } catch(error) {
+      this.toastr.error('An error occurred while updating user address');
+      console.error(error);
+    }
+  }
+
   updateUserData() {
     this.userData.email = this.formGroup.get('email').value;
     this.userData.phoneNumber = this.formGroup.get('phoneNumber').value;
@@ -374,7 +390,13 @@ export class UserProfileComponent implements OnInit, OnChanges {
     // Update the userData.socialMediaProfiles array
     this.userData.socialMediaProfiles = formArray.value;
 
-    this.userService.editUser(this.userData);
+    try {
+       this.userService.editUser(this.userData);
+      this.toastr.success('User data has been successfully updated');
+    } catch(error) {
+      this.toastr.error('An error occurred while updating user data');
+      console.error(error);
+    }
   }
 
   ngOnChanges(changes: SimpleChanges) {

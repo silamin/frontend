@@ -1,11 +1,10 @@
-import {Inject, Injectable} from '@angular/core';
+import { Injectable} from '@angular/core';
 import {AngularFireAuth} from "@angular/fire/compat/auth";
 import {AngularFireFunctions} from "@angular/fire/compat/functions";
 import {AngularFirestore} from "@angular/fire/compat/firestore";
 import {WorkExperienceFormDTO} from "../../dtos/DTO\'s";
 import {Observable} from "rxjs";
 import {SectionService} from "../section-service";
-import {WORK_EXPERIENCE_SERVICE_TOKEN} from "../tokens";
 
 @Injectable({
   providedIn: 'root'
@@ -19,8 +18,7 @@ export class WorkExperienceService implements SectionService{
   ) {}
 
   addItem(userId: string, workExperience: WorkExperienceFormDTO): Promise<any> {
-    console.log(userId)
-    console.log(workExperience)
+
     // Reference to the specific user's work experiences collection
     const workExperiencesRef = this.firestore.collection('users').doc(userId).collection('workExperience');
 
@@ -73,8 +71,6 @@ export class WorkExperienceService implements SectionService{
   }
 
   editItem(id, data) {
-    console.log(data);
-    console.log(id)
     // Check if data and data.id are defined before proceeding
     if(data && data.id) {
       this.firestore

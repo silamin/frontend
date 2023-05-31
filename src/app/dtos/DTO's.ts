@@ -47,7 +47,7 @@ export interface  JobDto{
 
 }
 
-interface AddressDTO {
+export interface AddressDTO {
   street: string;
   city: string;
   postalCode: string;

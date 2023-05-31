@@ -11,6 +11,7 @@ import {SearchService} from "../../services/search.service";
 import {combineLatest, Observable, of} from "rxjs";
 import {switchMap} from "rxjs/operators";
 import {UserService} from "../../services/user.service";
+import {ToastrService} from "ngx-toastr";
 
 @Component({
   selector: 'app-main-page',
@@ -39,8 +40,8 @@ export class MainPageComponent implements OnInit, AfterViewInit{
               private elementRef: ElementRef,
               private userStore: UserStore,
               public searchService: SearchService,
-              private userService: UserService
-  ) {
+              private userService: UserService,
+              private toastr: ToastrService) {
   }
 
   isScrollableEnd: boolean = false;
@@ -129,15 +130,30 @@ export class MainPageComponent implements OnInit, AfterViewInit{
     this.selectedJob=$event;
   }
   toggleLove(job: any) {
-      const index = this.userData.likedJobs.indexOf(job.id);
-      if (index !== -1) {
-        this.userData.likedJobs.splice(index, 1);
-        this.jobsService.removeLikedJob(this.userData.id, job.id);
-      } else {
-        this.userData.likedJobs.push(job.id);
-        this.jobsService.likeJob(this.userData.id, job.id);
-      }
+    const index = this.userData.likedJobs.indexOf(job.id);
+    if (index !== -1) {
+      this.userData.likedJobs.splice(index, 1);
+      this.jobsService.removeLikedJob(this.userData.id, job.id)
+        .then(() => {
+          this.toastr.success('Job removed from favorites');
+        })
+        .catch((error) => {
+          this.toastr.error('An error occurred while removing the job from favorites');
+          console.error(error);
+        });
+    } else {
+      this.userData.likedJobs.push(job.id);
+      this.jobsService.likeJob(this.userData.id, job.id)
+        .then(() => {
+          this.toastr.success('Job added to favorites');
+        })
+        .catch((error) => {
+          this.toastr.error('An error occurred while adding the job to favorites');
+          console.error(error);
+        });
     }
+  }
+
 
   isJobLiked(jobId: string): boolean {
     return this.userData?.likedJobs?.includes(jobId);
