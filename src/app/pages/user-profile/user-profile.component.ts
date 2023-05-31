@@ -278,9 +278,16 @@ export class UserProfileComponent implements OnInit, OnChanges {
     if (section) {
       const serviceToken = this.getServiceToken(sectionTitle);
       const service = this.injector.get<SectionService>(serviceToken);
-      service.deleteItem(item, this.userData.id);
+      try {
+        service.deleteItem(item, this.userData.id);
+        this.toastr.success('Item deleted successfully!');
+      } catch(error) {
+          this.toastr.error('An error occurred while deleting the item');
+          console.error(error);
+        }
     }
   }
+
 
   private getServiceToken(sectionTitle: string): ProviderToken<SectionService> {
     switch (sectionTitle) {

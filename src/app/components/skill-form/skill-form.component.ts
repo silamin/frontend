@@ -6,6 +6,7 @@ import {Observable} from "rxjs";
 import {UserDTO} from "../../dtos/DTO's";
 import {UserStore} from "../../stores/UserStore";
 import {UserService} from "../../services/user.service";
+import {ToastrService} from "ngx-toastr";
 
 @Component({
   selector: 'app-skill-form',
@@ -20,18 +21,34 @@ export class SkillFormComponent implements HasForm, OnInit{
   constructor(private fb: FormBuilder,
               private skillsService: SkillsService,
               private userStore: UserStore,
-              private userService:UserService) {
+              private userService:UserService,
+              private toastr: ToastrService) {
     this.skillForm = this.fb.group({
+      id: ['',],
       skill: ['', Validators.required],
       rating: ['', Validators.required],
     });
   }
 
-  onSubmit() {
-   this.skillsService.addItem(this.user.id,{
-     rating: this.skillForm.get('rating')?.value,
-     skill: this.skillForm.get('skill')?.value
-   })
+  onSubmit(): void {
+    if (!this.data){
+      this.skillsService.addItem(this.user.id,this.skillForm.value).then(() => {
+        this.toastr.success('Skill item added successfully!');
+      })
+        .catch(error => {
+          this.toastr.error('An error occurred while adding the skill item');
+        });
+    } else {
+      try {
+        this.skillsService.editItem(this.user.id, this.skillForm.value);
+        this.toastr.success('Skill item updated successfully!');
+      } catch(error) {
+        this.toastr.error('An error occurred while updating the skill item');
+      }
+    }
+
+    this.close();
+    this.data= null
   }
 
   @Input() visible: boolean=false;

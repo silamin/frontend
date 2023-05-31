@@ -6,6 +6,7 @@ import {UserStore} from "../../stores/UserStore";
 import {Observable} from "rxjs";
 import {UserDTO} from "../../dtos/DTO's";
 import {UserService} from "../../services/user.service";
+import {ToastrService} from "ngx-toastr";
 
 @Component({
   selector: 'app-language-form',
@@ -19,7 +20,8 @@ export class LanguageFormComponent implements HasForm, OnInit{
 
   constructor(private fb: FormBuilder,
               private languageService: LanguageServiceService,
-              private userStore: UserStore, private userService: UserService) {
+              private userStore: UserStore, private userService: UserService,
+              private toastr: ToastrService) {
     this.languageForm = this.fb.group({
       language: ['', Validators.required],
       rating: ['', Validators.required],
@@ -27,11 +29,26 @@ export class LanguageFormComponent implements HasForm, OnInit{
   }
 
 
-  onSubmit() {
-    this.languageService.addItem(this.user.id,{
-      rating: this.languageForm.get('rating')?.value,
-      language: this.languageForm.get('language')?.value
-    })
+  onSubmit(): void {
+    if (!this.data){
+      this.languageService.addItem(this.user.id,this.languageForm.value).then(() => {
+          this.toastr.success('Language item added successfully!');
+        })
+        .catch(error => {
+          this.toastr.error('An error occurred while adding the language item');
+          console.error(error);
+        });
+    } else {
+      try {
+        this.languageService.editItem(this.user.id, this.languageForm.value);
+        this.toastr.success('Language item updated successfully!');
+      } catch(error) {
+        this.toastr.error('An error occurred while updating the language item');
+        console.error(error);
+      }
+    }
+
+    this.close();
   }
 
   @Input() visible: boolean=false;

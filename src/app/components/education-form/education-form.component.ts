@@ -3,9 +3,10 @@ import {FormBuilder, FormGroup} from "@angular/forms";
 import {EducationService} from "../../services/forms-service/education.service";
 import {HasForm} from "../../services/factories/FormFactory";
 import {UserStore} from "../../stores/UserStore";
-import {Observable} from "rxjs";
+import {catchError, Observable} from "rxjs";
 import {UserDTO} from "../../dtos/DTO's";
 import {UserService} from "../../services/user.service";
+import {ToastrService} from "ngx-toastr";
 
 @Component({
   selector: 'app-education-form',
@@ -22,8 +23,10 @@ export class EducationFormComponent implements HasForm, OnInit{
 
   constructor(private formBuilder: FormBuilder,
               private educationService: EducationService,
-              private userStore: UserStore,private userService: UserService) {
+              private userStore: UserStore,private userService: UserService,
+              private toastr: ToastrService) {
     this.educationForm = this.formBuilder.group({
+      id: ['',[]],
       school: ['',[]],
       degree: ['',[]],
       fieldOfStudy: ['',[]],
@@ -36,18 +39,26 @@ export class EducationFormComponent implements HasForm, OnInit{
   }
 
   onSubmit(): void {
-    this.educationService.addItem(this.user.id,{
-      activitiesSocieties: "Student Council, Debate Club",
-      degree: "Bachelor of Science",
-      description: "Managed project timelines and deliverables",
-      endDate: new Date("2023-05-31"),
-      fieldOfStudy: "Computer Science",
-      grade: "A+",
-      school: "University of Example",
-      startDate: new Date("2020-09-01")
-    })
-    // Handle form submission
-    this.close();
+    if (!this.data){
+      this.educationService.addItem(this.user.id, this.educationForm.value)
+        .then(() => {
+          this.toastr.success('Education item added successfully!');
+        })
+        .catch(error => {
+          this.toastr.error('An error occurred while adding the education item');
+          console.error(error);
+        });
+    } else {
+      try {
+        this.educationService.editItem(this.user.id, this.educationForm.value);
+        this.toastr.success('Education item updated successfully!');
+      } catch(error) {
+        this.toastr.error('An error occurred while updating the education item');
+        console.error(error);
+      }
+    }
+
+  this.close();
   }
 
   close(): void {

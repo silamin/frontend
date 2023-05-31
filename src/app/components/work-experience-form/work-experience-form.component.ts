@@ -6,6 +6,7 @@ import {UserDTO, WorkExperienceFormDTO} from "../../dtos/DTO's";
 import {HasForm} from "../../services/factories/FormFactory";
 import {Observable} from "rxjs";
 import {UserService} from "../../services/user.service";
+import {ToastrService} from "ngx-toastr";
 
 
 @Component({
@@ -27,7 +28,11 @@ export class WorkExperienceFormComponent implements HasForm, OnInit{
   getForm(): FormGroup {
     return this.formData;
   }
-  constructor(private fb: FormBuilder, private workExperienceService: WorkExperienceService, private userStore: UserStore, private userService: UserService) {
+  constructor(private fb: FormBuilder,
+              private workExperienceService: WorkExperienceService,
+              private userStore: UserStore,
+              private userService: UserService,
+              private toastr: ToastrService) {
     this.formData = this.fb.group({
       id:[''],
       jobTitle: [''],
@@ -43,11 +48,25 @@ export class WorkExperienceFormComponent implements HasForm, OnInit{
   onSubmit() {
     if (!this.data){
       this.workExperienceService.addItem(this.user.id,this.formData.value)
+        .then(() => {
+          this.toastr.success('Work Experience added successfully!');
+        })
+        .catch(error => {
+          this.toastr.error('An error occurred while adding the work experience');
+          console.error(error);
+        });
     }else {
       this.data = this.formData.value
-      this.workExperienceService.editItem(this.user.id, this.data)
+      try {
+        this.workExperienceService.editItem(this.user.id, this.data);
+        this.toastr.success('Work Experience updated successfully!');
+      }catch(error) {
+          this.toastr.error('An error occurred while updating the work experience');
+        };
     }
+    this.close();
   }
+
   ngOnInit(): void {
     let userId = this.userStore.userId$.getValue();
     if (userId){

@@ -23,6 +23,7 @@ export interface EducationBackgroundDto{
   startDate: Date;
 }
 export interface SkillDto{
+  id: any;
   skill: string;
   rating: string;
 }

@@ -11,6 +11,7 @@ export class EducationFormFactoryService implements FormFactory{
 
   populateForm(data: any, formData): void {
     formData.setValue({
+      id: data?.id,
       school: data?.school ?? '',
       degree: data?.degree ?? '',
       fieldOfStudy: data?.fieldOfStudy ?? '',

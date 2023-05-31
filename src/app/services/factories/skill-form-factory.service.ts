@@ -11,6 +11,7 @@ export class SkillFormFactoryService  implements FormFactory{
 
   populateForm(data: any,formData): void {
     formData.setValue({
+      id: data.id,
       skill: data.skill,
       rating: data.rating
     });

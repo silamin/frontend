@@ -68,6 +68,7 @@ export class EducationService implements SectionService{
     return educationBackgroundRef.valueChanges();
   }
   editItem(id, data) {
+    console.log(data)
     // Check if data and data.id are defined before proceeding
     if(data && data.id) {
       this.firestore

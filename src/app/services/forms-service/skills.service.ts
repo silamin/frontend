@@ -16,18 +16,42 @@ export class SkillsService implements SectionService{
               private functions: AngularFireFunctions,
               private firestore: AngularFirestore) {}
   addItem(userId: string, skillDto: SkillDto): Promise<any> {
-    // Reference to the specific user's work experiences collection
-    const educationBackgroundRef = this.firestore.collection('users').doc(userId).collection('skills');
+    // Reference to the specific user's skills collection
+    const skillsRef = this.firestore.collection('users').doc(userId).collection('skills');
 
-    // Adding the new work experience to the user's workExperience sub-collection
-    return educationBackgroundRef.add(skillDto);
+    // Get the previous ID and add one to it, or start from one if not found
+    return skillsRef.get().toPromise().then(snapshot => {
+      let newId: number;
+      const previousIds: number[] = [];
+
+      snapshot?.forEach(doc => {
+        const skill = doc.data() as SkillDto;
+        if (skill.id) {
+          previousIds.push(skill.id);
+        }
+      });
+
+      if (previousIds.length > 0) {
+        const maxId = Math.max(...previousIds);
+        newId = maxId + 1;
+      } else {
+        newId = 1;
+      }
+
+      // Add the ID to the skillDto object
+      skillDto.id = newId;
+
+      // Adding the new skill to the user's skills sub-collection
+      return skillsRef.add(skillDto);
+    });
   }
+
 
   deleteItem(item: any, userId: string): void {
     this.firestore
       .collection('users')
       .doc(userId)
-      .collection('skills', ref => ref.where('skill', '==', item.skill))
+      .collection('skills', ref => ref.where('id', '==', item.id))
       .get()
       .subscribe(querySnapshot => {
         querySnapshot.forEach(doc => {
