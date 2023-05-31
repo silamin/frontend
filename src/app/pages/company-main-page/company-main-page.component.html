@@ -49,13 +49,17 @@
   </div>
   <div class="modal-body px-4 py-3">
     <p>Are you sure you want to reject this candidate?</p>
-    <textarea [(ngModel)]="rejectionText" rows="4" cols="50" placeholder="Please mention the reasons for rejection"></textarea>
+    <div class="form-group">
+      <textarea [(ngModel)]="rejectionText" class="form-control" rows="5" placeholder="Please mention the reasons for rejection"></textarea>
+    </div>
+    <button type="button" class="btn btn-secondary mt-2" (click)="insertDefaultText()">Insert Default Text</button>
   </div>
   <div class="modal-footer">
-    <button type="button" class="btn btn-outline-danger" (click)="modal.close('Yes')">Yes</button>
-    <button type="button" class="btn btn-outline-primary" (click)="modal.dismiss('No')">No</button>
+    <button type="button" class="btn btn-danger" (click)="modal.close('Yes')">Yes</button>
+    <button type="button" class="btn btn-outline-dark" (click)="modal.dismiss('No')">No</button>
   </div>
 </ng-template>
+
 
 
 <!-- 'Display jobs' template -->

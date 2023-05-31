@@ -110,6 +110,7 @@ export class UserProfileComponent implements OnInit, OnChanges {
       if (userId) {
         let userData$: Observable<UserDTO> = await this.userService.getUserById(userId);
         userData$.subscribe(async userData => {
+          console.log('silamin')
           this.userData = userData;
           // Check if there are social media profiles in userData
           if (this.userData.socialMediaProfiles && this.socialMediaProfiles.length === 0) {
@@ -123,28 +124,31 @@ export class UserProfileComponent implements OnInit, OnChanges {
             this.formGroup.get('socialMediaProfiles').patchValue(this.userData.socialMediaProfiles);
           }
           if (!userData.isCompanyUser) {
-            this.sections = [
-              {
-                title: 'Work Experience',
-                items: this.workExperienceService.fetchData(this.userData?.id),
-                displayProperty: ['jobTitle']
-              },
-              {
-                title: 'Education',
-                items: this.educationService.fetchData(this.userData?.id),
-                displayProperty: ['degree']
-              },
-              {
-                title: 'Skills',
-                items: this.skillsService.fetchData(this.userData?.id),
-                displayProperty: ['skill']
-              },
-              {
-                title: 'Languages',
-                items: this.languageService.fetchData(this.userData?.id),
-                displayProperty: ['language']
-              }
-            ];
+            if (this.sections.length === 0){
+              this.sections = [
+                {
+                  title: 'Work Experience',
+                  items: this.workExperienceService.fetchData(this.userData?.id),
+                  displayProperty: ['jobTitle']
+                },
+                {
+                  title: 'Education',
+                  items: this.educationService.fetchData(this.userData?.id),
+                  displayProperty: ['degree']
+                },
+                {
+                  title: 'Skills',
+                  items: this.skillsService.fetchData(this.userData?.id),
+                  displayProperty: ['skill']
+                },
+                {
+                  title: 'Languages',
+                  items: this.languageService.fetchData(this.userData?.id),
+                  displayProperty: ['language']
+                }
+              ];
+            }
+
           }
         });
       }

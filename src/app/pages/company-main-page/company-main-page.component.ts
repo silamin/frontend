@@ -183,4 +183,15 @@ export class CompanyMainPageComponent implements OnInit {
     this.isUserProfileVisible = false;
     this.isPopUp = false;
   }
+
+  insertDefaultText() {
+    this.rejectionText = `Dear Candidate,
+Thank you for your application.
+We regret to inform you that we have chosen not to proceed with your application. The decision was not easy, and there were many qualified applicants for this position.
+Thank you again for showing interest in our company. We encourage you to apply for future openings for which you qualify.
+Please take some time to learn more about our organization and the opportunities we offer by visiting our job portal.
+
+Best Regards,
+Hiring Team`
+  }
 }

@@ -1,9 +1,6 @@
-<app-navigation-bar class="my-2" [isCompanyUser]="false" [showSearchBar]="true"></app-navigation-bar>
 <ng-container *ngIf="user || userData; else loading">
-
-
-
   <div *ngIf="userData && userData.isCompanyUser === false ; else popUp" class="p-3">
+    <app-navigation-bar class="my-2" [isCompanyUser]="false" [showSearchBar]="true"></app-navigation-bar>
     <div class="row">
       <!-- User Profile Section -->
       <div class="col-lg-4 col-12">

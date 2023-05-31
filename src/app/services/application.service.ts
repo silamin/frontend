@@ -29,7 +29,7 @@ export class ApplicationService {
         jobId: jobId,
         candidateId: candidateId,
         applicationDate: new Date(),
-        status: 'Application sent.'
+        status: 'in progress.'
       };
       await applicationsRef.doc(newId.toString()).set(applicationData);
       console.log("Document successfully written!");
