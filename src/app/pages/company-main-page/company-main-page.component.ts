@@ -89,9 +89,18 @@ export class CompanyMainPageComponent implements OnInit {
         this.user = userData;
         this.jobsService.getAllJobs(userId!, this.user.isCompanyUser).subscribe(jobs => {
           for (let job of jobs) {
-            this.applicationService.getAllCandidatesByJobId(job.id.toString()).subscribe(candidates =>{
+            job.hasAcceptedCandidate = false; // default value
+            this.applicationService.getAllCandidatesByJobId(job.id.toString()).subscribe(candidates => {
+              // attach candidates to job
               job.candidates = candidates
-              console.log(candidates)
+              // check if any candidate is accepted
+              for (let candidate of candidates) {
+                console.log(candidate)
+                if (candidate.applicationStatus === 'accepted') {
+                  job.hasAcceptedCandidate = true; // set boolean value to true
+                  break; // stop processing remaining candidates
+                }
+              }
             });
           }
           this.jobsToDisplay = jobs;
@@ -101,9 +110,6 @@ export class CompanyMainPageComponent implements OnInit {
       this.jobsToDisplay = [];
     }
   }
-
-
-  candidatesPosition: { top: string, left: string } = { top: '0', left: '0' };
   selectedJob: any = null;
   isUserProfileVisible = false;
   selectCandidate(jobIndex: number, rowIndex: number) {

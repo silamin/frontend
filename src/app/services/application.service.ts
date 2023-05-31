@@ -157,7 +157,7 @@ export class ApplicationService {
               filter(candidate => candidate !== undefined), // Filter out undefined values
               map(candidate => ({
                 ...candidate,
-                isCandidateSelected: application.status === 'in progress'
+                applicationStatus: application.status
               }))
             ) as Observable<UserDTO>;
 

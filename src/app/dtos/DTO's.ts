@@ -46,6 +46,7 @@ export interface  JobDto{
   jobBenefits: string,
   candidates?: any[];
   candidates$?: Observable<UserDTO[]>;
+  hasAcceptedCandidate?: boolean;
 
 }
 
@@ -64,7 +65,8 @@ export interface UserDTO{
   email: string;
   phoneNumber: string;
   address: AddressDTO;
-  socialMediaProfiles: any
+  socialMediaProfiles: any;
+  applicationStatus: string;
 }
 
 export interface ScheduleDto {
