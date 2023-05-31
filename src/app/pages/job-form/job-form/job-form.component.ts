@@ -6,6 +6,7 @@ import {UserService} from "../../../services/user.service";
 import { Observable} from "rxjs";
 import {UserDTO} from "../../../dtos/DTO's";
 import {ApplicationService} from "../../../services/application.service";
+import {ToastrService} from "ngx-toastr";
 
 
 
@@ -27,9 +28,8 @@ export class JobFormComponent implements OnChanges, OnInit{
 
 
   ngOnChanges() {
-    console.log(this.selectedJob)
     this.isApplied = false;
-    if (this.selectedJob && this.applications) { // Check if applications is defined
+    if (this.selectedJob) { // Check if applications is defined
       this.jobForm.get('id')?.setValue(this.selectedJob?.id);
       this.jobForm.get('jobTitle')?.setValue(this.selectedJob?.jobTitle);
       this.jobForm.get('workplace')?.setValue(this.selectedJob?.workplace);
@@ -40,7 +40,7 @@ export class JobFormComponent implements OnChanges, OnInit{
       this.jobForm.get('jobDescription')?.setValue(this.selectedJob?.jobDescription);
       this.jobForm.get('backgroundSkills')?.setValue(this.selectedJob?.backgroundSkills);
       this.jobForm.get('jobBenefits')?.setValue(this.selectedJob?.jobBenefits);
-      this.isApplied = this.applications.some(application => application.jobId === this.jobForm.get('id')?.value);
+      this.isApplied = this.applications?.some(application => application.jobId === this.jobForm.get('id')?.value);
 
       this.selectedJobChange.emit(this.selectedJob);
     }
@@ -76,7 +76,8 @@ export class JobFormComponent implements OnChanges, OnInit{
               private userStore: UserStore,
               private userService: UserService,
               private applicationService: ApplicationService,
-              private changeDetector: ChangeDetectorRef) {
+              private changeDetector: ChangeDetectorRef,
+              private toastr: ToastrService) {
     this.jobForm = this.fb.group({
       id: ['', Validators.required],
       jobTitle: ['', Validators.required],
@@ -93,7 +94,6 @@ export class JobFormComponent implements OnChanges, OnInit{
   }
 
   submitJobForm() {
-    console.log(this.isEdit)
     if (!this.isEdit) {
       this.jobForm.get('userId')?.setValue(this.userId)
       this.jobService.addJob(this.jobForm.value)
@@ -105,22 +105,29 @@ export class JobFormComponent implements OnChanges, OnInit{
   @Input() isEdit: boolean = false;
   onApply() {
     this.isLoading = true;
-    if (this.isApplied){
-      this.applicationService.withdrawApplication(this.jobForm.get('id')?.value, this.userId).then(()=>{
-      }).finally(()=>{
+    if (this.isApplied) {
+      this.applicationService.withdrawApplication(this.jobForm.get('id')?.value, this.userId).then(() => {
+        this.toastr.success('Application withdrawn successfully');
+      }).catch(error => {
+        this.toastr.error('Error while withdrawing application');
+      }).finally(() => {
         this.isApplied = false;
         this.isLoading = false;
         this.changeDetector.detectChanges();  // add this line
       });
-    }else {
-      this.applicationService.startProcess(this.jobForm.get('id')?.value, this.userId).then(()=>{
-      }).finally(()=>{
+    } else {
+      this.applicationService.startProcess(this.jobForm.get('id')?.value, this.userId).then(() => {
+        this.toastr.success('Application started successfully');
+      }).catch(error => {
+        this.toastr.error('Error while starting application');
+      }).finally(() => {
         this.isApplied = true;
         this.isLoading = false;
         this.changeDetector.detectChanges();  // add this line
       });
     }
   }
+
 
 
 }

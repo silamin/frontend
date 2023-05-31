@@ -84,7 +84,7 @@ export class AuthServiceService {
       }
     } catch (error) {
       // Delegate error handling to global error handler
-      this.errorHandler.handleError(error);
+      throw error;
     }
   }
 

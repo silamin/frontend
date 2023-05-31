@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import {AuthServiceService} from "../../services/auth-service.service";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {ToastrService} from "ngx-toastr";
 
 @Component({
   selector: 'app-sign-in',
@@ -12,7 +13,9 @@ export class SignInComponent {
   isLoading: boolean = false;
 
 
-  constructor(private fb: FormBuilder, private authService: AuthServiceService) {
+  constructor(private fb: FormBuilder,
+              private authService: AuthServiceService,
+              private toastr: ToastrService) {
     // Initialize form groups for login and register
     this.loginRegisterForm = this.fb.group({
       email: ['', Validators.required],
@@ -31,20 +34,29 @@ export class SignInComponent {
     this.isLoading = true;
     try {
       await this.authService.register(this.loginRegisterForm);
+      this.toastr.success('Registration successful');
+    } catch (error) {
+      this.toastr.error('Registration failed');
+      console.error(error);
     } finally {
       this.isLoading = false;
     }
   }
 
-  // Function to switch to login form
+// Function to switch to login form
   async login() {
     this.isLoading = true;
     try {
       await this.authService.login(this.loginRegisterForm);
+      this.toastr.success('Login successful');
+    } catch (error) {
+      this.toastr.error('Login failed');
+      console.error(error);
     } finally {
       this.isLoading = false;
     }
   }
+
 
 
   switchToRegister(): void {
