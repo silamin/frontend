@@ -111,10 +111,15 @@ export class ApplicationService {
         console.error('Error saving notes: ', error);
       });
   }
-  getAllApplications(userId: string): Observable<ApplicationDto[]> {
-    return this.firestore.collection<any>('applications', ref => ref.where('candidateId', '==', userId.toString()))
-      .valueChanges();
+  getAllApplications(userId?: string): Observable<ApplicationDto[]> {
+    if (userId) {
+      return this.firestore.collection<ApplicationDto>('applications',
+        ref => ref.where('candidateId', '==', userId.toString())).valueChanges();
+    } else {
+      return this.firestore.collection<ApplicationDto>('applications').valueChanges();
+    }
   }
+
 
   withdrawApplication(jobId: number, userId: number): Promise<void> {
     const applicationsRef: AngularFirestoreCollection<any> = this.firestore.collection('applications');

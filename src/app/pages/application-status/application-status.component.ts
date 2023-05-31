@@ -18,6 +18,8 @@ export class ApplicationStatusComponent implements OnInit{
   userData: any;
   isLoading = true;
   applications: any;
+  itemsPerPage = 3;
+  currentPage = 1;
 
 
   constructor(private userStore: UserStore,
@@ -76,6 +78,15 @@ export class ApplicationStatusComponent implements OnInit{
 
   redirectToJobs() {
 
+  }
+
+  onPageChanged(newPage: number) {
+    this.currentPage = newPage;
+  }
+  get paginatedApplications(): any[] {
+    const startIndex = (this.currentPage - 1) * 3;
+    const endIndex = startIndex + 3;
+    return this.applications!.slice(startIndex, endIndex);
   }
 }
 

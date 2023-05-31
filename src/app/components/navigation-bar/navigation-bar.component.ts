@@ -6,6 +6,7 @@ import {user} from "@angular/fire/auth";
 import {FormControl, FormGroup} from "@angular/forms";
 import {SearchService} from "../../services/search.service";
 import {AuthServiceService} from "../../services/auth-service.service";
+import {ToastrService} from "ngx-toastr";
 
 @Component({
   selector: 'app-navigation-bar',
@@ -25,7 +26,8 @@ export class NavigationBarComponent implements OnInit{
   constructor(private router: Router,
               private navBarService: NavBarService,
               private searchService: SearchService,
-              private authService: AuthServiceService
+              private authService: AuthServiceService,
+              private toastr: ToastrService
               ) {
     this.searchControl.valueChanges.subscribe(query => this.searchService.updateSearchQuery(query));
   }
@@ -42,8 +44,14 @@ export class NavigationBarComponent implements OnInit{
       case 'Log out':
       {
         await this.router.navigate(['/']);
-        await this.authService.logout()
-      };break;
+        try {
+          await this.authService.logout();
+          this.toastr.success('Successfully logged out', 'Success');
+        } catch (error) {
+          console.error('Error during logout:', error);
+          this.toastr.error('Failed to log out. Please try again', 'Error');
+        }
+      }break;
 
       case 'Post a job': this.jobPopupVisible = true;
     }

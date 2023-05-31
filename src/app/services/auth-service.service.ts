@@ -92,6 +92,7 @@ export class AuthServiceService {
   async logout(): Promise<void> {
     try {
       await this.afAuth.signOut();
+      localStorage.clear();
     } catch (error) {
       console.error('Error during logout:', error);
       throw error;
