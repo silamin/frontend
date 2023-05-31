@@ -2,11 +2,11 @@ import {Component, OnInit} from '@angular/core';
 import {UserStore} from "../../stores/UserStore";
 import {UserService} from "../../services/user.service";
 import {JobServiceService} from "../../services/job-service.service";
-import {JobDto, UserDTO} from "../../dtos/DTO's";
-import {forkJoin, Observable, of} from "rxjs";
+import {forkJoin, of} from "rxjs";
 import {ApplicationService} from "../../services/application.service";
 import {ToastrService} from "ngx-toastr";
 import {switchMap} from "rxjs/operators";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-likes-jobs',
@@ -31,7 +31,8 @@ export class LikesJobsComponent implements OnInit{
               private jobsService: JobServiceService,
               private userService: UserService,
               private applicationService: ApplicationService,
-              private toastr: ToastrService) { }
+              private toastr: ToastrService,
+              private router: Router) { }
 
   ngOnInit(): void {
     let userId = this.userStore.userId$.getValue();
@@ -55,23 +56,18 @@ export class LikesJobsComponent implements OnInit{
         switchMap(jobs => {
           this.jobs = jobs;
           this.jobs?.forEach(job => this.isCollapsed[job.id] = true);
-          this.isLoading = false;
           return this.applicationService.getAllApplications();
         })
       ).subscribe(applications => {
         this.jobs?.forEach(job => {
-          console.log(job);
-          console.log(job.id)
-          console.log(this.user.id)
-          console.log(applications)
           job.isApplied = applications.some(app => app.jobId === job.id && app.candidateId === this.user.id);
         });
-        console.log(this.jobs)
+        this.isLoading = false;  // Set isLoading to false here
+      }, error => {
+        this.isLoading = false;  // Also set isLoading to false in case of error to stop the loading indicator
       });
     }
   }
-
-
 
   async onApply(id: number) {
     try {
@@ -105,11 +101,11 @@ export class LikesJobsComponent implements OnInit{
   }
 
   redirectToProfile() {
-
+    this.router.navigate(['user-profile'])
   }
 
   redirectToJobs() {
-
+    this.router.navigate(['user-main-page'])
   }
 
   onWithdrawApplication(id) {

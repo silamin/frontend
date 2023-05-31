@@ -12,6 +12,7 @@ import {combineLatest, Observable, of} from "rxjs";
 import {switchMap} from "rxjs/operators";
 import {UserService} from "../../services/user.service";
 import {ToastrService} from "ngx-toastr";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-main-page',
@@ -41,7 +42,8 @@ export class MainPageComponent implements OnInit, AfterViewInit{
               private userStore: UserStore,
               public searchService: SearchService,
               private userService: UserService,
-              private toastr: ToastrService) {
+              private toastr: ToastrService,
+              private router: Router) {
   }
 
   isScrollableEnd: boolean = false;
@@ -180,6 +182,6 @@ export class MainPageComponent implements OnInit, AfterViewInit{
   }
 
   redirectToProfile() {
-
+    this.router.navigate(['user-profile'])
   }
 }
