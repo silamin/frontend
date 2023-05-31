@@ -3,8 +3,7 @@ import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {JobServiceService} from "../../../services/job-service.service";
 import {UserStore} from "../../../stores/UserStore";
 import {UserService} from "../../../services/user.service";
-import {user} from "@angular/fire/auth";
-import {map, Observable} from "rxjs";
+import { Observable} from "rxjs";
 import {UserDTO} from "../../../dtos/DTO's";
 import {ApplicationService} from "../../../services/application.service";
 
@@ -24,8 +23,11 @@ export class JobFormComponent implements OnChanges, OnInit{
   @Input() userId ;
   isApplied = false;
   applications:any
+  isLoading: boolean = false;
+
 
   ngOnChanges() {
+    console.log(this.selectedJob)
     this.isApplied = false;
     if (this.selectedJob && this.applications) { // Check if applications is defined
       this.jobForm.get('id')?.setValue(this.selectedJob?.id);
@@ -73,7 +75,8 @@ export class JobFormComponent implements OnChanges, OnInit{
               private jobService: JobServiceService,
               private userStore: UserStore,
               private userService: UserService,
-              private applicationService: ApplicationService) {
+              private applicationService: ApplicationService,
+              private changeDetector: ChangeDetectorRef) {
     this.jobForm = this.fb.group({
       id: ['', Validators.required],
       jobTitle: ['', Validators.required],
@@ -101,15 +104,23 @@ export class JobFormComponent implements OnChanges, OnInit{
   }
   @Input() isEdit: boolean = false;
   onApply() {
+    this.isLoading = true;
     if (this.isApplied){
       this.applicationService.withdrawApplication(this.jobForm.get('id')?.value, this.userId).then(()=>{
+      }).finally(()=>{
         this.isApplied = false;
+        this.isLoading = false;
+        this.changeDetector.detectChanges();  // add this line
       });
     }else {
       this.applicationService.startProcess(this.jobForm.get('id')?.value, this.userId).then(()=>{
+      }).finally(()=>{
         this.isApplied = true;
-
+        this.isLoading = false;
+        this.changeDetector.detectChanges();  // add this line
       });
-      }
+    }
   }
+
+
 }

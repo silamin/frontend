@@ -166,9 +166,11 @@
         </form>
         <div *ngIf="isDisplay" class="col-12 my-3 w-100">
           <button class="btn btn-success btn-send pt-2 btn-block" (click)="onApply()" style="width: 100%"
-                  [ngClass]="{'btn-danger': isApplied}">
+                  [ngClass]="{'btn-danger': isApplied}" [disabled]="isLoading">
             {{ isApplied ? 'Withdraw Application' : 'Apply' }}
+            <span *ngIf="isLoading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
           </button>
+
         </div>
       </div>
     </div>
