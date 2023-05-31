@@ -7,6 +7,7 @@ import {ApplicationService} from "../../services/application.service";
 import {Timestamp} from "firebase/firestore";
 import {switchMap} from "rxjs/operators";
 import {JobServiceService} from "../../services/job-service.service";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-application-status',
@@ -25,7 +26,8 @@ export class ApplicationStatusComponent implements OnInit{
   constructor(private userStore: UserStore,
               private userService: UserService,
               private applicationService: ApplicationService,
-              private jobService: JobServiceService) { }
+              private jobService: JobServiceService,
+              private router: Router) { }
 
   ngOnInit(): void {
     let userId = this.userStore.userId$.getValue();
@@ -77,7 +79,7 @@ export class ApplicationStatusComponent implements OnInit{
   }
 
   redirectToJobs() {
-
+    this.router.navigate(['user-main-page'])
   }
 
   onPageChanged(newPage: number) {
