@@ -23,6 +23,7 @@ export class LanguageFormComponent implements HasForm, OnInit{
               private userStore: UserStore, private userService: UserService,
               private toastr: ToastrService) {
     this.languageForm = this.fb.group({
+      id: ['',],
       language: ['', Validators.required],
       rating: ['', Validators.required],
     });
@@ -49,6 +50,7 @@ export class LanguageFormComponent implements HasForm, OnInit{
     }
 
     this.close();
+    this.data= null
   }
 
   @Input() visible: boolean=false;

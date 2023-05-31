@@ -62,9 +62,10 @@ export class WorkExperienceFormComponent implements HasForm, OnInit{
         this.toastr.success('Work Experience updated successfully!');
       }catch(error) {
           this.toastr.error('An error occurred while updating the work experience');
-        };
+        }
     }
     this.close();
+    this.data= null
   }
 
   ngOnInit(): void {
