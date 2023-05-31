@@ -1,224 +1,219 @@
 <app-navigation-bar class="my-2" [isCompanyUser]="false" [showSearchBar]="true"></app-navigation-bar>
 <ng-container *ngIf="user || userData; else loading">
-  <div *ngIf="userData && userData.isCompanyUser === false ; else popUp">
-    <div class="container my-2">
-      <div class="row">
-        <div class="col-12">
-          <div class="card mb-4">
-            <div class="row g-0">
-              <div class="col-md-2 d-flex flex-column align-items-center">
-                <img src="https://robohash.org/mockUser?size=104x104" class="img-fluid rounded-start" alt="Profile Picture">
-                <button class="toggle-button btn btn-outline-primary" (click)="toggleShowMore()">
-                  {{ showMoreUserInfo ? 'Show Less' : 'Show More' }}
-                  <i class="fa" [ngClass]="{'fa-chevron-down': !showMoreUserInfo, 'fa-chevron-up': showMoreUserInfo, 'rotate-icon': showMoreUserInfo}"></i>
-                </button>
-              </div>
-              <div class="col-md-10">
-                <div class="card-body expandable-card">
-                  <div *ngIf="userData?.name; else noName">
-                    <h5 class="card-title">{{userData.name}}</h5>
+
+
+
+  <div *ngIf="userData && userData.isCompanyUser === false ; else popUp" class="p-3">
+    <div class="row">
+      <!-- User Profile Section -->
+      <div class="col-lg-4 col-12">
+        <div class="card mb-4">
+          <div class="card-body text-center">
+            <img src="https://robohash.org/mockUser?size=104x104" class="rounded-circle mb-3" alt="Profile Picture">
+            <h5 class="card-title">{{ userData?.name || 'No name provided' }}</h5>
+            <!-- Add more user details here, similar to your existing layout. -->
+          </div>
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item">
+              <!-- Email -->
+              <div class="card-text box position-relative" [formGroup]="formGroup">
+                <div *ngIf="!isEditing('email')">
+                  <div class="content-wrap">
+                    <i class="fa fa-envelope"></i>
+                    <span>: {{ userData.email }}</span>
                   </div>
-                  <ng-template #noName>
-                    <h5 class="card-title">No name provided</h5>
-                  </ng-template>
-                  <div class="user-info-section" [ngClass]="{ 'scrollable-card': showMoreUserInfo, 'expandable-card': !showMoreUserInfo }">
-
-                    <!-- Email -->
-                    <div class="card-text box position-relative" [formGroup]="formGroup">
-                      <div *ngIf="!isEditing('email')">
-                        <div class="content-wrap">
-                          <i class="fa fa-envelope"></i>
-                          <span>: {{ userData.email }}</span>
-                        </div>
-                        <button class="btn btn-link position-absolute top-0 end-0" (click)="startEditing('email')">
-                          <i class="fa fa-edit"></i>
-                        </button>
+                  <button class="btn btn-link position-absolute top-0 end-0" (click)="startEditing('email')">
+                    <i class="fa fa-edit"></i>
+                  </button>
+                </div>
+                <div *ngIf="isEditing('email')" class="content-wrap">
+                  <i class="fa fa-envelope"></i>
+                  <input type="email" class="form-control edit-input" placeholder="email" formControlName="email">
+                  <button class="btn btn-link position-absolute top-0 end-0" (click)="stopEditing(); updateUserData()">
+                    <i class="fa fa-check"></i>
+                  </button>
+                </div>
+              </div>
+            </li>
+            <li class="list-group-item">
+              <!-- Phone Number -->
+              <div class="card-text box position-relative" [formGroup]="formGroup">
+                <div *ngIf="!isEditing('phoneNumber')">
+                  <div class="content-wrap">
+                    <i class="fa fa-phone"></i>
+                    <span>: {{ userData.phoneNumber || 'No phone number provided' }}</span>
+                  </div>
+                  <button class="btn btn-link position-absolute top-0 end-0" (click)="startEditing('phoneNumber')">
+                    <i class="fa fa-edit"></i>
+                  </button>
+                </div>
+                <div *ngIf="isEditing('phoneNumber')" class="content-wrap">
+                  <i class="fa fa-phone"></i>
+                  <input type="tel" class="form-control edit-input" placeholder="phone number" formControlName="phoneNumber">
+                  <button class="btn btn-link position-absolute top-0 end-0" (click)="stopEditing(); updateUserData()">
+                    <i class="fa fa-check"></i>
+                  </button>
+                </div>
+              </div>
+            </li>
+            <li class="list-group-item">
+              <!-- Address -->
+              <div class="card-text box position-relative" [formGroup]="formGroup">
+                <div *ngIf="!isEditing('address') && userData?.address">
+                  <div class="content-wrap">
+                    <i class="fa fa-address-card"></i>
+                    <span>: {{ userData.address.street }}, {{ userData.address.city }}, {{ userData.address.postalCode }}, {{ userData.address.country }}</span>
+                  </div>
+                  <button class="btn btn-link position-absolute top-0 end-0" (click)="startEditing('address')">
+                    <i class="fa fa-edit"></i>
+                  </button>
+                </div>
+                <div *ngIf="!isEditing('address') && !userData?.address">
+                  <div class="content-wrap">
+                    <i class="fa fa-address-card"></i>
+                    <span>: No address provided</span>
+                  </div>
+                  <button class="btn btn-link position-absolute top-0 end-0" (click)="startEditing('address')">
+                    <i class="fa fa-edit"></i>
+                  </button>
+                </div>
+                <div *ngIf="isEditing('address')">
+                  <div class="content-wrap">
+                    <i class="fa fa-address-card"></i>
+                    <div class="row g-3">
+                      <div class="col">
+                        <input type="text" placeholder="Street" class="form-control edit-input" formControlName="street">
                       </div>
-                      <div *ngIf="isEditing('email')" class="content-wrap">
-                        <i class="fa fa-envelope"></i>
-                        <input type="email" class="form-control edit-input" placeholder="email" formControlName="email">
-                        <button class="btn btn-link position-absolute top-0 end-0" (click)="stopEditing(); updateUserData()">
-                          <i class="fa fa-check"></i>
-                        </button>
+                      <div class="col">
+                        <input type="text" placeholder="City" class="form-control edit-input" formControlName="city">
                       </div>
-                    </div>
-
-                    <!-- Phone Number -->
-                    <div class="card-text box position-relative" [formGroup]="formGroup">
-                      <div *ngIf="!isEditing('phoneNumber')">
-                        <div class="content-wrap">
-                          <i class="fa fa-phone"></i>
-                          <span>: {{ userData.phoneNumber || 'No phone number provided' }}</span>
-                        </div>
-                        <button class="btn btn-link position-absolute top-0 end-0" (click)="startEditing('phoneNumber')">
-                          <i class="fa fa-edit"></i>
-                        </button>
+                      <div class="col">
+                        <input type="text" placeholder="Postal Code" class="form-control edit-input" formControlName="postalCode">
                       </div>
-                      <div *ngIf="isEditing('phoneNumber')" class="content-wrap">
-                        <i class="fa fa-phone"></i>
-                        <input type="tel" class="form-control edit-input" placeholder="phone number" formControlName="phoneNumber">
-                        <button class="btn btn-link position-absolute top-0 end-0" (click)="stopEditing(); updateUserData()">
-                          <i class="fa fa-check"></i>
-                        </button>
-                      </div>
-                    </div>
-
-                    <!-- Address -->
-                    <div class="card-text box position-relative" [formGroup]="formGroup">
-                      <div *ngIf="!isEditing('address') && userData?.address">
-                        <div class="content-wrap">
-                          <i class="fa fa-address-card"></i>
-                          <span>: {{ userData.address.street }}, {{ userData.address.city }}, {{ userData.address.postalCode }}, {{ userData.address.country }}</span>
-                        </div>
-                        <button class="btn btn-link position-absolute top-0 end-0" (click)="startEditing('address')">
-                          <i class="fa fa-edit"></i>
-                        </button>
-                      </div>
-                      <div *ngIf="!isEditing('address') && !userData?.address">
-                        <div class="content-wrap">
-                          <i class="fa fa-address-card"></i>
-                          <span>: No address provided</span>
-                        </div>
-                        <button class="btn btn-link position-absolute top-0 end-0" (click)="startEditing('address')">
-                          <i class="fa fa-edit"></i>
-                        </button>
-                      </div>
-                      <div *ngIf="isEditing('address')">
-                        <div class="content-wrap">
-                          <i class="fa fa-address-card"></i>
-                          <div class="row g-3">
-                            <div class="col">
-                              <input type="text" placeholder="Street" class="form-control edit-input" formControlName="street">
-                            </div>
-                            <div class="col">
-                              <input type="text" placeholder="City" class="form-control edit-input" formControlName="city">
-                            </div>
-                            <div class="col">
-                              <input type="text" placeholder="Postal Code" class="form-control edit-input" formControlName="postalCode">
-                            </div>
-                            <div class="col">
-                              <input type="text" placeholder="Country" class="form-control edit-input" formControlName="country">
-                            </div>
-                          </div>
-                          <button class="btn btn-link position-absolute top-0 end-0" (click)="stopEditing(); updateUserAddress()">
-                            <i class="fa fa-check"></i>
-                          </button>
-                        </div>
+                      <div class="col">
+                        <input type="text" placeholder="Country" class="form-control edit-input" formControlName="country">
                       </div>
                     </div>
-
-                    <div class="card-body" [formGroup]="formGroup">
-                      <div formArrayName="socialMediaProfiles">
-                        <div *ngFor="let control of socialMediaProfiles.controls; let i = index">
-                          <div [formGroupName]="i" class="card-text box position-relative">
-                            <div class="d-flex justify-content-between align-items-center">
-                              <div>
-                                <span><i class="fab fa-{{control.value.type.toLowerCase()}}"></i>: <a [href]="control.value.url">{{ control.value.url }}</a></span>
-                              </div>
-                              <div>
-                                <button *ngIf="!isEditing(control.value.id)" class="btn btn-link me-2" (click)="startEditing(control.value.id)">
-                                  <i class="fa fa-edit"></i>
-                                </button>
-                                <button *ngIf="isEditing(control.value.id)" class="btn btn-link me-2" (click)="stopEditing(); updateUserData()">
-                                  <i class="fa fa-check"></i>
-                                </button>
-                                <button class="btn btn-link" (click)="removeLink(control.value)">
-                                  <i class="fa fa-trash"></i>
-                                </button>
-                              </div>
-                            </div>
-                            <div *ngIf="isEditing(control.value.id)">
-                              <input class="form-control mb-1" formControlName="type" placeholder="Social media type">
-                              <input class="form-control" formControlName="url" placeholder="Social media URL">
-                            </div>
-                          </div>
-                        </div>
-                        <div class="mt-3">
-                          <button class="btn btn-link" (click)="addSocialMediaProfile()">
-                            <i class="fa fa-plus"></i> Add Social Media Profile
-                          </button>
-                        </div>
-                      </div>
-                    </div>
+                    <button class="btn btn-link position-absolute top-0 end-0" (click)="stopEditing(); updateUserAddress()">
+                      <i class="fa fa-check"></i>
+                    </button>
                   </div>
                 </div>
               </div>
-            </div>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Social Media Section -->
+        <div class="card">
+          <div class="card-header">
+            <h6>Social Media Profiles</h6>
           </div>
+          <ul class="list-group list-group-flush">
+            <!-- Social Media Profiles -->
+            <div class="card-body" [formGroup]="formGroup">
+              <div formArrayName="socialMediaProfiles">
+                <div *ngFor="let control of socialMediaProfiles.controls; let i = index">
+                  <div [formGroupName]="i" class="card-text box position-relative">
+                    <div class="d-flex justify-content-between align-items-center">
+                      <div>
+                        <span><i class="fab fa-{{control.value.type.toLowerCase()}}"></i>: <a [href]="control.value.url">{{ control.value.url }}</a></span>
+                      </div>
+                      <div>
+                        <button *ngIf="!isEditing(control.value.id)" class="btn btn-link me-2" (click)="startEditing(control.value.id)">
+                          <i class="fa fa-edit"></i>
+                        </button>
+                        <button *ngIf="isEditing(control.value.id)" class="btn btn-link me-2" (click)="stopEditing(); updateUserData()">
+                          <i class="fa fa-check"></i>
+                        </button>
+                        <button class="btn btn-link" (click)="removeLink(control.value)">
+                          <i class="fa fa-trash"></i>
+                        </button>
+                      </div>
+                    </div>
+                    <div *ngIf="isEditing(control.value.id)">
+                      <input class="form-control mb-1" formControlName="type" placeholder="Social media type">
+                      <input class="form-control" formControlName="url" placeholder="Social media URL">
+                    </div>
+                  </div>
+                </div>
+                <div class="mt-3">
+                  <button class="btn btn-link" (click)="addSocialMediaProfile()">
+                    <i class="fa fa-plus"></i> Add Social Media Profile
+                  </button>
+                </div>
+              </div>
+            </div>
+          </ul>
         </div>
       </div>
 
-      <div class="row">
-        <ng-container *ngFor="let section of sections">
-          <div class="col-12">
-            <div class="card mb-4">
-              <div class="card-header d-flex justify-content-between">
-                {{ section.title }}
-                <div>
-                  <ng-container *ngIf="!isDisplay">
-                    <button class="btn btn-sm btn-success mx-1" (click)="showPopUp(section.title)">
-                      <i class="fa fa-plus"></i>
-                    </button>
-                  </ng-container>
-                </div>
-              </div>
-              <ul class="list-group list-group-flush">
-                <ng-container *ngIf="section.items | async as items">
-                  <ng-container *ngIf="getSlicedItems(items) as slicedItems">
-                    <li class="list-group-item d-flex justify-content-between align-items-center" *ngFor="let item of slicedItems">
-                      {{ getDisplayProperties(item, section.displayProperty) }}
-
-                      <div>
-                        <button class="btn btn-link text-bg-light" (click)="editItem(item, section.title)">
-                          <i class="fa fa-edit"></i>
-                        </button>
-                        <button class="btn btn-link text-danger" (click)="deleteItem(item, section.title)">
-                          <i class="fa fa-trash"></i>
-                        </button>
-                      </div>
-                    </li>
-                  </ng-container>
-
-                  <li class="list-group-item" *ngIf="items.length > 3 && !showMore[section.title]">
-                    <div class="d-flex justify-content-center">
-                      <button class="btn btn-primary w-100" (click)="showMoreItems(section.title)">
-                        Show More ({{ items.length - 3 }} left)
-                      </button>
-                    </div>
-                  </li>
-
-                  <ng-container *ngIf="showMore[section.title]">
-                    <li class="list-group-item d-flex justify-content-between align-items-center" *ngFor="let item of items | slice:3">
-                      {{ getDisplayProperties(item, section.displayProperty) }}
-
-                      <div>
-                        <button class="btn btn-link text-bg-light" (click)="editItem(item, section.title)">
-                          <i class="fa fa-edit"></i>
-                        </button>
-                        <button class="btn btn-link text-danger" (click)="deleteItem(item, section.title)">
-                          <i class="fa fa-trash"></i>
-                        </button>
-                      </div>
-
-                    </li>
-                    <li class="list-group-item">
-                      <div class="d-flex justify-content-center">
-                        <button class="btn btn-secondary w-100" (click)="showLessItems(section.title)">Show Less</button>
-                      </div>
-                    </li>
-                  </ng-container>
-                </ng-container>
-              </ul>
-            </div>
+      <!-- Section Items -->
+      <div class="col-lg-8 col-12">
+        <div *ngFor="let section of sections" class="card mb-4">
+          <div class="card-header d-flex justify-content-between align-items-center">
+            {{ section.title }}
+            <button class="btn btn-success btn-sm" (click)="showPopUp(section.title)">
+              <i class="fa fa-plus"></i>
+            </button>
           </div>
-        </ng-container>
+          <ul class="list-group list-group-flush">
+            <ng-container *ngIf="section.items | async as items">
+              <ng-container *ngIf="getSlicedItems(items) as slicedItems">
+                <li class="list-group-item d-flex justify-content-between align-items-center" *ngFor="let item of slicedItems">
+                  {{ getDisplayProperties(item, section.displayProperty) }}
+
+                  <div>
+                    <button class="btn btn-link text-bg-light" (click)="editItem(item, section.title)">
+                      <i class="fa fa-edit"></i>
+                    </button>
+                    <button class="btn btn-link text-danger" (click)="deleteItem(item, section.title)">
+                      <i class="fa fa-trash"></i>
+                    </button>
+                  </div>
+                </li>
+              </ng-container>
+
+              <li class="list-group-item" *ngIf="items.length > 3 && !showMore[section.title]">
+                <div class="d-flex justify-content-center">
+                  <button class="btn btn-primary w-100" (click)="showMoreItems(section.title)">
+                    Show More ({{ items.length - 3 }} left)
+                  </button>
+                </div>
+              </li>
+
+              <ng-container *ngIf="showMore[section.title]">
+                <li class="list-group-item d-flex justify-content-between align-items-center" *ngFor="let item of items | slice:3">
+                  {{ getDisplayProperties(item, section.displayProperty) }}
+
+                  <div>
+                    <button class="btn btn-link text-bg-light" (click)="editItem(item, section.title)">
+                      <i class="fa fa-edit"></i>
+                    </button>
+                    <button class="btn btn-link text-danger" (click)="deleteItem(item, section.title)">
+                      <i class="fa fa-trash"></i>
+                    </button>
+                  </div>
+
+                </li>
+                <li class="list-group-item">
+                  <div class="d-flex justify-content-center">
+                    <button class="btn btn-secondary w-100" (click)="showLessItems(section.title)">Show Less</button>
+                  </div>
+                </li>
+              </ng-container>
+            </ng-container>
+          </ul>
+        </div>
       </div>
     </div>
     <app-work-experience-form #workExperienceForm [data]="data" [visible]="isWorkExperienceFormVisible" (visibleChange)="hidePopUp()"></app-work-experience-form>
     <app-skill-form #skillForm [data]="data"  [visible]="isSkillFormVisible" (visibleChange)="hidePopUp()"></app-skill-form>
     <app-language-form #languageForm [data]="data"  [visible]="isLanguageFormVisible" (visibleChange)="hidePopUp()"></app-language-form>
     <app-education-form #educationForm [data]="data"  [visible]="isEducationFormVisible" (visibleChange)="hidePopUp()"></app-education-form>
+
   </div>
+
   <ng-template #popUp>
     <!-- Content to display when the condition is false -->
     <div [hidden]="!visible" [ngClass]="{'popup': isPopUp}" class="popup" (click)="close()">

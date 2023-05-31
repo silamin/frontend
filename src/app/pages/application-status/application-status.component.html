@@ -11,7 +11,7 @@
   </div>
 </ng-container>
 <ng-template #applicationsReady>
-  <h2>My Applications</h2>
+  <h2 *ngIf="applications.length !==0">My Applications</h2>
   <div class="container mt-4">
     <div class="card text-center" *ngIf="applications.length === 0">
       <div class="card-body">
