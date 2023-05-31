@@ -9,6 +9,8 @@ import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 })
 export class SignInComponent {
   loginRegisterForm: FormGroup;
+  isLoading: boolean = false;
+
 
   constructor(private fb: FormBuilder, private authService: AuthServiceService) {
     // Initialize form groups for login and register
@@ -25,13 +27,23 @@ export class SignInComponent {
   isRegistering: boolean = false;
 
   // Function to switch to registration form
-  async register(): Promise<void> {
-    await this.authService.register(this.loginRegisterForm);
+  async register() {
+    this.isLoading = true;
+    try {
+      await this.authService.register(this.loginRegisterForm);
+    } finally {
+      this.isLoading = false;
+    }
   }
 
   // Function to switch to login form
-  async login(): Promise<void> {
-    this.authService.login(this.loginRegisterForm);
+  async login() {
+    this.isLoading = true;
+    try {
+      await this.authService.login(this.loginRegisterForm);
+    } finally {
+      this.isLoading = false;
+    }
   }
 
 
