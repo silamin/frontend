@@ -3,7 +3,7 @@ import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {SkillsService} from "../../services/forms-service/skills.service";
 import {HasForm} from "../../services/factories/FormFactory";
 import {Observable} from "rxjs";
-import {UserDTO} from "../../dtos/DTO's";
+import {UserDTO} from "../../interfaces/DTO\'s";
 import {UserStore} from "../../stores/UserStore";
 import {UserService} from "../../services/user.service";
 import {ToastrService} from "ngx-toastr";

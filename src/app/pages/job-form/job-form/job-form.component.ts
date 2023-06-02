@@ -4,7 +4,7 @@ import {JobServiceService} from "../../../services/job-service.service";
 import {UserStore} from "../../../stores/UserStore";
 import {UserService} from "../../../services/user.service";
 import { Observable} from "rxjs";
-import {UserDTO} from "../../../dtos/DTO's";
+import {UserDTO} from "../../../interfaces/DTO\'s";
 import {ApplicationService} from "../../../services/application.service";
 import {ToastrService} from "ngx-toastr";
 

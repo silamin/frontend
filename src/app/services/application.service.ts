@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import {AngularFirestore, AngularFirestoreCollection} from "@angular/fire/compat/firestore";
 import {combineLatest, filter, map, Observable, tap} from "rxjs";
-import {ApplicationDto, ApplicationDTO, UserDTO} from "../dtos/DTO's";
+import {ApplicationDto, ApplicationDTO, UserDTO} from "../interfaces/DTO\'s";
 import 'firebase/firestore';
 import {Resource} from "../pages/process-application/process-application.component";
 import 'firebase/firestore';

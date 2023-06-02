@@ -4,7 +4,7 @@ import {AngularFireFunctions} from "@angular/fire/compat/functions";
 import {AngularFirestore} from "@angular/fire/compat/firestore";
 import {map} from "rxjs";
 import {UserStore} from "../stores/UserStore";
-import {UserDTO} from "../dtos/DTO's";
+import {UserDTO} from "../interfaces/DTO\'s";
 import firebase from "firebase/compat/app";
 
 @Injectable({

@@ -2,7 +2,7 @@ import { Injectable} from '@angular/core';
 import {AngularFireAuth} from "@angular/fire/compat/auth";
 import {AngularFireFunctions} from "@angular/fire/compat/functions";
 import {AngularFirestore} from "@angular/fire/compat/firestore";
-import {WorkExperienceFormDTO} from "../../dtos/DTO\'s";
+import {WorkExperienceFormDTO} from "../../interfaces/DTO\'s";
 import {Observable} from "rxjs";
 import {SectionService} from "../section-service";
 

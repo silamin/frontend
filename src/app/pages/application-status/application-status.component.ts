@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {UserStore} from "../../stores/UserStore";
 import {forkJoin, Observable} from "rxjs";
-import {UserDTO} from "../../dtos/DTO's";
+import {UserDTO} from "../../interfaces/DTO\'s";
 import {UserService} from "../../services/user.service";
 import {ApplicationService} from "../../services/application.service";
 import {Timestamp} from "firebase/firestore";

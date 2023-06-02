@@ -1,6 +1,6 @@
 import {Injectable} from "@angular/core";
 import {BehaviorSubject, Observable} from "rxjs";
-import {UserDTO} from "../dtos/DTO's";
+import {UserDTO} from "../interfaces/DTO\'s";
 
 @Injectable()
 export class UserStore {

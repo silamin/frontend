@@ -2,7 +2,7 @@ import {Component, OnInit, ViewChild} from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { ApplicationService } from "../../services/application.service";
 import {ActivatedRoute, Router} from "@angular/router";
-import {ApplicationDTO, ScheduleDto} from "../../dtos/DTO's";
+import {ApplicationDTO, ScheduleDto} from "../../interfaces/DTO\'s";
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {JobServiceService} from "../../services/job-service.service";
 import {Timestamp} from "firebase/firestore";

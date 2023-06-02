@@ -2,7 +2,7 @@ import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges
 import {FormBuilder, FormGroup} from "@angular/forms";
 import {WorkExperienceService} from "../../services/forms-service/work-experience.service";
 import {UserStore} from "../../stores/UserStore";
-import {UserDTO, WorkExperienceFormDTO} from "../../dtos/DTO's";
+import {UserDTO, WorkExperienceFormDTO} from "../../interfaces/DTO\'s";
 import {HasForm} from "../../services/factories/FormFactory";
 import {Observable} from "rxjs";
 import {UserService} from "../../services/user.service";

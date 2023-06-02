@@ -3,7 +3,7 @@ import {AngularFireAuth} from "@angular/fire/compat/auth";
 import {AngularFireFunctions} from "@angular/fire/compat/functions";
 import {AngularFirestore} from "@angular/fire/compat/firestore";
 import {Observable} from "rxjs";
-import {LanguageDto, SkillDto, WorkExperienceFormDTO} from "../../dtos/DTO\'s";
+import {LanguageDto, SkillDto, WorkExperienceFormDTO} from "../../interfaces/DTO\'s";
 import {SectionService} from "../section-service";
 
 @Injectable({

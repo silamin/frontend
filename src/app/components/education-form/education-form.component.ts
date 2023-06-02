@@ -4,7 +4,7 @@ import {EducationService} from "../../services/forms-service/education.service";
 import {HasForm} from "../../services/factories/FormFactory";
 import {UserStore} from "../../stores/UserStore";
 import {catchError, Observable} from "rxjs";
-import {UserDTO} from "../../dtos/DTO's";
+import {UserDTO} from "../../interfaces/DTO\'s";
 import {UserService} from "../../services/user.service";
 import {ToastrService} from "ngx-toastr";
 

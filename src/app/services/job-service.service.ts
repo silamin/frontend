@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {AngularFireAuth} from "@angular/fire/compat/auth";
 import {AngularFireFunctions} from "@angular/fire/compat/functions";
-import {ApplicationDto, JobDto, UserDTO} from "../dtos/DTO's";
+import {ApplicationDto, JobDto, UserDTO} from "../interfaces/DTO\'s";
 import { map, Observable} from "rxjs";
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import firebase from 'firebase/compat/app';

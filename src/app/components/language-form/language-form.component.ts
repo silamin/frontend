@@ -4,7 +4,7 @@ import {LanguageServiceService} from "../../services/forms-service/language-serv
 import {HasForm} from "../../services/factories/FormFactory";
 import {UserStore} from "../../stores/UserStore";
 import {Observable} from "rxjs";
-import {UserDTO} from "../../dtos/DTO's";
+import {UserDTO} from "../../interfaces/DTO\'s";
 import {UserService} from "../../services/user.service";
 import {ToastrService} from "ngx-toastr";
 

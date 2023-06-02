@@ -2,7 +2,7 @@ import {ChangeDetectorRef, Component, OnInit, ViewChild} from '@angular/core';
 import { JobServiceService } from '../../services/job-service.service';
 import { UserStore } from '../../stores/UserStore';
 import {Observable} from 'rxjs';
-import { JobDto, UserDTO} from "../../dtos/DTO's";
+import { JobDto, UserDTO} from "../../interfaces/DTO\'s";
 import {ModalDismissReasons, NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {Router} from "@angular/router";
 import {ApplicationService} from "../../services/application.service";

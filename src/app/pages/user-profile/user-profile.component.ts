@@ -11,7 +11,7 @@ import {
 } from '@angular/core';
 import {UserStore} from "../../stores/UserStore";
 import {Observable} from "rxjs";
-import {UserDTO} from "../../dtos/DTO's";
+import {UserDTO} from "../../interfaces/DTO\'s";
 import {FormFactoryProviderService} from "../../services/factories/form-factory-provider.service";
 import {WorkExperienceFormComponent} from "../../components/work-experience-form/work-experience-form.component";
 import {SkillFormComponent} from "../../components/skill-form/skill-form.component";
