@@ -7,6 +7,10 @@ import {AngularFirestore} from "@angular/fire/compat/firestore";
 import {UserService} from "./services/user.service";
 import {of} from "rxjs";
 import {ApplicationService} from "./services/application.service";
+import {JobServiceService} from "./services/job-service.service";
+import {WorkExperienceService} from "./services/forms-service/work-experience.service";
+import {EducationService} from "./services/forms-service/education.service";
+import {SkillsService} from "./services/forms-service/skills.service";
 
 @Component({
   selector: 'app-root',
@@ -14,30 +18,8 @@ import {ApplicationService} from "./services/application.service";
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
-  constructor(private authService: AuthServiceService, private firestore: AngularFirestore, private userStore: UserStore, private appSer: ApplicationService) {
+  constructor() {
   }
-
-  user: any;
-
   async ngOnInit() {
-    this.appSer.getAllCandidatesByJobId('1').subscribe(data => {
-      console.log(data)
-    })
-
-    /*this.userStore.user$.subscribe(user => {
-      this.user =user;
-    })
-    const userDocRef = this.firestore.collection('users').doc(this.user.uid);
-
-    // Set the summary and name fields
-    const summary = 'This is a mock summary';
-    const name = 'Silamin';
-
-    return userDocRef.update({ summary, name })
-      .catch((error) => {
-        console.error('Error updating user document:', error);
-        throw error;
-      });
-  }*/
   }
 }

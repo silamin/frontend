@@ -93,9 +93,10 @@ export class CompanyMainPageComponent implements OnInit {
             this.applicationService.getAllCandidatesByJobId(job.id.toString()).subscribe(candidates => {
               // attach candidates to job
               job.candidates = candidates
+              console.log(job.candidates)
+
               // check if any candidate is accepted
               for (let candidate of candidates) {
-                console.log(candidate)
                 if (candidate.applicationStatus === 'accepted') {
                   job.hasAcceptedCandidate = true; // set boolean value to true
                   break; // stop processing remaining candidates
@@ -153,7 +154,7 @@ export class CompanyMainPageComponent implements OnInit {
   }
 
   deleteJob(job: JobDto) {
-    this.jobsService.removeJob(job.id.toString());
+    this.jobsService.removeJob(job.id.toString(), this.user.id);
   }
 
   processApplication(candidateId: number, jobId: number) {

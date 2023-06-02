@@ -6,6 +6,8 @@ import { map, Observable} from "rxjs";
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import firebase from 'firebase/compat/app';
 import {switchMap} from "rxjs/operators";
+import { firstValueFrom } from 'rxjs';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -142,7 +144,33 @@ export class JobServiceService {
     return this.firestore.collection('jobs').doc(job.id.toString()).update(job);
   }
 
-  removeJob(jobId: string): Promise<void> {
-  return new Promise(resolve => resolve);
+  async removeJob(jobId: string, userId: string): Promise<void> {
+    // Create a reference to the document in the 'jobs' collection
+    const jobRef = this.firestore.collection('jobs').doc(jobId);
+
+    // Delete the job document
+    await jobRef.delete();
+
+    // Fetch user document
+    const userRef = this.firestore.collection('users').doc(userId);
+
+    // Get user data
+    const userSnapshot = await firstValueFrom(userRef.get());
+    const userData = userSnapshot.data() as UserDTO;
+
+    // Check if the job id is in the user's likedJobs array
+    if (userData?.likedJobs) {
+      const likedJobs = userData.likedJobs;
+      const jobIndex = likedJobs.indexOf(Number(jobId));
+
+      // If the job id is found, remove it
+      if (jobIndex > -1) {
+        likedJobs.splice(jobIndex, 1);
+        await userRef.update({ likedJobs });
+      }
+    }
   }
+
+
+
 }

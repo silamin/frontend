@@ -249,54 +249,79 @@
                     <div class="card mb-4">
                       <div class="card-header d-flex justify-content-between">
                         {{ section.title }}
-                        <div>
-                        </div>
                       </div>
                       <ul class="list-group list-group-flush">
                         <ng-container *ngIf="section.items | async as items">
-                          <ng-container *ngIf="getSlicedItems(items) as slicedItems">
-                            <li class="list-group-item d-flex justify-content-between align-items-center" *ngFor="let item of slicedItems">
-                              <ng-container *ngIf="section.title !== 'Skills' && section.title !== 'Languages'; else skillsAndLanguages">
-                                {{ getDisplayPropertiesBrief(item, section.title) }}
-                              </ng-container>
 
-                              <ng-template #skillsAndLanguages>
+                          <ng-container *ngIf="section.title !== 'Skills' && section.title !== 'Languages'">
+                            <ng-container *ngIf="!showMore[section.title]">
+                              <li class="list-group-item d-flex justify-content-between align-items-center" *ngFor="let item of items | slice:0:3">
+                                {{ getDisplayPropertiesBrief(item, section.title) }}
+                              </li>
+                              <li class="list-group-item" *ngIf="items.length > 3">
+                                <div class="d-flex justify-content-center">
+                                  <button class="btn btn-primary w-100" (click)="showMoreItems(section.title)">
+                                    Show More ({{ items.length - 3 }} left)
+                                  </button>
+                                </div>
+                              </li>
+                            </ng-container>
+
+                            <ng-container *ngIf="showMore[section.title]">
+                              <li class="list-group-item d-flex justify-content-between align-items-center" *ngFor="let item of items">
+                                {{ getDisplayPropertiesBrief(item,section.title) }}
+                              </li>
+                              <li class="list-group-item">
+                                <div class="d-flex justify-content-center">
+                                  <button class="btn btn-secondary w-100" (click)="showLessItems(section.title)">Show Less</button>
+                                </div>
+                              </li>
+                            </ng-container>
+                          </ng-container>
+
+                          <ng-container *ngIf="section.title === 'Skills' || section.title === 'Languages'">
+                            <ng-container *ngIf="!showMore[section.title]">
+                              <li class="list-group-item d-flex justify-content-between align-items-center" *ngFor="let item of items | slice:0:3">
                                 <div>{{ item.skill || item.language }}</div>
                                 <div class="stars">
                                   <ng-container *ngFor="let starIndex of starIndexes; index as i">
                                     <span class="star" *ngIf="i < item.rating">★</span>
                                   </ng-container>
                                 </div>
-                              </ng-template>
-                            </li>
+                              </li>
+                              <li class="list-group-item" *ngIf="items.length > 3">
+                                <div class="d-flex justify-content-center">
+                                  <button class="btn btn-primary w-100" (click)="showMoreItems(section.title)">
+                                    Show More ({{ items.length - 3 }} left)
+                                  </button>
+                                </div>
+                              </li>
+                            </ng-container>
+
+                            <ng-container *ngIf="showMore[section.title]">
+                              <li class="list-group-item d-flex justify-content-between align-items-center" *ngFor="let item of items">
+                                <div>{{ item.skill || item.language }}</div>
+                                <div class="stars">
+                                  <ng-container *ngFor="let starIndex of starIndexes; index as i">
+                                    <span class="star" *ngIf="i < item.rating">★</span>
+                                  </ng-container>
+                                </div>
+                              </li>
+                              <li class="list-group-item">
+                                <div class="d-flex justify-content-center">
+                                  <button class="btn btn-secondary w-100" (click)="showLessItems(section.title)">Show Less</button>
+                                </div>
+                              </li>
+                            </ng-container>
 
                           </ng-container>
 
-                          <li class="list-group-item" *ngIf="items.length > 3 && !showMore[section.title]">
-                            <div class="d-flex justify-content-center">
-                              <button class="btn btn-primary w-100" (click)="showMoreItems(section.title)">
-                                Show More ({{ items.length - 3 }} left)
-                              </button>
-                            </div>
-                          </li>
-
-                          <ng-container *ngIf="showMore[section.title]">
-                            <li class="list-group-item d-flex justify-content-between align-items-center" *ngFor="let item of items | slice:3">
-                              {{ getDisplayPropertiesBrief(item,section.title) }}
-
-
-                            </li>
-                            <li class="list-group-item">
-                              <div class="d-flex justify-content-center">
-                                <button class="btn btn-secondary w-100" (click)="showLessItems(section.title)">Show Less</button>
-                              </div>
-                            </li>
-                          </ng-container>
                         </ng-container>
                       </ul>
                     </div>
                   </div>
                 </ng-container>
+
               </div>
             </div>
           </div>

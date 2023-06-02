@@ -13,6 +13,7 @@ export interface WorkExperienceFormDTO{
   startDate: Date;
 }
 export interface EducationBackgroundDto{
+  id?: number;
   school: string;
   degree: string;
   fieldOfStudy: string;
@@ -23,7 +24,7 @@ export interface EducationBackgroundDto{
   startDate: Date;
 }
 export interface SkillDto{
-  id: any;
+  id?: any;
   skill: string;
   rating: string;
 }
@@ -67,6 +68,7 @@ export interface UserDTO{
   address: AddressDTO;
   socialMediaProfiles: any;
   applicationStatus: string;
+  likedJobs: number[];
 }
 
 export interface ScheduleDto {

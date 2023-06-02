@@ -3,7 +3,7 @@ import {AngularFireAuth} from "@angular/fire/compat/auth";
 import {AngularFireFunctions} from "@angular/fire/compat/functions";
 import {AngularFirestore} from "@angular/fire/compat/firestore";
 import {Observable} from "rxjs";
-import {WorkExperienceFormDTO} from "../../dtos/DTO\'s";
+import {EducationBackgroundDto, WorkExperienceFormDTO} from "../../dtos/DTO\'s";
 import {SectionService} from "../section-service";
 
 @Injectable({
@@ -16,7 +16,7 @@ export class EducationService implements SectionService{
     private afAuth: AngularFireAuth,
               private functions: AngularFireFunctions,
               private firestore: AngularFirestore) {}
-  addItem(userId: string, educationBackground: any): Promise<any> {
+  addItem(userId: string, educationBackground: EducationBackgroundDto): Promise<any> {
     // Reference to the specific user's education background collection
     const educationBackgroundsRef = this.firestore.collection('users').doc(userId).collection('education');
 

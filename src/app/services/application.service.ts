@@ -150,26 +150,37 @@ export class ApplicationService {
       tap(applications => console.log('applications:', applications)),
       switchMap((applications: any[]) => {
         const candidatesObservables: Observable<UserDTO>[] = [];
-
         applications.forEach(application => {
           if (application.status !== 'rejected') {
             const candidate$ = this.firestore.doc<UserDTO>(`users/${application.candidateId}`).valueChanges().pipe(
               filter(candidate => candidate !== undefined), // Filter out undefined values
-              map(candidate => ({
-                ...candidate,
-                applicationStatus: application.status
-              }))
+              switchMap(candidate => {
+                // Fetch subcollections and map them into the candidate object
+                const workExperience$ = this.firestore.collection(`users/${application.candidateId}/workExperience`).valueChanges();
+                const education$ = this.firestore.collection(`users/${application.candidateId}/education`).valueChanges();
+                const skills$ = this.firestore.collection(`users/${application.candidateId}/skills`).valueChanges();
+                const languages$ = this.firestore.collection(`users/${application.candidateId}/languages`).valueChanges();
+                return combineLatest([workExperience$, education$, skills$, languages$]).pipe(
+                  map(([workExperience, education, skills, languages]) => ({
+                    ...candidate,
+                    workExperience,
+                    education,
+                    skills,
+                    languages,
+                    applicationStatus: application.status
+                  }))
+                );
+              })
             ) as Observable<UserDTO>;
-
             candidatesObservables.push(candidate$);
           }
         });
-
         return combineLatest(candidatesObservables);
       }),
       tap(candidates => console.log('candidates:', candidates))
     );
   }
+
   rejectApplication(jobId: number, candidateId: string, rejectionReason?: string) {
     // Query the collection
     return this.firestore.collection('applications', ref => ref.where('jobId', '==', jobId).where('candidateId', '==', candidateId))
