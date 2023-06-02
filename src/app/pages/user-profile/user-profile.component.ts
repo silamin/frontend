@@ -24,6 +24,7 @@ import { WORK_EXPERIENCE_SERVICE_TOKEN, EDUCATION_SERVICE_TOKEN, SKILLS_SERVICE_
 import {UserService} from "../../services/user.service";
 import { v4 as uuidv4 } from 'uuid';
 import {ToastrService} from "ngx-toastr";
+import {UserInfoFormControlNames} from "../../interfaces/control-names";
 
 
 interface Section {
@@ -59,8 +60,6 @@ export class UserProfileComponent implements OnInit, OnChanges {
   toggleShowMore() {
     this.showMoreUserInfo = !this.showMoreUserInfo;
   }
-
-  isDisplay = false;
   isWorkExperienceFormVisible = false;
   isEducationFormVisible = false;
   isLanguageFormVisible = false;
@@ -121,7 +120,7 @@ export class UserProfileComponent implements OnInit, OnChanges {
             });
 
             // Set the value for the form array
-            this.formGroup.get('socialMediaProfiles').patchValue(this.userData.socialMediaProfiles);
+            this.formGroup.get(UserInfoFormControlNames.SocialMediaProfiles).patchValue(this.userData.socialMediaProfiles);
           }
           if (!userData.isCompanyUser) {
             if (this.sections.length === 0){
@@ -287,7 +286,6 @@ export class UserProfileComponent implements OnInit, OnChanges {
     }
   }
 
-
   private getServiceToken(sectionTitle: string): ProviderToken<SectionService> {
     switch (sectionTitle) {
       case 'Work Experience':
@@ -304,8 +302,6 @@ export class UserProfileComponent implements OnInit, OnChanges {
   }
 
   close() {
-
-    console.log()
     this.isPopUp = false
     this.visible = false;
     this.visibleChange.emit(this.visible);
@@ -314,16 +310,13 @@ export class UserProfileComponent implements OnInit, OnChanges {
   getDisplayProperties(item: any, displayProperties: string[]): string {
     return displayProperties.map(prop => item[prop]).join(' ');
   }
-
   editField: any;
-  socialMediaKeys: any;
-  isEditingWorkExperience = false;
 
   isEditing(field: string): boolean {
     return this.editField === field;
   }
   get socialMediaProfiles(): FormArray {
-    return this.formGroup.get('socialMediaProfiles') as FormArray;
+    return this.formGroup.get(UserInfoFormControlNames.SocialMediaProfiles) as FormArray;
   }
 
   addSocialMediaProfile(profile: SocialMediaProfile = {id: uuidv4(), type: '', url: ''}): void {
@@ -337,13 +330,13 @@ export class UserProfileComponent implements OnInit, OnChanges {
   startEditing(field: string): void {
     this.editField = field;
     // Populate the form controls with existing data
-    this.formGroup.get('email').setValue(this.userData.email);
-    this.formGroup.get('phoneNumber').setValue(this.userData.phoneNumber);
+    this.formGroup.get(UserInfoFormControlNames.Email).setValue(this.userData.email);
+    this.formGroup.get(UserInfoFormControlNames.PhoneNumber).setValue(this.userData.phoneNumber);
     if (this.userData.address) {
-      this.formGroup.get('street').setValue(this.userData.address.street);
-      this.formGroup.get('city').setValue(this.userData.address.city);
-      this.formGroup.get('postalCode').setValue(this.userData.address.postalCode);
-      this.formGroup.get('country').setValue(this.userData.address.country);
+      this.formGroup.get(UserInfoFormControlNames.Street).setValue(this.userData.address.street);
+      this.formGroup.get(UserInfoFormControlNames.City).setValue(this.userData.address.city);
+      this.formGroup.get(UserInfoFormControlNames.PostalCode).setValue(this.userData.address.postalCode);
+      this.formGroup.get(UserInfoFormControlNames.Country).setValue(this.userData.address.country);
     }
   }
 
@@ -353,13 +346,13 @@ export class UserProfileComponent implements OnInit, OnChanges {
 
   private createUserInfoFormGroup() {
       this.formGroup = this.formBuilder.group({
-        email: [this.userData?.email || '', []],
-        phoneNumber: [this.userData?.phoneNumber || '', []],
-        street: [this.userData?.address?.street || '', []],
-        city: [this.userData?.address?.city || '', []],
-        postalCode: [this.userData?.address?.postalCode || '', []],
-        country: [this.userData?.address?.country || '', []],
-        socialMediaProfiles: this.formBuilder.array([])
+        [UserInfoFormControlNames.Email]: [this.userData?.email || '', []],
+        [UserInfoFormControlNames.PhoneNumber]: [this.userData?.phoneNumber || '', []],
+        [UserInfoFormControlNames.Street]: [this.userData?.address?.street || '', []],
+        [UserInfoFormControlNames.City]: [this.userData?.address?.city || '', []],
+        [UserInfoFormControlNames.PostalCode]: [this.userData?.address?.postalCode || '', []],
+        [UserInfoFormControlNames.Country]: [this.userData?.address?.country || '', []],
+        [UserInfoFormControlNames.SocialMediaProfiles]: this.formBuilder.array([])
       });
     }
   async updateUserAddress() {
@@ -372,10 +365,10 @@ export class UserProfileComponent implements OnInit, OnChanges {
       };
     }
 
-    this.userData.address.street = this.formGroup.get('street').value;
-    this.userData.address.city = this.formGroup.get('city').value;
-    this.userData.address.postalCode = this.formGroup.get('postalCode').value;
-    this.userData.address.country = this.formGroup.get('country').value;
+    this.userData.address.street = this.formGroup.get(UserInfoFormControlNames.Street).value;
+    this.userData.address.city = this.formGroup.get(UserInfoFormControlNames.City).value;
+    this.userData.address.postalCode = this.formGroup.get(UserInfoFormControlNames.PostalCode).value;
+    this.userData.address.country = this.formGroup.get(UserInfoFormControlNames.Country).value;
 
     try {
       await this.userService.editUser(this.userData);
@@ -387,11 +380,11 @@ export class UserProfileComponent implements OnInit, OnChanges {
   }
 
   updateUserData() {
-    this.userData.email = this.formGroup.get('email').value;
-    this.userData.phoneNumber = this.formGroup.get('phoneNumber').value;
+    this.userData.email = this.formGroup.get(UserInfoFormControlNames.Email).value;
+    this.userData.phoneNumber = this.formGroup.get(UserInfoFormControlNames.PhoneNumber).value;
 
     // Get the FormArray
-    let formArray = this.formGroup.get('socialMediaProfiles') as FormArray;
+    let formArray = this.formGroup.get(UserInfoFormControlNames.SocialMediaProfiles) as FormArray;
 
     // Update the userData.socialMediaProfiles array
     this.userData.socialMediaProfiles = formArray.value;

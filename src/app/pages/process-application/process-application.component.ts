@@ -4,8 +4,8 @@ import { ApplicationService } from "../../services/application.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {ApplicationDTO, ScheduleDto} from "../../interfaces/DTO\'s";
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
-import {JobServiceService} from "../../services/job-service.service";
 import {Timestamp} from "firebase/firestore";
+import {ApplicationFormControlNames} from "../../interfaces/control-names";
 
 export interface Resource {
   name: string;
@@ -74,12 +74,12 @@ export class ProcessApplicationComponent implements OnInit {
 
   createForm(): void {
     this.applicationForm = this.formBuilder.group({
-      invitationText: [''],
-      interviewLocation: [''],
-      interviewDate: [''],
-      newResourceName: [''],
-      newResourceUrl: [''],
-      notes: [{ value: '', disabled: !this.isEditingNotes }]
+      [ApplicationFormControlNames.InvitationText]: [''],
+      [ApplicationFormControlNames.InterviewLocation]: [''],
+      [ApplicationFormControlNames.InterviewDate]: [''],
+      [ApplicationFormControlNames.NewResourceName]: [''],
+      [ApplicationFormControlNames.NewResourceUrl]: [''],
+      [ApplicationFormControlNames.Notes]: [{ value: '', disabled: !this.isEditingNotes }]
     });
   }
 
@@ -118,16 +118,16 @@ export class ProcessApplicationComponent implements OnInit {
     console.log(this.isEditingNotes);
 
     if (this.isEditingNotes) {
-      this.applicationForm.get('notes')?.enable(); // Enable the form control
+      this.applicationForm.get(ApplicationFormControlNames.Notes)?.enable(); // Enable the form control
     } else {
-      this.applicationForm.get('notes')?.disable(); // Disable the form control
+      this.applicationForm.get(ApplicationFormControlNames.Notes)?.disable(); // Disable the form control
       this.saveNotes(); // Save notes if not in editing mode
     }
   }
 
   addResource(): void {
-    const newResourceName = this.applicationForm.get('newResourceName')?.value;
-    const newResourceUrl = this.applicationForm.get('newResourceUrl')?.value;
+    const newResourceName = this.applicationForm.get(ApplicationFormControlNames.NewResourceName)?.value;
+    const newResourceUrl = this.applicationForm.get(ApplicationFormControlNames.NewResourceUrl)?.value;
 
     if (newResourceName && newResourceUrl) {
       const newResource: Resource = {
@@ -138,8 +138,8 @@ export class ProcessApplicationComponent implements OnInit {
       this.resources.push(newResource);
       this.applicationService.addResource(newResource, this.applicationData.id);
 
-      this.applicationForm.get('newResourceName')?.reset();
-      this.applicationForm.get('newResourceUrl')?.reset();
+      this.applicationForm.get(ApplicationFormControlNames.NewResourceName)?.reset();
+      this.applicationForm.get(ApplicationFormControlNames.NewResourceUrl)?.reset();
     }
   }
 
@@ -152,21 +152,21 @@ export class ProcessApplicationComponent implements OnInit {
   }
 
   useTemplate(): void {
-    this.applicationForm.get('invitationText')?.setValue('Dear [Candidate],\n\nWe are pleased to invite you for an interview at our office for the position of [Job Role]. Please let us know when you are available.\n\nBest Regards,\n[Your Name]');
+    this.applicationForm.get(ApplicationFormControlNames.InvitationText)?.setValue('Dear [Candidate],\n\nWe are pleased to invite you for an interview at our office for the position of [Job Role]. Please let us know when you are available.\n\nBest Regards,\n[Your Name]');
   }
 
   clearText(): void {
-    this.applicationForm.get('invitationText')?.reset();
+    this.applicationForm.get(ApplicationFormControlNames.InvitationText)?.reset();
   }
 
   sendInvitation(): void {
-    const invitationText = this.applicationForm.get('invitationText')?.value;
+    const invitationText = this.applicationForm.get(ApplicationFormControlNames.InvitationText)?.value;
     this.applicationService.sendInvitation(invitationText, this.applicationData.id);
   }
 
   scheduleInterview(): void {
-    const interviewLocation = this.applicationForm.get('interviewLocation')?.value;
-    const interviewDate = this.applicationForm.get('interviewDate')?.value;
+    const interviewLocation = this.applicationForm.get(ApplicationFormControlNames.InterviewLocation)?.value;
+    const interviewDate = this.applicationForm.get(ApplicationFormControlNames.InterviewDate)?.value;
 
     const interviewData = {
       location: interviewLocation,
@@ -177,25 +177,12 @@ export class ProcessApplicationComponent implements OnInit {
   }
 
   saveNotes(): void {
-    const notes = this.applicationForm.get('notes')?.value;
+    const notes = this.applicationForm.get(ApplicationFormControlNames.Notes)?.value;
     this.applicationService.saveData(notes, this.applicationData.id);
   }
 
-  firestoreStringToJSDate(dateString: string | undefined): Date | null {
-    if (!dateString) {
-      return null;
-    }
-
-    const timestamp = Date.parse(dateString);
-    if (isNaN(timestamp)) {
-      return null;
-    }
-
-    return new Date(timestamp);
-  }
-
   getProgress(): number {
-    // Implement your logic to calculate the progress percentage
+    // Implement the logic to calculate the progress percentage
     // Return the progress percentage as a number
     return 0;
   }
@@ -221,7 +208,7 @@ export class ProcessApplicationComponent implements OnInit {
         }
       } else if (result === 'No'){
       console.log('rejected')}
-    }, (reason) => {
+    }, () => {
       console.log('dismissed');
 
       // this function will be invoked if the promise is rejected.

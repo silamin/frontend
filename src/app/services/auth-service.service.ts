@@ -5,6 +5,7 @@ import {AngularFireFunctions} from "@angular/fire/compat/functions";
 import {Router} from "@angular/router";
 import {UserStore} from "../stores/UserStore";
 import {GlobalErrorHandlerService} from "./global-error-handler.service";
+import {LoginRegisterFormControlNames} from "../interfaces/control-names";
 
 @Injectable({
   providedIn: 'root'
@@ -21,9 +22,9 @@ export class AuthServiceService {
 
   async register(registerForm): Promise<void> {
     try {
-      const email = registerForm.get('email')?.value;
-      const password = registerForm.get('password')?.value;
-      const isRecruiter = registerForm.get('isRecruiter')?.value;
+      const email = registerForm.get(LoginRegisterFormControlNames.Email)?.value;
+      const password = registerForm.get(LoginRegisterFormControlNames.Password)?.value;
+      const isRecruiter = registerForm.get(LoginRegisterFormControlNames.IsRecruiter)?.value;
 
       const userCredential = await this.afAuth.createUserWithEmailAndPassword(email, password);
 
@@ -58,8 +59,8 @@ export class AuthServiceService {
 
   async login(loginForm): Promise<void> {
     try {
-      const email = loginForm.get('email')?.value;
-      const password = loginForm.get('password')?.value;
+      const email = loginForm.get(LoginRegisterFormControlNames.Email)?.value;
+      const password = loginForm.get(LoginRegisterFormControlNames.Password)?.value;
 
       const userCredential = await this.afAuth.signInWithEmailAndPassword(email, password);
       const user = userCredential?.user;

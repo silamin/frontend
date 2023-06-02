@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import {AuthServiceService} from "../../services/auth-service.service";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {ToastrService} from "ngx-toastr";
+import {LoginRegisterFormControlNames} from "../../interfaces/control-names";
 
 @Component({
   selector: 'app-sign-in',
@@ -11,6 +12,7 @@ import {ToastrService} from "ngx-toastr";
 export class SignInComponent {
   loginRegisterForm: FormGroup;
   isLoading: boolean = false;
+  LoginRegisterFormControlNames = LoginRegisterFormControlNames;
 
 
   constructor(private fb: FormBuilder,
@@ -25,9 +27,6 @@ export class SignInComponent {
       isLogin: [true]
     });
   }
-
-  // Flag to switch between login and register forms
-  isRegistering: boolean = false;
 
   // Function to switch to registration form
   async register() {
@@ -60,10 +59,10 @@ export class SignInComponent {
 
 
   switchToRegister(): void {
-    this.loginRegisterForm.get('isLogin')?.setValue(false);
+    this.loginRegisterForm.get(LoginRegisterFormControlNames.IsLogin)?.setValue(false);
   }
 
   switchToLogin(): void {
-    this.loginRegisterForm.get('isLogin')?.setValue(true);
+    this.loginRegisterForm.get(LoginRegisterFormControlNames.IsLogin)?.setValue(true);
   }
 }
