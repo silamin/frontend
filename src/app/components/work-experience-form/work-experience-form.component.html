@@ -9,7 +9,7 @@
         <form [formGroup]="formData" (ngSubmit)="onSubmit()">
           <div class="mb-3">
             <label for="jobTitle" class="form-label">Title</label>
-            <input type="text" class="form-control" id="jobTitle" placeholder="Job Title" formControlName="jobTitle">
+            <input type="text" class="form-control" id="jobTitle" placeholder="Job Title" formControlName="JobTitle">
           </div>
           <div class="mb-3">
             <label for="employment-type" class="form-label">Employment Type</label>
@@ -34,7 +34,7 @@
           <div class="row mb-3">
             <div class="col">
               <label for="start-date" class="form-label">Start Date</label>
-              <input type="date" class="form-control" id="start-date" formControlName="startDate">
+              <input type="date" class="form-control" id="start-date" formControlName="StartDate">
             </div>
             <div class="col">
               <label for="end-date" class="form-label">End Date</label>
@@ -47,7 +47,7 @@
           </div>
           <div class="mb-3">
             <label for="job-description" class="form-label">Job Description</label>
-            <textarea class="form-control" id="job-description" rows="3" placeholder="Job Description" formControlName="jobDescription"></textarea>
+            <textarea class="form-control" id="job-description" rows="3" placeholder="Job Description" formControlName="JobDescription"></textarea>
           </div>
           <button type="submit" class="btn btn-primary w-100">Submit</button>
         </form>

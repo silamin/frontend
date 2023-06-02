@@ -45,9 +45,9 @@ export class JobServiceService {
       // Add the ID to the jobDto object
       jobDto.id = newId;
 
-      // Check if userId is defined
+      // Check if UserId is defined
       if (!jobDto.userId) {
-        throw new Error("Invalid jobDto: userId is undefined");
+        throw new Error("Invalid jobDto: UserId is undefined");
       }
 
       // Adding the new job to the 'jobs' collection with the new ID
@@ -128,7 +128,7 @@ export class JobServiceService {
   }
 
   async getJobById(id: any): Promise<any> {
-    if (!id && id !== 0) { // this will handle id = 0 case as well
+    if (!id && id !== 0) { // this will handle Id = 0 case as well
       throw new Error('Invalid ID');
     }
     const idStr = id.toString(); // convert to string to use with firestore
@@ -158,12 +158,12 @@ export class JobServiceService {
     const userSnapshot = await firstValueFrom(userRef.get());
     const userData = userSnapshot.data() as UserDTO;
 
-    // Check if the job id is in the user's likedJobs array
+    // Check if the job Id is in the user's likedJobs array
     if (userData?.likedJobs) {
       const likedJobs = userData.likedJobs;
       const jobIndex = likedJobs.indexOf(Number(jobId));
 
-      // If the job id is found, remove it
+      // If the job Id is found, remove it
       if (jobIndex > -1) {
         likedJobs.splice(jobIndex, 1);
         await userRef.update({ likedJobs });

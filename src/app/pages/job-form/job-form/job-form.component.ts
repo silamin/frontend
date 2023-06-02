@@ -32,17 +32,17 @@ export class JobFormComponent implements OnChanges, OnInit{
   ngOnChanges() {
     this.isApplied = false;
     if (this.selectedJob) { // Check if applications is defined
-      this.jobForm.get(JobFormControlNames.id)?.setValue(this.selectedJob?.id);
-      this.jobForm.get(JobFormControlNames.jobTitle)?.setValue(this.selectedJob?.jobTitle);
-      this.jobForm.get(JobFormControlNames.workplace)?.setValue(this.selectedJob?.workplace);
-      this.jobForm.get(JobFormControlNames.workType)?.setValue(this.selectedJob?.workType);
-      this.jobForm.get(JobFormControlNames.startDate)?.setValue(this.selectedJob?.startDate);
-      this.jobForm.get(JobFormControlNames.deadline)?.setValue(this.selectedJob?.deadline);
-      this.jobForm.get(JobFormControlNames.jobResponsibilities)?.setValue(this.selectedJob?.jobResponsibilities);
-      this.jobForm.get(JobFormControlNames.jobDescription)?.setValue(this.selectedJob?.jobDescription);
-      this.jobForm.get(JobFormControlNames.backgroundSkills)?.setValue(this.selectedJob?.backgroundSkills);
-      this.jobForm.get(JobFormControlNames.jobBenefits)?.setValue(this.selectedJob?.jobBenefits);
-      this.isApplied = this.applications?.some(application => application.jobId === this.jobForm.get(JobFormControlNames.id)?.value);
+      this.jobForm.get(JobFormControlNames.Id)?.setValue(this.selectedJob?.id);
+      this.jobForm.get(JobFormControlNames.JobTitle)?.setValue(this.selectedJob?.jobTitle);
+      this.jobForm.get(JobFormControlNames.Workplace)?.setValue(this.selectedJob?.workplace);
+      this.jobForm.get(JobFormControlNames.WorkType)?.setValue(this.selectedJob?.workType);
+      this.jobForm.get(JobFormControlNames.StartDate)?.setValue(this.selectedJob?.startDate);
+      this.jobForm.get(JobFormControlNames.Deadline)?.setValue(this.selectedJob?.deadline);
+      this.jobForm.get(JobFormControlNames.JobResponsibilities)?.setValue(this.selectedJob?.jobResponsibilities);
+      this.jobForm.get(JobFormControlNames.JobDescription)?.setValue(this.selectedJob?.jobDescription);
+      this.jobForm.get(JobFormControlNames.BackgroundSkills)?.setValue(this.selectedJob?.backgroundSkills);
+      this.jobForm.get(JobFormControlNames.JobBenefits)?.setValue(this.selectedJob?.jobBenefits);
+      this.isApplied = this.applications?.some(application => application.jobId === this.jobForm.get(JobFormControlNames.Id)?.value);
 
       this.selectedJobChange.emit(this.selectedJob);
     }
@@ -57,7 +57,7 @@ export class JobFormComponent implements OnChanges, OnInit{
       userData$.subscribe(async userData => {
         this.applicationService.getAllApplications(this.userId).subscribe(applications => {
           this.applications = applications;
-          this.isApplied = this.applications.some(application => application.jobId === this.jobForm.get(JobFormControlNames.id)?.value)
+          this.isApplied = this.applications.some(application => application.jobId === this.jobForm.get(JobFormControlNames.Id)?.value)
         })
       })}
        };
@@ -81,23 +81,23 @@ export class JobFormComponent implements OnChanges, OnInit{
               private changeDetector: ChangeDetectorRef,
               private toastr: ToastrService) {
     this.jobForm = this.fb.group({
-      [JobFormControlNames.id]: ['', Validators.required],
-      [JobFormControlNames.jobTitle]: ['', Validators.required],
-      [JobFormControlNames.workplace]: ['', Validators.required],
-      [JobFormControlNames.workType]: ['', Validators.required],
-      [JobFormControlNames.startDate]: [''],
-      [JobFormControlNames.deadline]: [''],
-      [JobFormControlNames.jobDescription]: ['', Validators.required],
-      [JobFormControlNames.jobResponsibilities]: ['', Validators.required],
-      [JobFormControlNames.backgroundSkills]: ['', Validators.required],
-      [JobFormControlNames.jobBenefits]: ['', Validators.required],
-      [JobFormControlNames.userId]: ['', Validators.required]
+      [JobFormControlNames.Id]: ['', Validators.required],
+      [JobFormControlNames.JobTitle]: ['', Validators.required],
+      [JobFormControlNames.Workplace]: ['', Validators.required],
+      [JobFormControlNames.WorkType]: ['', Validators.required],
+      [JobFormControlNames.StartDate]: [''],
+      [JobFormControlNames.Deadline]: [''],
+      [JobFormControlNames.JobDescription]: ['', Validators.required],
+      [JobFormControlNames.JobResponsibilities]: ['', Validators.required],
+      [JobFormControlNames.BackgroundSkills]: ['', Validators.required],
+      [JobFormControlNames.JobBenefits]: ['', Validators.required],
+      [JobFormControlNames.UserId]: ['', Validators.required]
     });
   }
 
   submitJobForm() {
     if (!this.isEdit) {
-      this.jobForm.get(JobFormControlNames.userId)?.setValue(this.userId)
+      this.jobForm.get(JobFormControlNames.UserId)?.setValue(this.userId)
       this.jobService.addJob(this.jobForm.value)
     } else {
       this.jobService.editJob(this.jobForm.value);
@@ -108,7 +108,7 @@ export class JobFormComponent implements OnChanges, OnInit{
   onApply() {
     this.isLoading = true;
     if (this.isApplied) {
-      this.applicationService.withdrawApplication(this.jobForm.get(JobFormControlNames.id)?.value, this.userId).then(() => {
+      this.applicationService.withdrawApplication(this.jobForm.get(JobFormControlNames.Id)?.value, this.userId).then(() => {
         this.toastr.success('Application withdrawn successfully');
       }).catch(error => {
         this.toastr.error('Error while withdrawing application');
@@ -118,7 +118,7 @@ export class JobFormComponent implements OnChanges, OnInit{
         this.changeDetector.detectChanges();  // add this line
       });
     } else {
-      this.applicationService.startProcess(this.jobForm.get(JobFormControlNames.id)?.value, this.userId).then(() => {
+      this.applicationService.startProcess(this.jobForm.get(JobFormControlNames.Id)?.value, this.userId).then(() => {
         this.toastr.success('Application started successfully');
       }).catch(error => {
         this.toastr.error('Error while starting application');

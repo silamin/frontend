@@ -67,7 +67,7 @@ export class LanguageServiceService implements SectionService{
     return educationBackgroundRef.valueChanges();
   }
   editItem(id, data) {
-    // Check if data and data.id are defined before proceeding
+    // Check if data and data.Id are defined before proceeding
     if(data && data.id) {
       this.firestore
         .collection('users')
@@ -85,7 +85,7 @@ export class LanguageServiceService implements SectionService{
           });
         });
     } else {
-      console.error('Data or data.id is undefined');
+      console.error('Data or data.Id is undefined');
     }
   }
 }

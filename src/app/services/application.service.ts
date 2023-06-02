@@ -18,7 +18,7 @@ export class ApplicationService {
     try {
       const applicationsRef: AngularFirestoreCollection<any> = this.firestore.collection('applications');
 
-      // Get the most recent document based on the 'id' field in descending order
+      // Get the most recent document based on the 'Id' field in descending order
       const querySnapshot = await applicationsRef.ref.orderBy('id', 'desc').limit(1).get();
       const lastId = querySnapshot.empty ? 0 : querySnapshot.docs[0].data().id;
 

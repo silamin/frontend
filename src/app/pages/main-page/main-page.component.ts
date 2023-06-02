@@ -56,7 +56,7 @@ export class MainPageComponent implements OnInit, AfterViewInit{
           if (userId) {
             return this.userService.getUserById(userId);
           } else {
-            // handle the situation when userId is not available
+            // handle the situation when UserId is not available
             // return an appropriate Observable
             // For now, let's return an empty Observable as a placeholder
             return of(null);
@@ -78,7 +78,7 @@ export class MainPageComponent implements OnInit, AfterViewInit{
                 this.searchService.searchObservable
               ]);
             } else {
-              // handle the situation when userId is not available
+              // handle the situation when UserId is not available
               // return an appropriate Observable
               // For now, let's return an empty Observable as a placeholder
               return of([]);

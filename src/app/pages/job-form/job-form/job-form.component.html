@@ -13,13 +13,13 @@
               <!-- Job title -->
               <div class="form-group" *ngIf="!isDisplay; else jobTitleText">
                 <label for="jobTitle">Job title *</label>
-                <input formControlName="jobTitle" type="text" id="jobTitle" class="form-control"
+                <input formControlName="JobTitle" type="text" id="jobTitle" class="form-control"
                        placeholder="Please enter a job title" required>
               </div>
               <ng-template #jobTitleText>
                 <div class="form-group">
                   <label class="form-label fw-bold">Job title *</label>
-                  <p>{{ jobForm.get(JobFormControlNames.jobTitle)?.value }}</p>
+                  <p>{{ jobForm.get(JobFormControlNames.JobTitle)?.value }}</p>
                 </div>
               </ng-template>
             </div>
@@ -30,13 +30,13 @@
               <!-- Workplace -->
               <div class="form-group" *ngIf="!isDisplay; else workplaceText">
                 <label for="workplace">Workplace *</label>
-                <input formControlName="workplace" type="text" id="workplace" class="form-control"
-                       placeholder="Please enter your workplace" required>
+                <input formControlName="Workplace" type="text" id="workplace" class="form-control"
+                       placeholder="Please enter your Workplace" required>
               </div>
               <ng-template #workplaceText>
                 <div class="form-group">
                   <label class="form-label fw-bold">Workplace *</label>
-                  <p>{{ jobForm.get(JobFormControlNames.workplace)?.value }}</p>
+                  <p>{{ jobForm.get(JobFormControlNames.Workplace)?.value }}</p>
                 </div>
               </ng-template>
             </div>
@@ -44,7 +44,7 @@
               <!-- Work Type -->
               <div class="form-group" *ngIf="!isDisplay; else workTypeText">
                 <label for="workType">Type of work</label>
-                <select formControlName="workType" id="workType" class="form-control" required>
+                <select formControlName="WorkType" id="workType" class="form-control" required>
                   <option value="" selected disabled>--Select Your Issue--</option>
                   <option>Remote</option>
                   <option>On-site</option>
@@ -54,7 +54,7 @@
               <ng-template #workTypeText>
                 <div class="form-group">
                   <label class="form-label fw-bold">Type of work</label>
-                  <p>{{ jobForm.get(JobFormControlNames.workType)?.value }}</p>
+                  <p>{{ jobForm.get(JobFormControlNames.WorkType)?.value }}</p>
                 </div>
               </ng-template>
             </div>
@@ -65,13 +65,13 @@
               <!-- Start Date -->
               <div class="form-group" *ngIf="!isDisplay; else startDateText">
                 <label for="startDate">Starting date</label>
-                <input formControlName="startDate" type="date" id="startDate" class="form-control"
+                <input formControlName="StartDate" type="date" id="startDate" class="form-control"
                        placeholder="Select date">
               </div>
               <ng-template #startDateText>
                 <div class="form-group">
                   <label class="form-label fw-bold">Starting date</label>
-                  <p>{{ jobForm.get(JobFormControlNames.startDate)?.value }}</p>
+                  <p>{{ jobForm.get(JobFormControlNames.StartDate)?.value }}</p>
                 </div>
               </ng-template>
             </div>
@@ -79,13 +79,13 @@
               <!-- Deadline -->
               <div class="form-group" *ngIf="!isDisplay; else deadlineText">
                 <label for="deadline">Deadline for application</label>
-                <input formControlName="deadline" type="date" id="deadline" class="form-control"
+                <input formControlName="Deadline" type="date" id="deadline" class="form-control"
                        placeholder="Select date">
               </div>
               <ng-template #deadlineText>
                 <div class="form-group">
                   <label class="form-label fw-bold">Deadline for application</label>
-                  <p>{{ jobForm.get(JobFormControlNames.deadline)?.value }}</p>
+                  <p>{{ jobForm.get(JobFormControlNames.Deadline)?.value }}</p>
                 </div>
               </ng-template>
             </div>
@@ -96,13 +96,13 @@
               <!-- Job Description -->
               <div class="form-group" *ngIf="!isDisplay; else jobDescriptionText">
                 <label for="jobDescription">Job description</label>
-                <textarea formControlName="jobDescription" id="jobDescription" class="form-control"
+                <textarea formControlName="JobDescription" id="jobDescription" class="form-control"
                           placeholder="Write the job description." rows="3" required></textarea>
               </div>
               <ng-template #jobDescriptionText>
                 <div class="form-group">
                   <label class="form-label fw-bold">Job description</label>
-                  <p>{{ jobForm.get(JobFormControlNames.jobDescription)?.value }}</p>
+                  <p>{{ jobForm.get(JobFormControlNames.JobDescription)?.value }}</p>
                 </div>
               </ng-template>
             </div>
@@ -113,13 +113,13 @@
               <!-- Job Responsibilities -->
               <div class="form-group" *ngIf="!isDisplay; else jobResponsibilitiesText">
                 <label for="jobResponsibilities">Job Responsibilities</label>
-                <textarea formControlName="jobResponsibilities" id="jobResponsibilities" class="form-control"
+                <textarea formControlName="JobResponsibilities" id="jobResponsibilities" class="form-control"
                           placeholder="Write the job responsibilities." rows="3" required></textarea>
               </div>
               <ng-template #jobResponsibilitiesText>
                 <div class="form-group">
                   <label class="form-label fw-bold">Job Responsibilities</label>
-                  <p>{{ jobForm.get(JobFormControlNames.jobResponsibilities)?.value }}</p>
+                  <p>{{ jobForm.get(JobFormControlNames.JobResponsibilities)?.value }}</p>
                 </div>
               </ng-template>
             </div>
@@ -130,13 +130,13 @@
               <!-- Background & Skills -->
               <div class="form-group" *ngIf="!isDisplay; else backgroundSkillsText">
                 <label for="backgroundSkills">Background & Skills</label>
-                <textarea formControlName="backgroundSkills" id="backgroundSkills" class="form-control"
+                <textarea formControlName="BackgroundSkills" id="backgroundSkills" class="form-control"
                           placeholder="Write the required background and skills." rows="3" required></textarea>
               </div>
               <ng-template #backgroundSkillsText>
                 <div class="form-group">
                   <label class="form-label fw-bold">Background & Skills</label>
-                  <p>{{ jobForm.get(JobFormControlNames.backgroundSkills)?.value }}</p>
+                  <p>{{ jobForm.get(JobFormControlNames.BackgroundSkills)?.value }}</p>
                 </div>
               </ng-template>
             </div>
@@ -147,13 +147,13 @@
               <!-- Job Benefits -->
               <div class="form-group" *ngIf="!isDisplay; else jobBenefitsText">
                 <label for="jobBenefits">What you will get</label>
-                <textarea formControlName="jobBenefits" id="jobBenefits" class="form-control"
+                <textarea formControlName="JobBenefits" id="jobBenefits" class="form-control"
                           placeholder="Write the job description." rows="2" required></textarea>
               </div>
               <ng-template #jobBenefitsText>
                 <div class="form-group">
                   <label class="form-label fw-bold">What you will get</label>
-                  <p>{{ jobForm.get(JobFormControlNames.jobBenefits)?.value }}</p>
+                  <p>{{ jobForm.get(JobFormControlNames.JobBenefits)?.value }}</p>
                 </div>
               </ng-template>
 

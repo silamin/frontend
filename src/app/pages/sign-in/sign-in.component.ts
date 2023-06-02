@@ -20,11 +20,11 @@ export class SignInComponent {
               private toastr: ToastrService) {
     // Initialize form groups for login and register
     this.loginRegisterForm = this.fb.group({
-      email: ['', Validators.required],
-      password: ['', Validators.required],
-      username: [''],
-      isRecruiter: [false],
-      isLogin: [true]
+      [LoginRegisterFormControlNames.Email]: ['', Validators.required],
+      [LoginRegisterFormControlNames.Password]: ['', Validators.required],
+      [LoginRegisterFormControlNames.Username]: [''],
+      [LoginRegisterFormControlNames.IsRecruiter]: [false],
+      [LoginRegisterFormControlNames.IsLogin]: [true]
     });
   }
 

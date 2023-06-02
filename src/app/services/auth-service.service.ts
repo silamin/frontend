@@ -31,7 +31,7 @@ export class AuthServiceService {
       if (userCredential.user) {
         const uid = userCredential.user.uid; // Fetch uid from user object
 
-        // Set the userId in the UserStore
+        // Set the UserId in the UserStore
         this.userStore.setUserId(uid);
 
         // Create a new document in Firestore for this user
@@ -71,7 +71,7 @@ export class AuthServiceService {
         const userDoc = await userDocRef.get().toPromise();
 
         if (userDoc?.exists) {
-          // If the user document exists, set the userId in the UserStore
+          // If the user document exists, set the UserId in the UserStore
           this.userStore.setUserId(user.uid);
 
           // Determine the appropriate navigation based on user type

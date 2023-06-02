@@ -7,27 +7,27 @@ export class UserStore {
   userId$: BehaviorSubject<string | null>;
 
   constructor() {
-    // Try to load the user id from localStorage
+    // Try to load the user Id from localStorage
     const storedUserId = localStorage.getItem('userId');
     const initialUserId = storedUserId ? storedUserId : null;
 
-    // Initialize the userId$ observable with the loaded data
+    // Initialize the UserId$ observable with the loaded data
     this.userId$ = new BehaviorSubject<string | null>(initialUserId);
   }
 
   setUserId(userId: string) {
-    // Update the userId$ observable
+    // Update the UserId$ observable
     this.userId$.next(userId);
 
-    // Also save the user id in localStorage
+    // Also save the user Id in localStorage
     localStorage.setItem('userId', userId);
   }
 
   clearUserId() {
-    // Clear the userId$ observable
+    // Clear the UserId$ observable
     this.userId$.next(null);
 
-    // Also clear the user id from localStorage
+    // Also clear the user Id from localStorage
     localStorage.removeItem('userId');
   }
 }
