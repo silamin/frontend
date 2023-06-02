@@ -15,7 +15,7 @@ import {ToastrService} from "ngx-toastr";
 })
 export class NavigationBarComponent implements OnInit{
   searchControl: FormControl = new FormControl();
-  @Input() isCompanyUser
+  @Input() isCompanyUser;
   navItems: any[] = [];
   jobPopupVisible = false;
   isDisplay = false;

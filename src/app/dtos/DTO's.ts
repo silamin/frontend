@@ -1,8 +1,10 @@
 import {Observable} from "rxjs";
 import { Timestamp } from 'firebase/firestore';
+import {Resource} from "../pages/process-application/process-application.component";
+import {SocialMediaProfile} from "../pages/user-profile/user-profile.component";
 
 export interface WorkExperienceFormDTO{
-  id?: number;
+  id: number;
   companyName: string;
   currentlyWorkingHere: boolean;
   employmentType: string;
@@ -24,12 +26,12 @@ export interface EducationBackgroundDto{
   startDate: Date;
 }
 export interface SkillDto{
-  id?: any;
+  id: number;
   skill: string;
   rating: string;
 }
 export interface LanguageDto{
-  id: any;
+  id: number;
   language: string;
   rating: string;
 }
@@ -59,14 +61,14 @@ export interface AddressDTO {
 }
 
 export interface UserDTO{
-  id: number;
+  id: string;
   isCompanyUser: boolean;
   name: string;
   summary: string;
   email: string;
   phoneNumber: string;
   address: AddressDTO;
-  socialMediaProfiles: any;
+  socialMediaProfiles: SocialMediaProfile[];
   applicationStatus: string;
   likedJobs: number[];
 }
@@ -77,7 +79,7 @@ export interface ScheduleDto {
 }
 
 export interface ApplicationDTO{
-  resources: any[];
+  resources: Resource[];
   notes: string
   scheduling: ScheduleDto;
   invitation?: string;
@@ -88,11 +90,10 @@ export interface ApplicationDTO{
 
 }
 export interface ApplicationDto{
-  id: any;
-  userId: any;
-  jobId: any;
-  Status: any;
-  notes: any;
-  status: any
-  candidateId: any;
+  id: number;
+  userId: string;
+  jobId: number;
+  notes: string;
+  status: string
+  candidateId: string;
 }

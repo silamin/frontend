@@ -18,7 +18,7 @@ export class WorkExperienceFormComponent implements HasForm, OnInit{
   @Input() visible: boolean=false;
   @Output() visibleChange: EventEmitter<boolean> = new EventEmitter<boolean>();
   formData: FormGroup;
-  user: any;
+  user!: UserDTO;
   @Input() data;
   close() {
     this.visible = false;

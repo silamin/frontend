@@ -141,7 +141,7 @@ export class JobServiceService {
   }
 
   editJob(job: JobDto) {
-    return this.firestore.collection('jobs').doc(job.id.toString()).update(job);
+    return this.firestore.collection('jobs').doc(job.id?.toString()).update(job);
   }
 
   async removeJob(jobId: string, userId: string): Promise<void> {

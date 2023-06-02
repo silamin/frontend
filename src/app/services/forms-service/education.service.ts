@@ -26,7 +26,7 @@ export class EducationService implements SectionService{
       const previousIds: number[] = [];
 
       snapshot?.forEach(doc => {
-        const eduBackground = doc.data() as any;
+        const eduBackground = doc.data() as EducationBackgroundDto;
         if (eduBackground.id) {
           previousIds.push(eduBackground.id);
         }

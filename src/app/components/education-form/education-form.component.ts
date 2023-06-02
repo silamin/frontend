@@ -19,7 +19,7 @@ export class EducationFormComponent implements HasForm, OnInit{
   @Output() visibleChange: EventEmitter<boolean> = new EventEmitter<boolean>();
 
   educationForm: FormGroup;
-  user: any;
+  user!: UserDTO;
 
   constructor(private formBuilder: FormBuilder,
               private educationService: EducationService,

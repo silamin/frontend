@@ -24,7 +24,6 @@ import { WORK_EXPERIENCE_SERVICE_TOKEN, EDUCATION_SERVICE_TOKEN, SKILLS_SERVICE_
 import {UserService} from "../../services/user.service";
 import { v4 as uuidv4 } from 'uuid';
 import {ToastrService} from "ngx-toastr";
-import {AddressDTO} from "../../dtos/DTO's";
 
 
 interface Section {
@@ -33,7 +32,7 @@ interface Section {
   displayProperty: string[];
 }
 
-interface SocialMediaProfile {
+export interface SocialMediaProfile {
   id: string;
   type: string;
   url: string

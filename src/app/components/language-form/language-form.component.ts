@@ -16,7 +16,7 @@ import {ToastrService} from "ngx-toastr";
 export class LanguageFormComponent implements HasForm, OnInit{
   languageForm: FormGroup;
   @Input() data;
-  user: any;
+  user!: UserDTO;
 
   constructor(private fb: FormBuilder,
               private languageService: LanguageServiceService,

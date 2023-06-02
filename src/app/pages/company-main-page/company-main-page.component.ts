@@ -90,7 +90,7 @@ export class CompanyMainPageComponent implements OnInit {
         this.jobsService.getAllJobs(userId!, this.user.isCompanyUser).subscribe(jobs => {
           for (let job of jobs) {
             job.hasAcceptedCandidate = false; // default value
-            this.applicationService.getAllCandidatesByJobId(job.id.toString()).subscribe(candidates => {
+            this.applicationService.getAllCandidatesByJobId(job.id!.toString()).subscribe(candidates => {
               // attach candidates to job
               job.candidates = candidates
               console.log(job.candidates)
@@ -154,7 +154,7 @@ export class CompanyMainPageComponent implements OnInit {
   }
 
   deleteJob(job: JobDto) {
-    this.jobsService.removeJob(job.id.toString(), this.user.id);
+    this.jobsService.removeJob(job.id!.toString(), this.user.id);
   }
 
   processApplication(candidateId: number, jobId: number) {

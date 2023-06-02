@@ -16,7 +16,7 @@ import {ToastrService} from "ngx-toastr";
 export class SkillFormComponent implements HasForm, OnInit{
   skillForm: FormGroup;
   @Input() data;
-  user: any;
+  user!: UserDTO;
 
   constructor(private fb: FormBuilder,
               private skillsService: SkillsService,
