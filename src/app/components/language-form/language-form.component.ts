@@ -7,6 +7,7 @@ import {Observable} from "rxjs";
 import {UserDTO} from "../../interfaces/DTO\'s";
 import {UserService} from "../../services/user.service";
 import {ToastrService} from "ngx-toastr";
+import {LanguageFormControlNames} from "../../interfaces/control-names";
 
 @Component({
   selector: 'app-language-form',
@@ -14,6 +15,7 @@ import {ToastrService} from "ngx-toastr";
   styleUrls: ['./language-form.component.scss']
 })
 export class LanguageFormComponent implements HasForm, OnInit{
+  LanguageFormControlNames = LanguageFormControlNames;
   languageForm: FormGroup;
   @Input() data;
   user!: UserDTO;
@@ -23,9 +25,9 @@ export class LanguageFormComponent implements HasForm, OnInit{
               private userStore: UserStore, private userService: UserService,
               private toastr: ToastrService) {
     this.languageForm = this.fb.group({
-      id: ['',],
-      language: ['', Validators.required],
-      rating: ['', Validators.required],
+      [LanguageFormControlNames.Id]: ['',],
+      [LanguageFormControlNames.Language]: ['', Validators.required],
+      [LanguageFormControlNames.Rating]: ['', Validators.required],
     });
   }
 

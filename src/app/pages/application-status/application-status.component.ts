@@ -86,9 +86,14 @@ export class ApplicationStatusComponent implements OnInit{
     this.currentPage = newPage;
   }
   get paginatedApplications(): any[] {
+    if (!this.applications) {
+      return [];
+    }
+
     const startIndex = (this.currentPage - 1) * 3;
     const endIndex = startIndex + 3;
-    return this.applications!.slice(startIndex, endIndex);
+    return this.applications.slice(startIndex, endIndex);
   }
+
 }
 

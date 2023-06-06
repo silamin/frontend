@@ -110,7 +110,6 @@ export class UserProfileComponent implements OnInit, OnChanges {
       if (userId) {
         let userData$: Observable<UserDTO> = await this.userService.getUserById(userId);
         userData$.subscribe(async userData => {
-          console.log('silamin')
           this.userData = userData;
           // Check if there are social media profiles in userData
           if (this.userData.socialMediaProfiles && this.socialMediaProfiles.length === 0) {

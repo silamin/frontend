@@ -9,37 +9,37 @@
         <form [formGroup]="educationForm" (ngSubmit)="onSubmit()">
           <div class="mb-2">
             <label for="school" class="form-label">School</label>
-            <input type="text" class="form-control" id="school" placeholder="School" formControlName="school">
+            <input type="text" class="form-control" id="school" placeholder="School" formControlName="{{EducationFormControlNames.School}}">
           </div>
           <div class="mb-2">
             <label for="degree" class="form-label">Degree</label>
-            <input type="text" class="form-control" id="degree" placeholder="Degree" formControlName="degree">
+            <input type="text" class="form-control" id="degree" placeholder="Degree" formControlName="{{EducationFormControlNames.Degree}}">
           </div>
           <div class="mb-2">
             <label for="field-of-study" class="form-label">Field of Study</label>
-            <input type="text" class="form-control" id="field-of-study" placeholder="Field of Study" formControlName="fieldOfStudy">
+            <input type="text" class="form-control" id="field-of-study" placeholder="Field of Study" formControlName="{{EducationFormControlNames.FieldOfStudy}}">
           </div>
           <div class="row mb-2">
             <div class="col">
               <label for="start-date" class="form-label">Start Date</label>
-              <input type="date" class="form-control" id="start-date" formControlName="StartDate">
+              <input type="date" class="form-control" id="start-date" formControlName="{{EducationFormControlNames.StartDate}}">
             </div>
             <div class="col">
               <label for="end-date" class="form-label">End Date</label>
-              <input type="date" class="form-control" id="end-date" formControlName="endDate">
+              <input type="date" class="form-control" id="end-date" formControlName="{{EducationFormControlNames.EndDate}}">
             </div>
           </div>
           <div class="mb-2">
             <label for="grade" class="form-label">Grade</label>
-            <input type="text" class="form-control" id="grade" placeholder="Grade" formControlName="grade">
+            <input type="text" class="form-control" id="grade" placeholder="Grade" formControlName="{{EducationFormControlNames.Grade}}">
           </div>
           <div class="mb-2">
             <label for="activities-societies" class="form-label">Activities and Societies</label>
-            <textarea class="form-control" id="activities-societies" rows="2" placeholder="Activities and Societies" formControlName="activitiesSocieties"></textarea>
+            <textarea class="form-control" id="activities-societies" rows="2" placeholder="Activities and Societies" formControlName="{{EducationFormControlNames.ActivitiesSocieties}}"></textarea>
           </div>
           <div class="mb-2">
             <label for="description" class="form-label">Description</label>
-            <textarea class="form-control" id="description" rows="2" placeholder="Description" formControlName="description"></textarea>
+            <textarea class="form-control" id="description" rows="2" placeholder="Description" formControlName="{{EducationFormControlNames.Description}}"></textarea>
           </div>
           <button type="submit" class="btn btn-primary w-100">Submit</button>
         </form>

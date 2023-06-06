@@ -46,3 +46,24 @@ export enum WorkExperienceFormControlNames {
   CurrentlyWorking = 'currentlyWorking',
   JobDescription = 'jobDescription'
 }
+export enum EducationFormControlNames {
+  Id = 'id',
+  School = 'school',
+  Degree = 'degree',
+  FieldOfStudy = 'fieldOfStudy',
+  StartDate = 'startDate',
+  EndDate = 'endDate',
+  Grade = 'grade',
+  ActivitiesSocieties = 'activitiesSocieties',
+  Description = 'description'
+}
+export enum LanguageFormControlNames {
+  Id = 'id',
+  Language = 'language',
+  Rating = 'rating'
+}
+export enum SkillsFormControlNames {
+  Id = 'id',
+  Skill = 'skill',
+  Rating = 'rating'
+}

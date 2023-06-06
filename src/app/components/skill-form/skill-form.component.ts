@@ -7,6 +7,7 @@ import {UserDTO} from "../../interfaces/DTO\'s";
 import {UserStore} from "../../stores/UserStore";
 import {UserService} from "../../services/user.service";
 import {ToastrService} from "ngx-toastr";
+import {SkillsFormControlNames} from "../../interfaces/control-names";
 
 @Component({
   selector: 'app-skill-form',
@@ -14,6 +15,7 @@ import {ToastrService} from "ngx-toastr";
   styleUrls: ['./skill-form.component.scss']
 })
 export class SkillFormComponent implements HasForm, OnInit{
+  SkillsFormControlNames = SkillsFormControlNames;
   skillForm: FormGroup;
   @Input() data;
   user!: UserDTO;
@@ -24,9 +26,9 @@ export class SkillFormComponent implements HasForm, OnInit{
               private userService:UserService,
               private toastr: ToastrService) {
     this.skillForm = this.fb.group({
-      id: ['',],
-      skill: ['', Validators.required],
-      rating: ['', Validators.required],
+      [SkillsFormControlNames.Id]: ['',],
+      [SkillsFormControlNames.Skill]: ['', Validators.required],
+      [SkillsFormControlNames.Rating]: ['', Validators.required],
     });
   }
 

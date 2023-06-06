@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import {FormFactory} from "./FormFactory";
 import {FormGroup} from "@angular/forms";
+import {SkillsFormControlNames} from "../../interfaces/control-names";
 
 @Injectable({
   providedIn: 'root'
@@ -8,12 +9,11 @@ import {FormGroup} from "@angular/forms";
 export class SkillFormFactoryService  implements FormFactory{
 
   constructor() { }
-
   populateForm(data: any,formData): void {
     formData.setValue({
-      id: data.id,
-      skill: data.skill,
-      rating: data.rating
+      [SkillsFormControlNames.Id]: data.id,
+      [SkillsFormControlNames.Skill]: data.skill,
+      [SkillsFormControlNames.Rating]: data.rating
     });
   }
 

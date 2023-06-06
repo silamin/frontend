@@ -29,25 +29,25 @@
           </div>
           <div class="mb-3">
             <label for="location" class="form-label">Location</label>
-            <input type="text" class="form-control" id="location" placeholder="Location" formControlName="location">
+            <input type="text" class="form-control" id="location" placeholder="Location" formControlName="{{WorkExperienceFormControlNames.Location}}">
           </div>
           <div class="row mb-3">
             <div class="col">
               <label for="start-date" class="form-label">Start Date</label>
-              <input type="date" class="form-control" id="start-date" formControlName="StartDate">
+              <input type="date" class="form-control" id="start-date" formControlName="{{WorkExperienceFormControlNames.StartDate}}">
             </div>
             <div class="col">
               <label for="end-date" class="form-label">End Date</label>
-              <input type="date" class="form-control" id="end-date" formControlName="endDate">
+              <input type="date" class="form-control" id="end-date" formControlName="{{WorkExperienceFormControlNames.EndDate}}">
             </div>
           </div>
           <div class="mb-3 form-check">
-            <input type="checkbox" class="form-check-input" id="currently-working" formControlName="currentlyWorking">
+            <input type="checkbox" class="form-check-input" id="currently-working" formControlName="{{WorkExperienceFormControlNames.CurrentlyWorking}}">
             <label class="form-check-label" for="currently-working">Currently Working Here</label>
           </div>
           <div class="mb-3">
             <label for="job-description" class="form-label">Job Description</label>
-            <textarea class="form-control" id="job-description" rows="3" placeholder="Job Description" formControlName="JobDescription"></textarea>
+            <textarea class="form-control" id="job-description" rows="3" placeholder="Job Description" formControlName="{{WorkExperienceFormControlNames.JobDescription}}"></textarea>
           </div>
           <button type="submit" class="btn btn-primary w-100">Submit</button>
         </form>

@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import {FormFactory} from "./FormFactory";
 import {FormGroup} from "@angular/forms";
+import {LanguageFormControlNames} from "../../interfaces/control-names";
 
 @Injectable({
   providedIn: 'root'
@@ -8,12 +9,11 @@ import {FormGroup} from "@angular/forms";
 export class LanguageFormFactoryService implements FormFactory{
 
   constructor() { }
-
   populateForm(data: any, formData): void {
     formData.setValue({
-      id: data.id,
-      language: data.language,
-      rating: data.rating
+      [LanguageFormControlNames.Id]: data.id,
+      [LanguageFormControlNames.Language]: data.language,
+      [LanguageFormControlNames.Rating]: data.rating
     })
   }
 

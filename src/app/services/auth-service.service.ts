@@ -120,7 +120,7 @@ export class AuthServiceService {
 
   async logout(): Promise<void> {
     try {
-      const uid = localStorage.getItem('uid'); // Retrieve uid from localStorage
+      const uid = localStorage.getItem('userId'); // Retrieve uid from localStorage
 
       if (!uid) {
         throw new Error("User id not found in localStorage");

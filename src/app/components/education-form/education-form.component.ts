@@ -7,6 +7,7 @@ import {catchError, Observable} from "rxjs";
 import {UserDTO} from "../../interfaces/DTO\'s";
 import {UserService} from "../../services/user.service";
 import {ToastrService} from "ngx-toastr";
+import {EducationFormControlNames} from "../../interfaces/control-names";
 
 @Component({
   selector: 'app-education-form',
@@ -14,6 +15,7 @@ import {ToastrService} from "ngx-toastr";
   styleUrls: ['./education-form.component.scss']
 })
 export class EducationFormComponent implements HasForm, OnInit{
+  EducationFormControlNames = EducationFormControlNames
   @Input() visible: boolean = false;
   @Input() data;
   @Output() visibleChange: EventEmitter<boolean> = new EventEmitter<boolean>();
@@ -26,15 +28,15 @@ export class EducationFormComponent implements HasForm, OnInit{
               private userStore: UserStore,private userService: UserService,
               private toastr: ToastrService) {
     this.educationForm = this.formBuilder.group({
-      id: ['',[]],
-      school: ['',[]],
-      degree: ['',[]],
-      fieldOfStudy: ['',[]],
-      startDate: ['',[]],
-      endDate: ['',[]],
-      grade: ['',[]],
-      activitiesSocieties: ['',[]],
-      description: ['',[]]
+      [EducationFormControlNames.Id]: ['',[]],
+      [EducationFormControlNames.School]: ['',[]],
+      [EducationFormControlNames.Degree]: ['',[]],
+      [EducationFormControlNames.FieldOfStudy]: ['',[]],
+      [EducationFormControlNames.StartDate]: ['',[]],
+      [EducationFormControlNames.EndDate]: ['',[]],
+      [EducationFormControlNames.Grade]: ['',[]],
+      [EducationFormControlNames.ActivitiesSocieties]: ['',[]],
+      [EducationFormControlNames.Description]: ['',[]]
     });
   }
 
