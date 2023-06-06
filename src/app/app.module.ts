@@ -48,8 +48,6 @@ import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {GlobalErrorHandlerService} from "./services/global-error-handler.service";
 import {AngularFireMessagingModule} from "@angular/fire/compat/messaging";
 import { ServiceWorkerModule } from '@angular/service-worker';
-import {getMessaging} from "firebase/messaging";
-
 
 const routes: Routes = [
   { path: '', component: SignInComponent },
@@ -112,9 +110,9 @@ const firebaseConfig = {
         // Add AngularFire and Firebase configurations
         AngularFireModule.initializeApp(firebaseConfig),
         AngularFireAuthModule,
+        AngularFireMessagingModule,
         AngularFireFunctionsModule,
         NgbCollapse,
-        AngularFireMessagingModule,
         ServiceWorkerModule.register('ngsw-worker.js', {
           enabled: !isDevMode(),
           // Register the ServiceWorker as soon as the application is stable

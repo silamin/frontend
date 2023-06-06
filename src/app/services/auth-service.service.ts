@@ -84,18 +84,20 @@ export class AuthServiceService {
         const userDocRef = this.firestore.collection('users').doc(user.uid);
         const userDoc = await userDocRef.get().toPromise();
 
-        if (!userDoc?.exists) {
-          // If the user document doesn't exist, create it and store the FCM token
+        if (userDoc?.exists) {
+          // If the user document exists, update it with the FCM token
           try {
             const fcmToken = await this.messagingService.requestPermission();
             console.log('FCM Token:', fcmToken);
-            const userData = {
-              id: user.uid,
-              email: user.email,
-              isCompanyUser: false,
-              fcmToken: fcmToken // Store the FCM token
-            };
-            await userDocRef.set(userData);
+
+            // Update the document with the new FCM token
+            if (fcmToken) {
+              await userDocRef.update({
+                fcmToken: fcmToken // Update only the FCM token
+              });
+            } else {
+              console.log('Failed to get FCM token');
+            }
           } catch (error) {
             console.log('Failed to get FCM token:', error);
           }
@@ -117,6 +119,7 @@ export class AuthServiceService {
       throw error;
     }
   }
+
 
   async logout(): Promise<void> {
     try {

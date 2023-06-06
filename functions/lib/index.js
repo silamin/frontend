@@ -1,9 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const functions = require("firebase-functions");
-const admin = require("firebase-admin");
 const nodemailer = require("nodemailer");
-admin.initializeApp();
+const admin = require("firebase-admin");
+const serviceAccount = require("../serviceAccountKey.json");
+admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount),
+});
 const transporter = nodemailer.createTransport({
     service: "gmail",
     auth: {
@@ -30,29 +33,46 @@ exports.sendWelcomeEmail = functions.auth.user().onCreate((user) => {
     });
 });
 exports.notifyNewJob = functions.firestore
-    .document('jobs/{documentId}')
-    .onCreate(async (snapshot, context) => {
+    .document("jobs/{documentId}")
+    .onCreate(async () => {
     try {
-        const usersSnapshot = await admin.firestore().collection('users').get();
-        const notificationPromises = [];
-        for (const userDoc of usersSnapshot.docs) {
-            const fcmToken = userDoc.data().fcmToken;
-            if (fcmToken) {
-                const message = {
-                    notification: {
-                        title: 'New Job',
-                        body: 'A new job has been added!',
-                    },
-                    token: fcmToken,
-                };
-                notificationPromises.push(admin.messaging().send(message));
+        // Get all user documents
+        const usersSnapshot = await admin.firestore().collection("users").get();
+        console.log(`Total users: ${usersSnapshot.size}`);
+        const sendPromises = [];
+        usersSnapshot.forEach((userDoc) => {
+            const userData = userDoc.data();
+            console.log(`User: ${userDoc.id}, FCM Token: ${userData.fcmToken}`);
+            // Only send a message if the fcmToken exists and is a non-empty string
+            if (userData.fcmToken && typeof userData.fcmToken === "string" && userData.fcmToken.trim() !== "") {
+                console.log(`Sending message to fcmToken: ${userData.fcmToken}`);
+                try {
+                    if (userData.fcmToken) {
+                        const message = {
+                            token: userData.fcmToken,
+                            notification: {
+                                title: "Notification Title",
+                                body: "Notification Body",
+                            },
+                        };
+                        console.log(`Message: ${JSON.stringify(message)}`);
+                        // Send the message
+                        sendPromises.push(admin.messaging().send(message));
+                    }
+                }
+                catch (error) {
+                    console.log(`Error sending message to ${userDoc.id}:`, error);
+                }
             }
-        }
-        await Promise.all(notificationPromises);
-        console.log('Notifications sent successfully');
+            else {
+                console.log(`Skipping user with invalid fcmToken: ${userDoc.id}`);
+            }
+        });
+        await Promise.all(sendPromises);
+        console.log("Notifications sent successfully");
     }
     catch (error) {
-        console.log('Error sending notifications:', error);
+        console.log("Error sending notifications:", error);
     }
 });
 //# sourceMappingURL=index.js.map
