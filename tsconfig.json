@@ -21,6 +21,7 @@
     "module": "ES2022",
     "useDefineForClassFields": false,
     "lib": [
+      "webworker",
       "ES2022",
       "dom"
     ],

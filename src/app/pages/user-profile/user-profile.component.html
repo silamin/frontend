@@ -25,7 +25,7 @@
                 </div>
                 <div *ngIf="isEditing('email')" class="content-wrap">
                   <i class="fa fa-envelope"></i>
-                  <input type="email" class="form-control edit-input" placeholder="email" formControlName="email">
+                  <input type="email" class="form-control edit-input" placeholder="email" formControlName="{{UserInfoFormControlNames.Email}}">
                   <button class="btn btn-link position-absolute top-0 end-0" (click)="stopEditing(); updateUserData()">
                     <i class="fa fa-check"></i>
                   </button>
@@ -46,7 +46,7 @@
                 </div>
                 <div *ngIf="isEditing('phoneNumber')" class="content-wrap">
                   <i class="fa fa-phone"></i>
-                  <input type="tel" class="form-control edit-input" placeholder="phone number" formControlName="phoneNumber">
+                  <input type="tel" class="form-control edit-input" placeholder="phone number" formControlName="{{UserInfoFormControlNames.PhoneNumber}}">
                   <button class="btn btn-link position-absolute top-0 end-0" (click)="stopEditing(); updateUserData()">
                     <i class="fa fa-check"></i>
                   </button>
@@ -79,16 +79,16 @@
                     <i class="fa fa-address-card"></i>
                     <div class="row g-3">
                       <div class="col">
-                        <input type="text" placeholder="Street" class="form-control edit-input" formControlName="street">
+                        <input type="text" placeholder="Street" class="form-control edit-input" formControlName="{{UserInfoFormControlNames.Street}}">
                       </div>
                       <div class="col">
-                        <input type="text" placeholder="City" class="form-control edit-input" formControlName="city">
+                        <input type="text" placeholder="City" class="form-control edit-input" formControlName="{{UserInfoFormControlNames.City}}">
                       </div>
                       <div class="col">
-                        <input type="text" placeholder="Postal Code" class="form-control edit-input" formControlName="postalCode">
+                        <input type="text" placeholder="Postal Code" class="form-control edit-input" formControlName="{{UserInfoFormControlNames.PostalCode}}">
                       </div>
                       <div class="col">
-                        <input type="text" placeholder="Country" class="form-control edit-input" formControlName="country">
+                        <input type="text" placeholder="Country" class="form-control edit-input" formControlName="{{UserInfoFormControlNames.Country}}">
                       </div>
                     </div>
                     <button class="btn btn-link position-absolute top-0 end-0" (click)="stopEditing(); updateUserAddress()">

@@ -6,19 +6,22 @@ import {Router} from "@angular/router";
 import {UserStore} from "../stores/UserStore";
 import {GlobalErrorHandlerService} from "./global-error-handler.service";
 import {LoginRegisterFormControlNames} from "../interfaces/control-names";
+import {MessagingService} from "./messaging.service";
+import firebase from "firebase/compat/app";
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthServiceService {
-
-  constructor(private afAuth: AngularFireAuth,
-              private functions: AngularFireFunctions,
-              private firestore: AngularFirestore,
-              private router: Router,
-              private userStore: UserStore,
-              private errorHandler: GlobalErrorHandlerService) {}
-
+  constructor(
+    private afAuth: AngularFireAuth,
+    private functions: AngularFireFunctions,
+    private firestore: AngularFirestore,
+    private router: Router,
+    private userStore: UserStore,
+    private errorHandler: GlobalErrorHandlerService,
+    private messagingService: MessagingService
+  ) {}
 
   async register(registerForm): Promise<void> {
     try {
@@ -39,7 +42,17 @@ export class AuthServiceService {
           id: uid,
           email: email,
           isCompanyUser: isRecruiter
-        })
+        });
+
+        // Get the FCM token and store it in the user document
+        try {
+          const fcmToken = await this.messagingService.requestPermission();
+          await this.firestore.collection('users').doc(uid).update({
+            fcmToken: fcmToken
+          });
+        } catch (error) {
+          console.log('Failed to get FCM token:', error);
+        }
 
         // Redirect the user to the appropriate page based on whether they're a recruiter or not
         if (isRecruiter) {
@@ -51,6 +64,7 @@ export class AuthServiceService {
     } catch (error: any) {
       console.error('Error during registration:', error);
       if (error.code === 'auth/email-already-in-use') {
+        // Handle specific error case if needed
       } else {
         throw error;
       }
@@ -70,17 +84,32 @@ export class AuthServiceService {
         const userDocRef = this.firestore.collection('users').doc(user.uid);
         const userDoc = await userDocRef.get().toPromise();
 
-        if (userDoc?.exists) {
-          // If the user document exists, set the UserId in the UserStore
-          this.userStore.setUserId(user.uid);
-
-          // Determine the appropriate navigation based on user type
-          const userData: any = userDoc.data();
-          if (userData?.isCompanyUser) {
-            await this.router.navigate(['/company-main-page']);
-          } else {
-            await this.router.navigate(['/user-main-page']);
+        if (!userDoc?.exists) {
+          // If the user document doesn't exist, create it and store the FCM token
+          try {
+            const fcmToken = await this.messagingService.requestPermission();
+            console.log('FCM Token:', fcmToken);
+            const userData = {
+              id: user.uid,
+              email: user.email,
+              isCompanyUser: false,
+              fcmToken: fcmToken // Store the FCM token
+            };
+            await userDocRef.set(userData);
+          } catch (error) {
+            console.log('Failed to get FCM token:', error);
           }
+        }
+
+        // Set the UserId in the UserStore
+        this.userStore.setUserId(user.uid);
+
+        // Determine the appropriate navigation based on user type
+        const userData: any = userDoc?.data();
+        if (userData?.isCompanyUser) {
+          await this.router.navigate(['/company-main-page']);
+        } else {
+          await this.router.navigate(['/user-main-page']);
         }
       }
     } catch (error) {
@@ -89,9 +118,17 @@ export class AuthServiceService {
     }
   }
 
-
   async logout(): Promise<void> {
     try {
+      const uid = localStorage.getItem('uid'); // Retrieve uid from localStorage
+
+      if (!uid) {
+        throw new Error("User id not found in localStorage");
+      }
+      await this.firestore.collection('users').doc(uid).update({
+        fcmToken: firebase.firestore.FieldValue.delete()
+      });
+
       await this.afAuth.signOut();
       localStorage.clear();
     } catch (error) {

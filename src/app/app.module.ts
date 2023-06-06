@@ -1,4 +1,4 @@
-import {ErrorHandler, NgModule, NgZone} from '@angular/core';
+import {ErrorHandler, NgModule, NgZone, isDevMode} from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppComponent } from './app.component';
@@ -46,6 +46,10 @@ import { ProcessApplicationComponent } from './pages/process-application/process
 import {ToastrModule, ToastrService} from "ngx-toastr";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {GlobalErrorHandlerService} from "./services/global-error-handler.service";
+import {AngularFireMessagingModule} from "@angular/fire/compat/messaging";
+import { ServiceWorkerModule } from '@angular/service-worker';
+import {getMessaging} from "firebase/messaging";
+
 
 const routes: Routes = [
   { path: '', component: SignInComponent },
@@ -66,6 +70,7 @@ const firebaseConfig = {
   appId : "1:365220988857:web:f8fbe2e3ad8efd3b13d868" ,
   measurementId : "G-394246XLDF"
 };
+
 
 @NgModule({
   declarations: [
@@ -109,6 +114,13 @@ const firebaseConfig = {
         AngularFireAuthModule,
         AngularFireFunctionsModule,
         NgbCollapse,
+        AngularFireMessagingModule,
+        ServiceWorkerModule.register('ngsw-worker.js', {
+          enabled: !isDevMode(),
+          // Register the ServiceWorker as soon as the application is stable
+          // or after 30 seconds (whichever comes first).
+          registrationStrategy: 'registerWhenStable:30000'
+        }),
     ],
   providers: [
     UserStore,

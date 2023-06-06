@@ -29,26 +29,30 @@ exports.sendWelcomeEmail = functions.auth.user().onCreate((user) => {
         console.log("Sent email", info);
     });
 });
-exports.notifyCandidates = functions.firestore
-    .document("jobs/{jobId}")
-    .onCreate(async (snap) => {
-    // Fetch job details
-    const jobData = snap.data();
-    // Query all users
-    const candidatesSnapshot = await admin.firestore().collection("users").get();
-    // For each candidate, send notification
-    candidatesSnapshot.forEach(async (candidate) => {
-        const userToken = candidate.data().fcmToken;
-        const message = {
-            notification: {
-                title: "New Job Alert",
-                body: `A new job posting you might be interested in: ${jobData.title}`,
-                icon: "/path_to_icon.png", // Update with path to your notification icon
-            },
-        };
-        // Send the message to the candidate's FCM token
-        await admin.messaging().sendToDevice(userToken, message);
-        console.log("Notification sent to:", userToken);
-    });
+exports.notifyNewJob = functions.firestore
+    .document('jobs/{documentId}')
+    .onCreate(async (snapshot, context) => {
+    try {
+        const usersSnapshot = await admin.firestore().collection('users').get();
+        const notificationPromises = [];
+        for (const userDoc of usersSnapshot.docs) {
+            const fcmToken = userDoc.data().fcmToken;
+            if (fcmToken) {
+                const message = {
+                    notification: {
+                        title: 'New Job',
+                        body: 'A new job has been added!',
+                    },
+                    token: fcmToken,
+                };
+                notificationPromises.push(admin.messaging().send(message));
+            }
+        }
+        await Promise.all(notificationPromises);
+        console.log('Notifications sent successfully');
+    }
+    catch (error) {
+        console.log('Error sending notifications:', error);
+    }
 });
 //# sourceMappingURL=index.js.map

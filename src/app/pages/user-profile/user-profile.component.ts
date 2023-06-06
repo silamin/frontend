@@ -45,6 +45,7 @@ export interface SocialMediaProfile {
   styleUrls: ['./user-profile.component.scss']
 })
 export class UserProfileComponent implements OnInit, OnChanges {
+  UserInfoFormControlNames = UserInfoFormControlNames;
   @Input() user: any;
   @ViewChild('workExperienceForm') workExperienceForm!: WorkExperienceFormComponent;
   @ViewChild('skillForm') skillForm!: SkillFormComponent;

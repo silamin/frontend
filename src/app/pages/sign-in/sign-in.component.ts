@@ -10,6 +10,7 @@ import {LoginRegisterFormControlNames} from "../../interfaces/control-names";
   styleUrls: ['./sign-in.component.scss']
 })
 export class SignInComponent {
+
   loginRegisterForm: FormGroup;
   isLoading: boolean = false;
   LoginRegisterFormControlNames = LoginRegisterFormControlNames;

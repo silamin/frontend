@@ -35,3 +35,14 @@ export enum LoginRegisterFormControlNames {
   IsRecruiter = 'isRecruiter',
   IsLogin = 'isLogin',
 }
+export enum WorkExperienceFormControlNames {
+  Id = 'id',
+  JobTitle = 'jobTitle',
+  EmploymentType = 'employmentType',
+  CompanyName = 'companyName',
+  Location = 'location',
+  StartDate = 'startDate',
+  EndDate = 'endDate',
+  CurrentlyWorking = 'currentlyWorking',
+  JobDescription = 'jobDescription'
+}

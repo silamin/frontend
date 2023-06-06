@@ -13,7 +13,7 @@
               <!-- Job title -->
               <div class="form-group" *ngIf="!isDisplay; else jobTitleText">
                 <label for="jobTitle">Job title *</label>
-                <input formControlName="JobTitle" type="text" id="jobTitle" class="form-control"
+                <input formControlName="{{JobFormControlNames.JobTitle}}" type="text" id="jobTitle" class="form-control"
                        placeholder="Please enter a job title" required>
               </div>
               <ng-template #jobTitleText>
@@ -30,7 +30,7 @@
               <!-- Workplace -->
               <div class="form-group" *ngIf="!isDisplay; else workplaceText">
                 <label for="workplace">Workplace *</label>
-                <input formControlName="Workplace" type="text" id="workplace" class="form-control"
+                <input formControlName="{{JobFormControlNames.Workplace}}" type="text" id="workplace" class="form-control"
                        placeholder="Please enter your Workplace" required>
               </div>
               <ng-template #workplaceText>
@@ -43,8 +43,8 @@
             <div class="col-md-6">
               <!-- Work Type -->
               <div class="form-group" *ngIf="!isDisplay; else workTypeText">
-                <label for="workType">Type of work</label>
-                <select formControlName="WorkType" id="workType" class="form-control" required>
+                <label for="WorkType">Type of work</label>
+                <select formControlName="{{JobFormControlNames.WorkType}}" id="workType" class="form-control" required>
                   <option value="" selected disabled>--Select Your Issue--</option>
                   <option>Remote</option>
                   <option>On-site</option>
@@ -65,7 +65,7 @@
               <!-- Start Date -->
               <div class="form-group" *ngIf="!isDisplay; else startDateText">
                 <label for="startDate">Starting date</label>
-                <input formControlName="StartDate" type="date" id="startDate" class="form-control"
+                <input formControlName="{{JobFormControlNames.StartDate}}" type="date" id="startDate" class="form-control"
                        placeholder="Select date">
               </div>
               <ng-template #startDateText>
@@ -79,7 +79,7 @@
               <!-- Deadline -->
               <div class="form-group" *ngIf="!isDisplay; else deadlineText">
                 <label for="deadline">Deadline for application</label>
-                <input formControlName="Deadline" type="date" id="deadline" class="form-control"
+                <input formControlName="{{JobFormControlNames.Deadline}}" type="date" id="deadline" class="form-control"
                        placeholder="Select date">
               </div>
               <ng-template #deadlineText>
@@ -96,7 +96,7 @@
               <!-- Job Description -->
               <div class="form-group" *ngIf="!isDisplay; else jobDescriptionText">
                 <label for="jobDescription">Job description</label>
-                <textarea formControlName="JobDescription" id="jobDescription" class="form-control"
+                <textarea formControlName="{{JobFormControlNames.JobDescription}}" id="jobDescription" class="form-control"
                           placeholder="Write the job description." rows="3" required></textarea>
               </div>
               <ng-template #jobDescriptionText>
@@ -113,7 +113,7 @@
               <!-- Job Responsibilities -->
               <div class="form-group" *ngIf="!isDisplay; else jobResponsibilitiesText">
                 <label for="jobResponsibilities">Job Responsibilities</label>
-                <textarea formControlName="JobResponsibilities" id="jobResponsibilities" class="form-control"
+                <textarea formControlName="{{JobFormControlNames.JobResponsibilities}}" id="jobResponsibilities" class="form-control"
                           placeholder="Write the job responsibilities." rows="3" required></textarea>
               </div>
               <ng-template #jobResponsibilitiesText>
@@ -130,7 +130,7 @@
               <!-- Background & Skills -->
               <div class="form-group" *ngIf="!isDisplay; else backgroundSkillsText">
                 <label for="backgroundSkills">Background & Skills</label>
-                <textarea formControlName="BackgroundSkills" id="backgroundSkills" class="form-control"
+                <textarea formControlName="{{JobFormControlNames.BackgroundSkills}}" id="backgroundSkills" class="form-control"
                           placeholder="Write the required background and skills." rows="3" required></textarea>
               </div>
               <ng-template #backgroundSkillsText>
@@ -147,7 +147,7 @@
               <!-- Job Benefits -->
               <div class="form-group" *ngIf="!isDisplay; else jobBenefitsText">
                 <label for="jobBenefits">What you will get</label>
-                <textarea formControlName="JobBenefits" id="jobBenefits" class="form-control"
+                <textarea formControlName="{{JobFormControlNames.JobBenefits}}" id="jobBenefits" class="form-control"
                           placeholder="Write the job description." rows="2" required></textarea>
               </div>
               <ng-template #jobBenefitsText>

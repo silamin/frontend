@@ -2,11 +2,12 @@ import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges
 import {FormBuilder, FormGroup} from "@angular/forms";
 import {WorkExperienceService} from "../../services/forms-service/work-experience.service";
 import {UserStore} from "../../stores/UserStore";
-import {UserDTO, WorkExperienceFormDTO} from "../../interfaces/DTO\'s";
+import {UserDTO} from "../../interfaces/DTO\'s";
 import {HasForm} from "../../services/factories/FormFactory";
 import {Observable} from "rxjs";
 import {UserService} from "../../services/user.service";
 import {ToastrService} from "ngx-toastr";
+import {WorkExperienceFormControlNames} from "../../interfaces/control-names";
 
 
 @Component({
@@ -15,6 +16,7 @@ import {ToastrService} from "ngx-toastr";
   styleUrls: ['./work-experience-form.component.scss']
 })
 export class WorkExperienceFormComponent implements HasForm, OnInit{
+  WorkExperienceFormControlNames = WorkExperienceFormControlNames;
   @Input() visible: boolean=false;
   @Output() visibleChange: EventEmitter<boolean> = new EventEmitter<boolean>();
   formData: FormGroup;
@@ -34,15 +36,15 @@ export class WorkExperienceFormComponent implements HasForm, OnInit{
               private userService: UserService,
               private toastr: ToastrService) {
     this.formData = this.fb.group({
-      id:[''],
-      jobTitle: [''],
-      employmentType: [''],
-      companyName: [''],
-      location: [''],
-      startDate: [''],
-      endDate: [''],
-      currentlyWorking: [false],
-      jobDescription: ['']
+      [WorkExperienceFormControlNames.Id]:[''],
+      [WorkExperienceFormControlNames.JobTitle]: [''],
+      [WorkExperienceFormControlNames.EmploymentType]: [''],
+      [WorkExperienceFormControlNames.CompanyName]: [''],
+      [WorkExperienceFormControlNames.Location]: [''],
+      [WorkExperienceFormControlNames.StartDate]: [''],
+      [WorkExperienceFormControlNames.EndDate]: [''],
+      [WorkExperienceFormControlNames.CurrentlyWorking]: [false],
+      [WorkExperienceFormControlNames.JobDescription]: ['']
     });
   }
   onSubmit() {
