@@ -34,6 +34,7 @@ export class CompanyMainPageComponent implements OnInit {
         this.closeResult = `Closed with: ${result}`;
         if (content === this.confirmSelectModal) {
           if (result === 'Yes'){
+            this.applicationService.selectCandidate(this.candidateId, this.jobId)
             this.router.navigate(['application-process',this.candidateId, this.jobId])
           }
         } else if (content === this.confirmRejectModal) {

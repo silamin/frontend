@@ -19,6 +19,8 @@ export class EducationFormComponent implements HasForm, OnInit{
   @Input() visible: boolean = false;
   @Input() data;
   @Output() visibleChange: EventEmitter<boolean> = new EventEmitter<boolean>();
+  @Output() dataChange = new EventEmitter();
+
 
   educationForm: FormGroup;
   user!: UserDTO;
@@ -41,6 +43,7 @@ export class EducationFormComponent implements HasForm, OnInit{
   }
 
   onSubmit(): void {
+    console.log(this.data)
     if (!this.data){
       this.educationService.addItem(this.user.id, this.educationForm.value)
         .then(() => {
@@ -64,7 +67,9 @@ export class EducationFormComponent implements HasForm, OnInit{
   }
 
   close(): void {
+    this.data = null;
     this.visible = false;
+    this.dataChange.emit(this.data); // emit the new data
     this.visibleChange.emit(this.visible);
   }
 

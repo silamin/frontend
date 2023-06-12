@@ -22,7 +22,10 @@ export class WorkExperienceFormComponent implements HasForm, OnInit{
   formData: FormGroup;
   user!: UserDTO;
   @Input() data;
+  @Output() dataChange = new EventEmitter();
   close() {
+    this.data = null;
+    this.dataChange.emit(this.data);
     this.visible = false;
     this.visibleChange.emit(this.visible);
   }

@@ -215,4 +215,21 @@ export class ApplicationService {
         }
       }).catch(error => console.error('Error executing query: ', error));
   }
+
+  selectCandidate(candidateId: number, jobId: number) {
+    // Query the collection
+    return this.firestore.collection('applications', ref => ref.where('jobId', '==', jobId).where('candidateId', '==', candidateId))
+      .get().toPromise().then(querySnapshot => {
+        if (querySnapshot && !querySnapshot.empty) {
+          const docRef = querySnapshot.docs[0].ref;  // Take the first matched document
+          return docRef.set({ status: 'selected' }, { merge: true })
+            .then(() => console.log('Candidate selected'))
+            .catch(error => console.error('Error selecting candidate: ', error));
+        }  else {
+          console.log(`No matching application found for jobId: ${jobId}, candidateId: ${candidateId}`);
+          return Promise.resolve();  // Resolve the promise in case of no matching document
+        }
+      }).catch(error => console.error('Error executing query: ', error));
+
+  }
 }

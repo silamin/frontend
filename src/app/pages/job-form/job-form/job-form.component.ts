@@ -70,6 +70,7 @@ export class JobFormComponent implements OnChanges, OnInit{
     this.visible = false;
     this.isEdit = false;
     this.selectedJob = null;
+    this.jobForm.reset();
     this.visibleChange.emit(this.visible);
   }
 

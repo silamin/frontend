@@ -18,6 +18,8 @@ export class LanguageFormComponent implements HasForm, OnInit{
   LanguageFormControlNames = LanguageFormControlNames;
   languageForm: FormGroup;
   @Input() data;
+  @Output() dataChange = new EventEmitter();
+
   user!: UserDTO;
 
   constructor(private fb: FormBuilder,
@@ -59,6 +61,8 @@ export class LanguageFormComponent implements HasForm, OnInit{
   @Output() visibleChange: EventEmitter<boolean> = new EventEmitter<boolean>();
 
   close() {
+    this.data = null;
+    this.dataChange.emit(this.data)
     this.visible = false;
     this.visibleChange.emit(this.visible);
   }

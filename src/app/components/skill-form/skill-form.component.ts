@@ -18,6 +18,7 @@ export class SkillFormComponent implements HasForm, OnInit{
   SkillsFormControlNames = SkillsFormControlNames;
   skillForm: FormGroup;
   @Input() data;
+  @Output() dataChange = new EventEmitter();
   user!: UserDTO;
 
   constructor(private fb: FormBuilder,
@@ -33,6 +34,7 @@ export class SkillFormComponent implements HasForm, OnInit{
   }
 
   onSubmit(): void {
+    console.log(this.data)
     if (!this.data){
       this.skillsService.addItem(this.user.id,this.skillForm.value).then(() => {
         this.toastr.success('Skill item added successfully!');
@@ -57,6 +59,8 @@ export class SkillFormComponent implements HasForm, OnInit{
   @Output() visibleChange: EventEmitter<boolean> = new EventEmitter<boolean>();
 
   close() {
+    this.data = null;
+    this.dataChange.emit(this.data);
     this.visible = false;
     this.visibleChange.emit(this.visible);
   }

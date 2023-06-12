@@ -204,10 +204,34 @@
         </div>
       </div>
     </div>
-    <app-work-experience-form #workExperienceForm [data]="data" [visible]="isWorkExperienceFormVisible" (visibleChange)="hidePopUp()"></app-work-experience-form>
-    <app-skill-form #skillForm [data]="data"  [visible]="isSkillFormVisible" (visibleChange)="hidePopUp()"></app-skill-form>
-    <app-language-form #languageForm [data]="data"  [visible]="isLanguageFormVisible" (visibleChange)="hidePopUp()"></app-language-form>
-    <app-education-form #educationForm [data]="data"  [visible]="isEducationFormVisible" (visibleChange)="hidePopUp()"></app-education-form>
+    <app-work-experience-form
+      #workExperienceForm
+      [data]="data"
+      [visible]="isWorkExperienceFormVisible"
+      (visibleChange)="hidePopUp()"
+      (dataChange)="data = $event">
+    </app-work-experience-form>
+    <app-skill-form
+      #skillForm
+      [data]="data"
+      [visible]="isSkillFormVisible"
+      (visibleChange)="hidePopUp()"
+      (dataChange)="data = $event">
+    </app-skill-form>
+    <app-language-form
+      #languageForm
+      [data]="data"
+      [visible]="isLanguageFormVisible"
+      (visibleChange)="hidePopUp()"
+      (dataChange)="data = $event">
+    </app-language-form>
+    <app-education-form
+      #educationForm
+      [data]="data"
+      [visible]="isEducationFormVisible"
+      (visibleChange)="hidePopUp()"
+      (dataChange)="data = $event">
+    </app-education-form>
 
   </div>
 

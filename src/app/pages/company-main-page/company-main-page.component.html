@@ -157,7 +157,7 @@
                           </ng-container>
                           <ng-template #notAccepted>
                             <button class="btn btn-outline-primary mb-2 " (click)="showMore(candidate)">Show more <i class="fa fa-info-circle"></i></button>
-                            <ng-container *ngIf="candidate.isCandidateSelected; else showButtons">
+                            <ng-container *ngIf="candidate.applicationStatus ==='selected'; else showButtons">
                               <button class="btn btn-outline-success  ms-2 mb-2" (click)="processApplication( candidate.id, job.id)">Process Application</button>
                             </ng-container>
                             <ng-template #showButtons>
