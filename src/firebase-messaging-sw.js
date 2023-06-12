@@ -16,26 +16,33 @@ const messaging = firebase.messaging();
 self.addEventListener('push', (event) => {
   console.log('Received a push event:', event);
 
-  let pushMessage = {};
+  const pushData = event.data ? event.data.json() : {};
 
-  if (event.data && event.data.text()) {
-    pushMessage = {
-      notification: {
-        title: 'Manual push',
-        body: event.data.text(),
-      },
-    };
-  } else if (event.data) {
-    pushMessage = event.data.json();
-  }
+  const title = pushData.notification?.title || 'Test Title';
+  const body = pushData.notification?.body || 'Test Body';
 
   const options = {
-    body: pushMessage.notification.body,
+    body: body,
     // include other options as necessary, such as icon, image, etc.
   };
 
-  event.waitUntil(
-    self.registration.showNotification(pushMessage.notification.title, options)
-  );
+  if (event.data) {
+    event.waitUntil(
+      self.registration.showNotification(title, options)
+    );
+  } else {
+    // Handle the push event when data is not available
+    console.log('Foreground push event received:', event);
+    // Handle the notification manually or perform other actions
+    // For example, you can dispatch a custom event to communicate with the page
+    self.clients.matchAll().then((clients) => {
+      clients.forEach((client) => {
+        client.postMessage({
+          type: 'foreground-push',
+          title: title,
+          body: body,
+        });
+      });
+    });
+  }
 });
-self.registration.showNotification('Test Title', { body: 'Test Body' });
