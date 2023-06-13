@@ -48,6 +48,7 @@ import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {GlobalErrorHandlerService} from "./services/global-error-handler.service";
 import {AngularFireMessagingModule} from "@angular/fire/compat/messaging";
 import { ServiceWorkerModule } from '@angular/service-worker';
+import {firebaseConfig} from "../../firebaseconfig.js";
 
 const routes: Routes = [
   { path: '', component: SignInComponent },
@@ -59,15 +60,6 @@ const routes: Routes = [
   { path: 'application-process/:cid/:jid', component: ProcessApplicationComponent },
 
 ];
-const firebaseConfig = {
-  apiKey : "AIzaSyD-UXdqY60rn6MigvTq9jsU6dnDNI9jPLk" ,
-  authDomain : "silamin-7bbfd.firebaseapp.com" ,
-  projectId : "silamin-7bbfd" ,
-  storageBucket : "silamin-7bbfd.appspot.com" ,
-  messagingSenderId : "365220988857" ,
-  appId : "1:365220988857:web:f8fbe2e3ad8efd3b13d868" ,
-  measurementId : "G-394246XLDF"
-};
 
 
 @NgModule({

@@ -1,8 +1,9 @@
 import * as functions from "firebase-functions";
 import * as nodemailer from "nodemailer";
-import {SentMessageInfo} from "nodemailer";
+import {SentMessageInfo, TransportOptions} from "nodemailer";
 import * as admin from "firebase-admin";
 import * as serviceAccount from "../serviceAccountKey.json";
+import { authConfig } from '../authConfig';
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount as admin.ServiceAccount),
@@ -10,14 +11,8 @@ admin.initializeApp({
 
 const transporter = nodemailer.createTransport({
   service: "gmail",
-  auth: {
-    type: "OAuth2",
-    user: "amine.aouina.lp.4@gmail.com",
-    clientId: "365220988857-s0phi3fp45sidpg4vfk169uetjs4alis.apps.googleusercontent.com",
-    clientSecret: "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",
-    refreshToken: "1//04U4dzaWtJD57CgYIARAAGAQSNwF-L9IrpdFGiCqprrPdfdk0j3J4Q5KZfi_AZU78syqSd5fBU7LamwexoeUt6GIa9oQ9UF6q8o0",
-  },
-});
+  auth: authConfig,
+}as TransportOptions);
 
 exports.sendWelcomeEmail = functions.auth.user().onCreate((user) => {
   const mailOptions: nodemailer.SendMailOptions = {
